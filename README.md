@@ -1,6 +1,6 @@
-#  Mass Spectra Predictor
+#  Mass Spectrum Predictor
 
-This repository contains implementations for a neural spectra simulator model: 
+This repository contains implementations for a neural spectrum simulator model: 
 
 🧣 SCARF 🧣: Subformula Classification for Autoregressively Reconstructing Fragmentations  
 Authors: Sam Goldman, John Bradshaw, Jiayi Xin, Connor W. Coley
