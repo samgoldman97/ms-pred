@@ -1,0 +1,24 @@
+name: ms-gen
+channels:
+- pytorch
+- dglteam
+- conda-forge
+- pyg
+dependencies:
+- python=3.8.*
+- matplotlib=3.4.*
+- rdkit=2021.03.*
+- python-graphviz=0.17
+- pygraphviz=1.7
+- cudatoolkit=11.1
+- pytorch-lightning=1.4.*
+- pip=21.2.*
+- pytorch::torchvision
+- ipykernel=6.0.*
+- dgl-cuda11.1 
+- pytorch::pytorch=1.9.* 
+- einops
+- nb_conda_kernels=2.3.*
+- seaborn=0.11.*
+- ray-tune
+- pytorch-scatter

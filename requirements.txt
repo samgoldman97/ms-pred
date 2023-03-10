@@ -1,0 +1,9 @@
+scikit-learn
+pathos
+hyperopt
+setuptools==59.5.0
+ray[air]
+CairoSVG
+git+https://github.com/ray-project/ray_lightning#ray_lightning
+numba
+ipdb

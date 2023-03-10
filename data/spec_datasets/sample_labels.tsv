@@ -1,0 +1,101 @@
+dataset	spec	name	formula	ionization	smiles	inchikey
+nist2020	nist_1786352	Ethyl 4-{[(benzoylamino)carbothioyl]amino}benzoate	C17H16N2O3S	[M+Na]+	CCOC(=O)c1ccc(NC(=S)NC(=O)c2ccccc2)cc1	UGLKNRLHRREZKD-UHFFFAOYSA-N
+nist2020	nist_3075869	5,7-Dihydroxy-2-(4-hydroxy-3-methoxyphenyl)-3,6-dimethoxychromone	C18H16O8	[M+H]+	COc1cc(-c2oc3cc(O)c(OC)c(O)c3c(=O)c2OC)ccc1O	XUWTZJRCCPNNJR-UHFFFAOYSA-N
+nist2020	nist_1492611	.beta.-D-Glucopyranosiduronic acid, (17.beta.)-17-(acetyloxy)estra-1,3,5(10)-trien-3-yl, methyl ester, triacetate	C33H42O12	[M+NH4]+	COC(=O)[C@H]1O[C@@H](Oc2ccc3c(c2)CC[C@@H]2[C@@H]3CC[C@]3(C)[C@@H](OC(C)=O)CC[C@@H]23)[C@H](OC(C)=O)[C@@H](OC(C)=O)[C@@H]1OC(C)=O	RWNQOWSIOCGYAE-LXNJTFBUSA-N
+nist2020	nist_1814178	5-(4-Carboxy-3-methylbutyl)-5,6,8a-trimethyl-3-oxo-3,4,4a,5,6,7,8,8a-octahydronaphthalene-1-carboxylic acid	C20H30O5	[M+H-2H2O]+	CC(CCC1(C)C(C)CCC2(C)C(C(=O)O)=CC(=O)CC21)CC(=O)O	XKXZAYIPFRBKHT-UHFFFAOYSA-N
+nist2020	nist_1521061	Bicyclo[2.2.1]heptan-2-one, 1,7,7-trimethyl-, (1R,4R)-	C10H16O	[M+H-H2O]+	CC1(C)[C@@H]2CC[C@@]1(C)C(=O)C2	DSSYKIVIOFKYAU-XCBNKYQSSA-N
+nist2020	nist_1973328	Acetic acid, 2-[[3-cyano-4-(4-methoxyphenyl)-6-phenyl-2-pyridinyl]thio]-	C21H16N2O3S	[M+H-H2O]+	COc1ccc(-c2cc(-c3ccccc3)nc(SCC(=O)O)c2C#N)cc1	LBQWBYYTMGYKKS-UHFFFAOYSA-N
+nist2020	nist_1340176	Acetic acid, 2-acetylhydrazide	C4H8N2O2	[M+H]+	CC(=O)NNC(C)=O	ZLHNYIHIHQEHJQ-UHFFFAOYSA-N
+nist2020	nist_1874917	2-[[(4-Methoxyphenyl)methyl]thio]acetic acid	C10H12O3S	[M+Na]+	COc1ccc(CSCC(=O)O)cc1	SDNBUZXAGNJNBL-UHFFFAOYSA-N
+nist2020	nist_3069255	2-(4,6-Dihydroxy-1-oxo-5-((2E,6E)-3,7,11-trimethyldodeca-2,6,10-trien-1-yl)-1,3-dihydro-2H-isoindol-2-yl)pentanedioic acid	C28H37NO7	[M+H]+	CC(C)=CCC/C(C)=C/CC/C(C)=C/Cc1c(O)cc2c(c1O)CN(C(CCC(=O)O)C(=O)O)C2=O	LTEYADKCUWEHSA-ZYCAGONGSA-N
+nist2020	nist_1218678	2-[(1-Oxo-5Z,8Z,11Z,14Z-eicosatetraenyl)amino]ethanesulfonic acid	C22H37NO4S	[M+Na]+	CCCCC/C=C\C/C=C\C/C=C\C/C=C\CCCC(=O)NCCS(=O)(=O)O	YUNYSWCRLRYOPO-DOFZRALJSA-N
+nist2020	nist_1859048	2-[2-(4-Methylphenyl)sulfonyloxyethoxy]ethyl 4-methylphenylsulfonate	C18H22O7S2	[M+H]+	Cc1ccc(S(=O)(=O)OCCOCCOS(=O)(=O)c2ccc(C)cc2)cc1	VYVPNTJBGPQTFA-UHFFFAOYSA-N
+nist2020	nist_3131729	2-Piperidinecarboxylic acid, 1-[(4-bromophenyl)sulfonyl]-	C12H14BrNO4S	[M+H]+	O=C(O)C1CCCCN1S(=O)(=O)c1ccc(Br)cc1	BFYXCFKAZNUOEO-UHFFFAOYSA-N
+nist2020	nist_1625185	11-Octadecenoic acid, (11Z)-	C18H34O2	[M+H-H2O]+	CCCCCC/C=C\CCCCCCCCCC(=O)O	UWHZIFQPPBDJPM-FPLPWBNLSA-N
+nist2020	nist_3457304	Benzoic acid, 3,5-dibromo-2,4-dihydroxy-, methyl ester	C8H6Br2O4	[M+H]+	COC(=O)c1cc(Br)c(O)c(Br)c1O	QRNWLIBAWZHZNY-UHFFFAOYSA-N
+nist2020	nist_1864102	4-[(4-Fluorophenyl)amino]-4-oxobutanoic acid	C10H10FNO3	[M+H]+	O=C(O)CCC(=O)Nc1ccc(F)cc1	NAPJELQHRKGMDD-UHFFFAOYSA-N
+nist2020	nist_1487289	8,11-Epoxy-9,12-ethano-11,15-methano-5H,11H-[1,9]dioxacyclooctadecino[4,3-b]pyridine-5,17(18H) -dione, 10,13,22,23-tetrakis(acetyloxy)-12-[(acetyloxy)methyl]-14- (benzoyloxy)-7,8,9,10,12,13,14,15,19,20-decahydro-21- hydroxy-8,18,21-trimethyl-, (8R,9R,10R,11S,12S,13R,14R,15S,18S,21S,22S,23R)-	C43H49NO18	[M+H]+	CC(=O)OCC12C(OC(C)=O)C(OC(C)=O)C3C(OC(C)=O)C14OC3(C)COC(=O)c1cccnc1CCC(C)C(=O)OC(C(OC(=O)c1ccccc1)C2OC(C)=O)C4(C)O	ZOCKGJZEUVPPPI-UHFFFAOYSA-N
+nist2020	nist_1398490	3,4-Dihydro-6-hydroxy-2,8-dimethyl-2H-1-benzopyran-2-propanoic acid	C14H18O4	[M+H-2H2O]+	Cc1cc(O)cc2c1O[C@](C)(CCC(=O)O)CC2	BNVXCCQXUZCRSR-AWEZNQCLSA-N
+nist2020	nist_1541999	D-Galactose, 2-O-.alpha.-D-glucopyranosyl-	C12H22O11	[M+Na]+	O=C[C@H](O[C@H]1O[C@H](CO)[C@@H](O)[C@H](O)[C@H]1O)[C@@H](O)[C@@H](O)[C@H](O)CO	PZDOWFGHCNHPQD-IJVVWVSMSA-N
+nist2020	nist_3051197	Benzenesulfonamide, 2-bromo-N-cyclohexyl-	C12H16BrNO2S	[M+Na]+	O=S(=O)(NC1CCCCC1)c1ccccc1Br	ZJNJLUIXKKZXBS-UHFFFAOYSA-N
+nist2020	nist_1430492	1H-Thieno[3,4-d]imidazole-4-pentanamide, hexahydro-N-[5-[[(5Z,13E,15S)-15-hydroxy-1,9-dioxoprosta-5,10,13-trien-1-yl]amino]pentyl]-2-oxo-, [3aS-(3a.alpha.,4.beta.,6a.alpha.)]-	C35H56N4O5S	[M+H]+	CCCCC[C@H](O)/C=C/[C@H]1C=CC(=O)[C@H]1C/C=C\CCCC(=O)NCCCCCNC(=O)CCCC[C@H]1SC[C@@H]2NC(=O)N[C@@H]21	CMOWJMGZBDREFB-RYNARFMTSA-N
+nist2020	nist_1363196	3-Indolyllactic acid	C11H11NO3	[M+H-2H2O]+	O=C(O)C(O)Cc1c[nH]c2ccccc12	XGILAAMKEQUXLS-UHFFFAOYSA-N
+nist2020	nist_3425995	[5-(Difluoromethyl)-1H-pyrazol-3-yl]amine	C4H5F2N3	[M+H]+	Nc1cc(C(F)F)n[nH]1	CRWZZOMNSRUIMA-UHFFFAOYSA-N
+nist2020	nist_3173180	Prangolarin hydrate	C16H16O6	[M+H]+	CC(C)(O)C(O)COc1c2ccoc2cc2oc(=O)ccc12	PEWFWDOPJISUOK-UHFFFAOYSA-N
+nist2020	nist_1607844	Phenol, 2-(1,3-dioxolan-2-yl)-, 1-(N-methylcarbamate)	C11H13NO4	[M+H]+	CNC(=O)Oc1ccccc1C1OCCO1	SDKQRNRRDYRQKY-UHFFFAOYSA-N
+nist2020	nist_3452217	1-Piperidinecarboximidamide, 4-methyl-	C7H15N3	[M+H]+	CC1CCN(C(=N)N)CC1	NIWNTTFADJMCIT-UHFFFAOYSA-N
+nist2020	nist_1223898	2-Propen-1-one, 3-(2,5-dimethoxyphenyl)-1-(2-hydroxy-6-methoxyphenyl)-	C18H18O5	[M+H-H2O]+	COc1ccc(OC)c(/C=C/C(=O)c2c(O)cccc2OC)c1	IGGNNEJKAJQXOV-VQHVLOKHSA-N
+nist2020	nist_1348606	Ribothymidine	C10H14N2O6	[M+H-H2O]+	Cc1cn([C@H]2O[C@@H](CO)[C@H](O)[C@@H]2O)c(=O)[nH]c1=O	DWRXFEITVBNRMK-AZRUVXNYSA-N
+nist2020	nist_3093063	2-(3,4-Dihydroxyphenyl)-4,6-dihydroxy-2-methoxycoumaran-3-one	C15H12O7	[M+H-H2O]+	COC1(c2ccc(O)c(O)c2)Oc2cc(O)cc(O)c2C1=O	LMUQMEDGLAEQEK-UHFFFAOYSA-N
+nist2020	nist_3466220	Benzenemethanamine, 4-bromo-N-butyl-	C11H16BrN	[M+H]+	CCCCNCc1ccc(Br)cc1	MCNOIXPMJHKLAK-UHFFFAOYSA-N
+nist2020	nist_1251845	Pentanamide, 2-amino-4-methyl-	C6H14N2O	[M+H]+	CC(C)CC(N)C(N)=O	FORGMRSGVSYZQR-UHFFFAOYSA-N
+nist2020	nist_1562946	Benzaldehyde, 3-(1,1-dimethylethyl)-2-hydroxy-	C11H14O2	[M+H]+	CC(C)(C)c1cccc(C=O)c1O	ROILLNJICXGZQQ-UHFFFAOYSA-N
+nist2020	nist_1663039	2-Pyrimidinamine, N-phenyl-4-(3-pyridinyl)-	C15H12N4	[M+H]+	c1ccc(Nc2nccc(-c3cccnc3)n2)cc1	IJAJKPWVXDRQIB-UHFFFAOYSA-N
+nist2020	nist_3270163	2-Morpholino-4,6-dichloropyrimidine	C8H9Cl2N3O	[M+H]+	Clc1cc(Cl)nc(N2CCOCC2)n1	OXCOCPRVQUEIOL-UHFFFAOYSA-N
+nist2020	nist_1537766	Cyclopropanecarboxylic acid, 3-(2,2-dichloroethenyl)-2,2-dimethyl-, (R)-cyano(3-phenoxyphenyl)methyl ester, (1S,3S)-rel-	C22H19Cl2NO3	[M+NH4]+	CC1(C)C(C=C(Cl)Cl)C1C(=O)OC(C#N)c1cccc(Oc2ccccc2)c1	KAATUXNTWXVJKI-UHFFFAOYSA-N
+nist2020	nist_1474088	5H-Furo[3,2-g][1]benzopyran-5-one, 4-methoxy-7-methyl-	C13H10O4	[M+H]+	COc1c2ccoc2cc2oc(C)cc(=O)c12	NZVQLVGOZRELTG-UHFFFAOYSA-N
+nist2020	nist_3307543	4-[2-[2-(3,4-Dihydroxyphenyl)ethoxy]-2-ketoethyl]-5-hydroxy-4a,5,7,7a-tetrahydro-4H-furo[3,4-b]pyran-3-carboxylic acid 2-(3,4-dihydroxyphenyl)ethyl ester	C26H28O11	[M+Na]+	O=C(CC1C(C(=O)OCCc2ccc(O)c(O)c2)=COC2COC(O)C21)OCCc1ccc(O)c(O)c1	AIPGFMVNUMXXEM-UHFFFAOYSA-N
+nist2020	nist_1666704	Benzenesulfonic acid, 3-nitro-, (2R)-2-oxiranylmethyl ester	C9H9NO6S	[M+H]+	O=[N+]([O-])c1cccc(S(=O)(=O)OC[C@@H]2CO2)c1	AIHIHVZYAAMDPM-QMMMGPOBSA-N
+nist2020	nist_1174594	Phosphonic acid, P-(phenylmethyl)-	C7H9O3P	[M+H]+	O=P(O)(O)Cc1ccccc1	OGBVRMYSNSKIEF-UHFFFAOYSA-N
+nist2020	nist_1718003	9-Oxo-9H-thioxanthene-3-carboxylic acid 10,10-dioxide	C14H8O5S	[M+H-H2O]+	O=C(O)c1ccc2c(c1)S(=O)(=O)c1ccccc1C2=O	KTMTUGYSHWKLNN-UHFFFAOYSA-N
+nist2020	nist_3068698	Sulfilimine, S-acetamido-N-acetyl-S-(p-nitrophenyl)-	C10H11N3O4S	[M+H]+	CC(=O)/N=S(/NC(C)=O)c1ccc([N+](=O)[O-])cc1	AMQWCRVZVZQYQV-UHFFFAOYSA-N
+nist2020	nist_1432325	4-Chloro-6-[5-[[2-(4-morpholinyl)ethyl]amino]-1,2-benzisoxazol-3-yl]-1,3-benzenediol	C19H20ClN3O4	[M+H]+	Oc1cc(O)c(-c2noc3ccc(NCCN4CCOCC4)cc23)cc1Cl	JLIRVZVVCCIAKG-UHFFFAOYSA-N
+nist2020	nist_3419068	4-Piperidinecarboxylic acid, 1-[(4-fluorophenyl)sulfonyl]-	C12H14FNO4S	[M+H-H2O]+	O=C(O)C1CCN(S(=O)(=O)c2ccc(F)cc2)CC1	XLGNTFOVANBJCQ-UHFFFAOYSA-N
+nist2020	nist_3006359	2H-Phenanthro[1,2-c]pyran-2-carboxylic acid, 5-(acetyloxy)hexadecahydro-6,10-dihydroxy-2,4b,7,7,10a,12a-hexamethyl-12-methylene-1,4,8-trioxo-, methyl ester, (2R,4aS,4bR,10aR,10bR,12aR)-	C28H38O10	[M+Na]+	C=C1CC2C3(C)C(O)CC(=O)C(C)(C)C3C(O)C(OC(C)=O)C2(C)C2C(=O)OC(C)(C(=O)OC)C(=O)C12C	BTGVTHAIJREEMO-UHFFFAOYSA-N
+nist2020	nist_1143206	Glycine, L-.gamma.-glutamyl-S-[(1R,2E,4E,6Z,9Z)-1-[(1S)-4-carboxy-1-hydroxybutyl]-2,4,6,9-pentadecatetraen-1-yl]-L-cysteinyl-	C30H47N3O9S	[M+H-H2O]+	CCCCC/C=C\C/C=C\C=C\C=C\[C@@H](SCC(NC(=O)CCC(N)C(=O)O)C(=O)NCC(=O)O)[C@@H](O)CCCC(=O)O	GWNVDXQDILPJIG-SWOVEEFNSA-N
+nist2020	nist_1416987	5-Chloro NNEI	C24H23ClN2O	[M+Na]+	O=C(Nc1cccc2ccccc12)c1cn(CCCCCCl)c2ccccc12	SAZREAASVMJYTK-UHFFFAOYSA-N
+nist2020	nist_3271525	N-(2-Furanylmethyl)-2-phenoxyacetamide	C13H13NO3	[M+H]+	O=C(COc1ccccc1)NCc1ccco1	SNFGMJAFFUHSIT-UHFFFAOYSA-N
+nist2020	nist_3062857	1H-Pyrazolo[3,4-d]pyrimidine, 4-hydrazino-1-methyl-	C6H8N6	[M+H]+	Cn1ncc2c(NN)ncnc21	DZCWBKIIPGWKNI-UHFFFAOYSA-N
+nist2020	nist_1338961	Propanoic acid, 2-[4-[(5-chloro-3-fluoro-2-pyridinyl)oxy]phenoxy]-, 2-propyn-1-yl ester, (2R)-	C17H13ClFNO4	[M+H]+	C#CCOC(=O)C(C)Oc1ccc(Oc2ncc(Cl)cc2F)cc1	JBDHZKLJNAIJNC-UHFFFAOYSA-N
+nist2020	nist_1413332	JWH 203	C21H22ClNO	[M+H]+	CCCCCn1cc(C(=O)Cc2ccccc2Cl)c2ccccc21	YDINKDBAZJOSLV-UHFFFAOYSA-N
+nist2020	nist_3289982	Benzamide, 2-chloro-N-(2,4,6-trimethylphenyl)-	C16H16ClNO	[M+H]+	Cc1cc(C)c(NC(=O)c2ccccc2Cl)c(C)c1	GGUSVCZEIJYNJF-UHFFFAOYSA-N
+nist2020	nist_1726817	Benzaldehyde, 3-ethoxy-4-(2-methylpropoxy)-	C13H18O3	[M+H]+	CCOc1cc(C=O)ccc1OCC(C)C	BVHHJYYHHQIPCB-UHFFFAOYSA-N
+nist2020	nist_1257088	L-Glutamic acid, N-[4-[[(2-amino-3,4,7,8-tetrahydro-4-oxo-6-pteridinyl)methyl]amino]benzoyl]-	C19H21N7O6	[M+Na]+	Nc1nc(=O)c2c([nH]1)NCC(CNc1ccc(C(=O)N[C@@H](CCC(=O)O)C(=O)O)cc1)=N2	OZRNSSUDZOLUSN-LBPRGKRZSA-N
+nist2020	nist_3139157	Benzoic acid, 4-bromo-2-fluoro-3-methyl-	C8H6BrFO2	[M+H]+	Cc1c(Br)ccc(C(=O)O)c1F	PIMDCUNZRUXGME-UHFFFAOYSA-N
+nist2020	nist_1643029	Glutamylglycylglutamic acid	C12H19N3O8	[M+H]+	NC(CCC(=O)O)C(=O)NCC(=O)NC(CCC(=O)O)C(=O)O	OGNJZUXUTPQVBR-UHFFFAOYSA-N
+nist2020	nist_3266580	Piperazine, 1-(6-bromo-2-pyridinyl)-	C9H12BrN3	[M+H]+	Brc1cccc(N2CCNCC2)n1	WBRRYSNZMKKYLZ-UHFFFAOYSA-N
+nist2020	nist_1216791	1,7-Bis(3,4-dimethoxyphenyl)-1,6-heptadiene-3,5-dione	C23H24O6	[M+H]+	COc1ccc(/C=C/C(=O)CC(=O)/C=C/c2ccc(OC)c(OC)c2)cc1OC	HMJSBVCDPKODEX-NXZHAISVSA-N
+nist2020	nist_3060137	2-Furancarboxamide, 5-nitro-N-3-pyridinyl-	C10H7N3O4	[M+H]+	O=C(Nc1cccnc1)c1ccc([N+](=O)[O-])o1	ADYPJKNMIDVKIU-UHFFFAOYSA-N
+nist2020	nist_3363444	(2S,3S,4S,5R,6R)-6-[[(3S,6aR,6bS,8aR,9R,14bS)-14b-Formyl-9-hydroxy-4,4,6a,6b,8a,11,11-heptamethyl-1,2,3,4a,5,6,7,8,9,10,12,12a,14,14a-tetradecahydropicen-3-yl]oxy]-5-[(2S,3R,4S,5R)-4,5-dihydroxy-3-[(2S,3R,4R,5R,6S)-3,4,5-trihydroxy-6-methyloxan-2-yl]oxyoxan-2-yl]oxy-3,4-dihydroxyoxane-2-carboxylic acid	C47H74O17	[M+Na]+	CC1OC(OC2C(OC3C(OC4CCC5(C=O)C(CCC6(C)C5CC=C5C7CC(C)(C)CC(O)C7(C)CCC56C)C4(C)C)OC(C(=O)O)C(O)C3O)OCC(O)C2O)C(O)C(O)C1O	GGYFTLUVQMVCMN-UHFFFAOYSA-N
+nist2020	nist_1618430	5-Methoxy EPT	C16H24N2O	[M+H]+	CCCN(CC)CCc1c[nH]c2ccc(OC)cc12	OQHFIOKNGNJPPF-UHFFFAOYSA-N
+nist2020	nist_3249088	1H-Indole-2,3-dione, 1-hexadecyl-	C24H37NO2	[M+NH4]+	CCCCCCCCCCCCCCCCN1C(=O)C(=O)c2ccccc21	JLUGWHXZCKLPBY-UHFFFAOYSA-N
+nist2020	nist_3191573	N-Cyclopropylquinaldamide	C13H12N2O	[M+H]+	O=C(NC1CC1)c1ccc2ccccc2n1	IWPZJPQGXHRNIO-UHFFFAOYSA-N
+nist2020	nist_1244849	2H-1,4-Benzodiazepin-2-one, 7-amino-1,3-dihydro-5-phenyl-	C15H13N3O	[M+H]+	Nc1ccc2c(c1)C(c1ccccc1)=NCC(=O)N2	OYOUQHVDCKOOAL-UHFFFAOYSA-N
+nist2020	nist_3158397	2-Indolecarbohydrazide	C9H9N3O	[M+H]+	NNC(=O)c1cc2ccccc2[nH]1	DZLFRQHFFVRYEE-UHFFFAOYSA-N
+nist2020	nist_3181750	BMS 540215	C19H19FN4O3	[M+H]+	Cc1cc2c(F)c(Oc3ncnn4cc(OCC(C)O)c(C)c34)ccc2[nH]1	WCWUXEGQKLTGDX-UHFFFAOYSA-N
+nist2020	nist_1850464	5-(2-Methylphenyl)-1H-pyrazole-3-carboxylic acid	C11H10N2O2	[M+H-H2O]+	Cc1ccccc1-c1cc(C(=O)O)[nH]n1	BHLFDODDOGJUGN-UHFFFAOYSA-N
+nist2020	nist_1146925	1-Butanamine, N-methyl-4-[2-(phenylmethyl)phenoxy]-	C18H23NO	[M+H]+	CNCCCCOc1ccccc1Cc1ccccc1	QSQQPMHPCBLLGX-UHFFFAOYSA-N
+nist2020	nist_3411698	N-[2-chloro-5-(trifluoromethyl)phenyl]-3-ketobutyramide	C11H9ClF3NO2	[M+H]+	CC(=O)CC(=O)Nc1cc(C(F)(F)F)ccc1Cl	VZRQBDKLEYQGPP-UHFFFAOYSA-N
+nist2020	nist_1515680		C20H24O3	[M+H-H2O]+	C[C@]12C=CC(=O)C=C1C1(CO1)C[C@@H]1[C@@H]2CC[C@]2(C)C(=O)CC[C@@H]12	GFNJDRLFFJDJAC-YCNUYBHRSA-N
+nist2020	nist_3070989	1,3-Dioxane-4,5,6-trione, 2,2-dimethyl-, 5-[(4-nitrophenyl)hydrazone]	C12H11N3O6	[M+H]+	CC1(C)OC(=O)C(=NNc2ccc([N+](=O)[O-])cc2)C(=O)O1	FRXHUELRNOAPBB-UHFFFAOYSA-N
+nist2020	nist_1187630	(2S,3S)-1-(4-chlorophenyl)-4,4-dimethyl-2-(1,2,4-triazol-1-yl)pentan-3-ol	C15H20ClN3O	[M+H]+	CC(C)(C)C(O)C(Cc1ccc(Cl)cc1)n1cncn1	RMOGWMIKYWRTKW-UHFFFAOYSA-N
+nist2020	nist_1394082	N-(3R-Amino-2S-hydroxy-1-oxo-4-phenylbutyl)-L-leucine	C16H24N2O4	[M+Na]+	CC(C)C[C@H](NC(=O)[C@H](O)[C@H](N)Cc1ccccc1)C(=O)O	VGGGPCQERPFHOB-HZSPNIEDSA-N
+nist2020	nist_3306204	Methyl (1S,4aS,5S,7aS)-7-((acetyloxy)methyl)-1-(.beta.-D-glucopyranosyloxy)-5-hydroxy-1,4a,5,7a-tetrahydrocyclopenta[c]pyran-4-carboxylate	C19H26O12	[M+H-H2O]+	COC(=O)C1=COC(OC2OC(CO)C(O)C(O)C2O)C2C(COC(C)=O)=CC(O)C12	YSOBQIMODQOGKQ-UHFFFAOYSA-N
+nist2020	nist_1390257	1-(4-Chlorobenzoyl)-5-methoxy-2-methyl-1H-indole-3-acetic acid	C19H16ClNO4	[M+Na]+	COc1ccc2c(c1)c(CC(=O)O)c(C)n2C(=O)c1ccc(Cl)cc1	CGIGDMFJXJATDK-UHFFFAOYSA-N
+nist2020	nist_1908759	5-[(Z)-14-(3,5-Dihydroxyphenyl)tetradec-10-enyl]resorcinol	C26H36O4	[M+H]+	Oc1cc(O)cc(CCC/C=C\CCCCCCCCCc2cc(O)cc(O)c2)c1	PFIQXUYXVYYERO-ALCCZGGFSA-N
+nist2020	nist_1725267	Piperazine, 1-(1H-indol-2-ylcarbonyl)-4-methyl-	C14H17N3O	[M+H]+	CN1CCN(C(=O)c2cc3ccccc3[nH]2)CC1	YHFMZBHLJMFAID-UHFFFAOYSA-N
+nist2020	nist_1647375	Methanesulfonamide, N-(2,6-dimethylphenyl)-	C9H13NO2S	[M+H]+	Cc1cccc(C)c1NS(C)(=O)=O	CLMPXVSJALKBTQ-UHFFFAOYSA-N
+nist2020	nist_1225620	4H-1-Benzopyran-4-one, 2-(2-methoxyphenyl)-6-methyl-	C17H14O3	[M+H]+	COc1ccccc1-c1cc(=O)c2cc(C)ccc2o1	QEIHFNZSIRWEBX-UHFFFAOYSA-N
+nist2020	nist_3275941	5,7-Dihydroxy-3-(4-hydroxy-3-(3-methylbut-2-en-1-yl)phenyl)-8-(3-methylbut-2-en-1-yl)-4H-chromen-4-one	C25H26O5	[M+H]+	CC(C)=CCc1cc(-c2coc3c(CC=C(C)C)c(O)cc(O)c3c2=O)ccc1O	FXJPTJQFJYNFKC-UHFFFAOYSA-N
+nist2020	nist_3204008	4-(1,5-Dihydroxy-1,5-dimethylhexyl)-3-hydroxybenzoic acid	C15H22O5	[M+H-H2O]+	CC(C)(O)CCCC(C)(O)c1ccc(C(=O)O)cc1O	YCUWMGPYKGLQQF-UHFFFAOYSA-N
+nist2020	nist_1292930	Tectorigenin 7-O-.beta.-D-glucopyranoside	C22H22O11	[M+Na]+	COc1c(O[C@@H]2O[C@H](CO)[C@@H](O)[C@H](O)[C@H]2O)cc2occ(-c3ccc(O)cc3)c(=O)c2c1O	CNOURESJATUGPN-UDEBZQQRSA-N
+nist2020	nist_3324738	3-O-.beta.-Glucopyranosyl-(1->4)-.beta.-fucopyranosylcincholic acid	C42H66O14	[M+Na]+	CC1OC(OC2CCC3(C)C(CCC4(C)C3CC=C3C5CC(C)(C)CCC5(C(=O)O)CCC34C(=O)O)C2(C)C)C(O)C(O)C1OC1OC(CO)C(O)C(O)C1O	OPPNKBZIGKCERC-UHFFFAOYSA-N
+nist2020	nist_3242799	1,2-Benzenedicarboxylic acid, 4,4'-oxybis-	C16H10O9	[M+H]+	O=C(O)c1ccc(Oc2ccc(C(=O)O)c(C(=O)O)c2)cc1C(=O)O	AIVVXPSKEVWKMY-UHFFFAOYSA-N
+nist2020	nist_1225927	2-Propen-1-one, 3-(1,3-benzodioxol-5-yl)-1-(2-hydroxy-6-methylphenyl)-	C17H14O4	[M+H]+	Cc1cccc(O)c1C(=O)/C=C/c1ccc2c(c1)OCO2	KJQLOBFQDPWBHD-FNORWQNLSA-N
+nist2020	nist_3185879	Spiro[9H-cyclopenta[a]cyclopropa[f]cycloundecene-9,2'-oxiran]-4(1H)-one, 1a,4a,5,6,7,7a,8,10,11,11a-decahydro-4a,7,8-trihydroxy-1,1,3,6-tetramethyl-, (1aR,2E,2'R,4aR,6S,7S,7aR,8S,11aS)-	C20H30O5	[M+H]+	C/C1=C/[C@@H]2[C@H](CC[C@@]3(CO3)[C@@H](O)[C@H]3[C@@H](O)[C@@H](C)C[C@]3(O)C1=O)C2(C)C	VEFQDSXSELSHMX-HMZDNQSVSA-N
+nist2020	nist_1298605	Cyclopentaneacetic acid, 3-oxo-2-(2Z)-2-pentenyl-, (1R,2S)-	C12H18O3	[M+H]+	CC/C=C\C[C@@H]1C(=O)CC[C@@H]1CC(=O)O	ZNJFBWYDHIGLCU-QKMQQOOLSA-N
+nist2020	nist_3068330	s-Triazine, 2,4-bis(dimethylamino)-6-hydrazino-	C7H15N7	[M+H]+	CN(C)c1nc(NN)nc(N(C)C)n1	SACCVFPGLKNXLE-UHFFFAOYSA-N
+nist2020	nist_1608344	Pregn-5-en-20-one, 3,21-dihydroxy-, (3.beta.)-	C21H32O3	[M+H-2H2O]+	CC12CCC(O)CC1=CCC1C2CCC2(C)C(C(=O)CO)CCC12	MOIQRAOBRXUWGN-UHFFFAOYSA-N
+nist2020	nist_1404553	Ethyl aprofen	C23H31NO2	[M+H]+	CCCC(C(=O)OCCN(CC)CC)(c1ccccc1)c1ccccc1	SNTQPLDRUZOSDP-UHFFFAOYSA-N
+nist2020	nist_1902840	Piperazine, 1-[(4-methoxyphenyl)sulfonyl]-	C11H16N2O3S	[M+H]+	COc1ccc(S(=O)(=O)N2CCNCC2)cc1	RYCVCXVHXZLECQ-UHFFFAOYSA-N
+nist2020	nist_3348258	1H-Indole-3-carboxaldehyde, 1-methyl-2-phenyl-	C16H13NO	[M+H]+	Cn1c(-c2ccccc2)c(C=O)c2ccccc21	YJOWMBICANYBLV-UHFFFAOYSA-N
+nist2020	nist_3270791	Quinazoline, 4-chloro-2-(4-fluorophenyl)-	C14H8ClFN2	[M+H]+	Fc1ccc(-c2nc(Cl)c3ccccc3n2)cc1	CKOPPMRJZDRZBH-UHFFFAOYSA-N
+nist2020	nist_1331819	Androst-4-en-3-one, 17-hydroxy-, (17.beta.)-	C19H28O2	[M+H-2H2O]+	C[C@]12CC[C@H]3[C@@H](CCC4=CC(=O)CC[C@@]43C)[C@@H]1CC[C@@H]2O	MUMGGOZAMZWBJJ-DYKIIFRCSA-N
+nist2020	nist_1859124	Acetamide, N-(2-amino-4,5-dichlorophenyl)-	C8H8Cl2N2O	[M+H-H2O]+	CC(=O)Nc1cc(Cl)c(Cl)cc1N	RFAVPISRRMQCOS-UHFFFAOYSA-N
+nist2020	nist_3451022	2-Propen-1-one, 3-(4-hydroxyphenyl)-1-(4-methoxyphenyl)-	C16H14O3	[M+H-H2O]+	COc1ccc(C(=O)/C=C/c2ccc(O)cc2)cc1	WSEGRADBFAKNHQ-NYYWCZLTSA-N
+nist2020	nist_3244948	Pentanamide, N-(4,6-diphenyl-2-pyrimidinyl)-	C21H21N3O	[M+H]+	CCCCC(=O)Nc1nc(-c2ccccc2)cc(-c2ccccc2)n1	USYDGSXEKYPSDH-UHFFFAOYSA-N
+nist2020	nist_3227136	1H-Benzimidazole, 5-fluoro-1-methyl-	C8H7FN2	[M+H]+	Cn1cnc2cc(F)ccc21	CJIVGQYHPZZEDW-UHFFFAOYSA-N
+nist2020	nist_1321812	[N(Z)]-N-[3-(2-Methoxyethyl)-4,5-dimethyl-2(3H)-thiazolylidene]-2,2,3,3-tetramethylcyclopropanecarboxamide	C16H26N2O2S	[M+Na]+	COCCn1c(C)c(C)s/c1=N\C(=O)C1C(C)(C)C1(C)C	JKGIMVBQKSRTGX-VKAVYKQESA-N
+nist2020	nist_1157860	2H-1-Benzopyran-2-one, 7-(diethylamino)-3-(4-methoxyphenyl)-	C20H21NO3	[M+H]+	CCN(CC)c1ccc2cc(-c3ccc(OC)cc3)c(=O)oc2c1	LPGQJMGJXIZHRI-UHFFFAOYSA-N
+nist2020	nist_1805907	s-Triazine, 2-amino-4-morpholino-	C7H11N5O	[M+H]+	Nc1ncnc(N2CCOCC2)n1	QEJUSHCHCOTTPE-UHFFFAOYSA-N
+nist2020	nist_1511057	Cyclohexanecarboxylic acid, 4-[[[[[4-[2-[[(3-ethyl-2,5-dihydro-4-methyl-2-oxo-1H-pyrrol-1-yl)carbonyl]amino]ethyl]phenyl]sulfonyl]amino]carbonyl]amino]-	C24H32N4O7S	[M+H]+	CCC1=C(C)CN(C(=O)NCCc2ccc(S(=O)(=O)NC(=O)NC3CCC(C(=O)O)CC3)cc2)C1=O	MMZLACCSCMGVHL-UHFFFAOYSA-N
