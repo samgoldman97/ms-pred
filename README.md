@@ -3,7 +3,10 @@
 This repository contains implementations for a neural spectrum simulator model: 
 
 🧣 SCARF 🧣: Subformula Classification for Autoregressively Reconstructing Fragmentations  
+<!--[TODO]()-->
+
 Authors: Sam Goldman, John Bradshaw, Jiayi Xin, Connor W. Coley
+
 
 
 ![Model graphic](github_teaser.png)
