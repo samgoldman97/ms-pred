@@ -36,7 +36,7 @@ python3 setup.py develop
 
 ## Quickstart <a name="quickstart"></a>
 
-To make predictions, we have released and made public a version of SCARF. This can be downloaded and used to predict a set of 100 sample molecules contained in the NIST library, as included at `data/spec_datasets/sample_labels.tsv` (test set):
+To make predictions, we have released and made public a version of SCARF trained upon the CANOPUS dataset. This can be downloaded and used to predict a set of 100 sample molecules contained in the NIST library, as included at `data/spec_datasets/sample_labels.tsv` (test set):
 
  
 ```
@@ -44,7 +44,8 @@ To make predictions, we have released and made public a version of SCARF. This c
 . quickstart/run_model.py
 ```
 
-Model outputs will be contained in `quickstart/out/`.
+Model outputs will be contained in `quickstart/out/`. **We note that this model is less performant than the model trained on the commercial NIST20 Library. Download links to models trained on NIST20 models are available upon request to any users with a NIST license.**
+
 
 ## Data <a name="data"></a>
 

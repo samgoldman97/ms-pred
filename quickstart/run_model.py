@@ -1,7 +1,8 @@
-#thread_model="results/scarf_nist20/split_1/version_0/best.ckpt"
-#weave_model="results/scarf_inten_nist20/split_1/version_0/best.ckpt"
-thread_model="quickstart/models/nist_thread_model.ckpt"
-weave_model="quickstart/models/nist_weave_model.ckpt"
+#thread_model="quickstart/models/nist_thread_model.ckpt"
+#weave_model="quickstart/models/nist_weave_model.ckpt"
+
+thread_model="quickstart/models/canopus_thread_model.ckpt"
+weave_model="quickstart/models/canopus_weave_model.ckpt"
 
 labels="data/spec_datasets/sample_labels.tsv"
 python src/ms_pred/scarf_pred/predict_smis.py \
