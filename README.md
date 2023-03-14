@@ -2,10 +2,10 @@
 
 This repository contains implementations for a neural spectrum simulator model: 
 
-🧣 SCARF 🧣: Subformula Classification for Autoregressively Reconstructing Fragmentations  
-<!--[TODO]()-->
+🧣 SCARF 🧣: Subformula Classification for Autoregressively Reconstructing Fragmentations
 
-Authors: Sam Goldman, John Bradshaw, Jiayi Xin, Connor W. Coley
+**Paper:** [Prefix-tree Decoding for Predicting Mass Spectra from Molecules](https://arxiv.org/abs/2303.06470)  
+**Authors:** Sam Goldman, John Bradshaw, Jiayi Xin, Connor W. Coley
 
 
 
@@ -188,7 +188,23 @@ Additional analyses used for figure generation were conducted in `notebooks/`.
 We ask any user of this repository to cite the following work:
 
 ```
-TODO
+@misc{https://doi.org/10.48550/arxiv.2303.06470,
+  doi = {10.48550/ARXIV.2303.06470},
+  
+  url = {https://arxiv.org/abs/2303.06470},
+  
+  author = {Goldman, Samuel and Bradshaw, John and Xin, Jiayi and Coley, Connor W.},
+  
+  keywords = {Quantitative Methods (q-bio.QM), Machine Learning (cs.LG), FOS: Biological sciences, FOS: Biological sciences, FOS: Computer and information sciences, FOS: Computer and information sciences},
+  
+  title = {Prefix-tree Decoding for Predicting Mass Spectra from Molecules},
+  
+  publisher = {arXiv},
+  
+  year = {2023},
+  
+  copyright = {Creative Commons Attribution Share Alike 4.0 International}
+}
 ```
 
 
