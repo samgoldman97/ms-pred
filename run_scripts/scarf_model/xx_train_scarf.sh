@@ -1,0 +1,25 @@
+CUDA_VISIBLE_DEVICES=0 python src/ms_pred/scarf_pred/train_gen.py  \
+--seed 5 \
+--num-workers 0 \
+--batch-size 32 \
+--max-epochs 200 \
+--dataset-name canopus_train_public \
+--dataset-labels labels.tsv \
+--split-name split_22.tsv \
+--learning-rate 0.000389 \
+--lr-decay-rate 0.778048 \
+--hidden-size 128  \
+--gnn-layers 4 \
+--mlp-layers 3 \
+--set-layers 0 \
+--dropout 0.1 \
+--gpu \
+--save-dir results/scarf_gen_learnt \
+--weight-decay 1e-07 \
+--loss bce  \
+--mpnn-type GINE \
+--pe-embed-k 10 \
+--pool-op avg \
+--loss-fn bce \
+--use-reverse \
+--embedder learnt

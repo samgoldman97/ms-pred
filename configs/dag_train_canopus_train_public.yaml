@@ -1,0 +1,54 @@
+launcher_args: {experiment_name: dag_canopus_train_public, #dag_gen_,
+  script_name: "src/ms_pred/dag_pred/train_gen.py",
+  slurm_script: launcher_scripts/generic_slurm.sh, 
+  launch_method: local,
+  visible_devices: [0]
+}
+universal_args:
+  _slurm_args:
+  - {_num_gpu: 1, cpus-per-task: 7, job-name: forward_train, mem-per-cpu: 8G, #nodelist: 'node[1236]',
+    time: '1-18:00:00'}
+  debug: [false]
+  gpu: [true]
+
+  seed: [1]
+  num-workers: [8] #[20]
+  batch-size: [32]
+  max-epochs: [200]
+
+  dataset-name: [canopus_train_public]
+  split-name: [split_1.tsv] #[split_1.tsv, split_2.tsv, split_3.tsv]
+
+  learning-rate: [0.000996]
+  lr-decay-rate: [0.7214]
+
+  dropout: [0.2]
+  mpnn-type: [GGNN]
+  pe-embed-k: [14]
+  pool-op: [avg]
+  set-layers: [0]
+  hidden-size: [512]
+  weight-decay: [0.0]
+  layers: [6]
+
+  # Trying to run with FP encoding
+  root-encode: [gnn]
+  inject-early: [false]
+  encode-forms: [true]
+  embed-adduct: [true]
+  add-hs: [true] 
+
+  # Define embedder
+  #embedder: [abs-sines]
+  #info-join
+
+  # Define magma folder
+  #formula-folder: [magma_subform_50]
+
+iterative_args:
+  -  split-name: [split_1.tsv]
+     save-dir: [split_1]
+     #-  split-name: [split_2.tsv]
+     #   save-dir: [split_2]
+     #-  split-name: [split_3.tsv]
+     #   save-dir: [split_3]

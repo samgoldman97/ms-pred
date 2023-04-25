@@ -1,0 +1,1 @@
+python launcher_scripts/run_from_config.py configs/dag_inten_train.yaml

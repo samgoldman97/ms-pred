@@ -1,0 +1,53 @@
+launcher_args: {experiment_name: debug_dag_inten_canopus_train_public,
+  script_name: "src/ms_pred/dag_pred/train_inten.py",
+  slurm_script: launcher_scripts/generic_slurm.sh, 
+  launch_method: local,
+  visible_devices: [1]
+}
+universal_args:
+  _slurm_args:
+  - {_num_gpu: 1, cpus-per-task: 7, job-name: forward_train, mem-per-cpu: 8G, #nodelist: 'node[1236]',
+    time: '1-18:00:00'}
+    #debug: [true]
+    #debug-overfit: [true]
+  debug: [true]
+  debug-overfit: [false]
+  gpu: [true]
+
+  seed: [1]
+  num-workers: [20]
+  batch-size: [32]
+  max-epochs: [200]
+
+  dataset-name: [canopus_train_public]
+  split-name: [split_1.tsv] #[split_1.tsv, split_2.tsv, split_3.tsv]
+
+  learning-rate: [0.000736]
+  lr-decay-rate: [0.825]
+
+  dropout: [0.1]
+  mpnn-type: [GGNN]
+  pe-embed-k: [0]
+  pool-op: [avg]
+  hidden-size: [256] #128
+  weight-decay: [1e-7]
+  set-layers: [0]
+  frag-set-layers: [3] #[1]
+  mlp-layers: [4]
+  gnn-layers: [3]
+  loss-fn: [cosine]
+  root-encode: [gnn]
+  inject-early: [false]
+
+  binned-targs: [true] 
+  embed-adduct: [true]
+
+  grad-accumulate: [1]
+
+iterative_args:
+  -  split-name: [split_1.tsv]
+     save-dir: [split_1]
+     batch-size: [32]
+     grad-accumulate: [1]
+     magma-dag-folder: [results/dag_canopus_train_public/split_1/preds_train_100_inten/]
+     encode-forms: [true]

@@ -1,0 +1,29 @@
+name: ms-gen
+channels:
+- pytorch
+- dglteam
+- conda-forge
+- pyg
+dependencies:
+- python=3.8.*
+- matplotlib=3.4.*
+- rdkit=2021.03.*
+- conda-forge::python-graphviz=0.17
+- conda-forge::pygraphviz=1.7
+- pytorch-lightning=1.4.*
+- pip=21.2.*
+- ipykernel=6.0.*
+- pytorch::pytorch=1.9.* 
+- einops
+- nb_conda_kernels=2.3.*
+- seaborn=0.11.*
+- ray-tune
+- pytorch-scatter
+# CPU:
+- dgl
+# GPU:
+#- cudatoolkit=11.1
+#- dgl-cuda11.1 
+
+ # Removed:
+  #- pytorch::torchvision-cpu # Causing erorrs.. 
