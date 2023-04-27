@@ -2,8 +2,8 @@
 
 This repository contains implementations for the following spectrum simulator models predicting molecular tandem mass spectra from molecules: 
 
-<!-- TODO: Add link to ICEBERG paper-->
-- ️️️️ ❄️ ICEBER️️G ❄️: [Inferring CID by Estimating Breakage Events and Reconstructing their Graphs]()
+
+- ️️️️ ❄️ ICEBER️️G ❄️: [Inferring CID by Estimating Breakage Events and Reconstructing their Graphs](http://arxiv.org/abs/2304.13136)
 - 🧣 SCARF 🧣: [Subformula Classification for Autoregressively Reconstructing Fragmentations](https://arxiv.org/abs/2303.06470),
 
 ICEBERG predicts spectra at the level of molecular fragments, whereas SCARF predicts spectra at the level of chemical formula. Additional sensible baselines using neural networks to predict "binned" spectra are also included, along with CFM-ID instructions.
@@ -231,43 +231,27 @@ Additional analyses used for figure generation were conducted in `notebooks/`.
 ## Citation
 
 We ask any user of this repository to cite the following works based upon the portion of the repository used:
-<!-- TODO: Add citation for  ICEBERG -->
+
 ```
 @article{https://doi.org/10.48550/arxiv.2303.06470,
   doi = {10.48550/ARXIV.2303.06470},
-  
   url = {https://arxiv.org/abs/2303.06470},
-  
   author = {Goldman, Samuel and Bradshaw, John and Xin, Jiayi and Coley, Connor W.},
-  
   keywords = {Quantitative Methods (q-bio.QM), Machine Learning (cs.LG), FOS: Biological sciences, FOS: Biological sciences, FOS: Computer and information sciences, FOS: Computer and information sciences},
-  
   title = {Prefix-tree Decoding for Predicting Mass Spectra from Molecules},
-  
   publisher = {arXiv},
-  
   year = {2023},
-  
   copyright = {Creative Commons Attribution Share Alike 4.0 International}
 }
 
-@article{goldman2023iceberg,
-  doi = {TODO}
-  url = {TODO},
-  
-  author = {Goldman, Samuel and Li, Janet and Coley, Connor W.},
-  
-  keywords = {},
-  
-  title = {},
-  
-  publisher = {arXiv},
-  
-  year = {2023},
-  
-  copyright = {Creative Commons Attribution Share Alike 4.0 International}
-} 
-
+@misc{goldman2023generating,
+      title={Generating Molecular Fragmentation Graphs with Autoregressive Neural Networks}, 
+      author={Samuel Goldman and Janet Li and Connor W. Coley},
+      year={2023},
+      eprint={2304.13136},
+      archivePrefix={arXiv},
+      primaryClass={q-bio.QM}
+}
 
 ```
 
