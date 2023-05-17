@@ -6,6 +6,7 @@ channels:
 - pyg
 dependencies:
 - python=3.8.*
+- cython
 - matplotlib=3.4.*
 - rdkit=2021.03.*
 - conda-forge::python-graphviz=0.17

@@ -47,7 +47,9 @@ def relabel_tree(pred_form_file: Path, true_form_file: Path,
     if true_form['output_tbl'] is None:
         return
 
-    pred_tbl, true_tbl = pred_form['output_tbl'], true_form['output_tbl']
+    pred_tbl, true_tbl = pred_form.get('output_tbl', None), true_form['output_tbl']
+    if pred_tbl is None:
+        pred_tbl = {"formula_mass_no_adduct": []}
 
     # Use rel inten
     true_form_to_inten = dict(zip(true_tbl['formula'], true_tbl['rel_inten']))

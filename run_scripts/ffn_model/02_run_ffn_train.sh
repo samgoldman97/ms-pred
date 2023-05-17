@@ -1,1 +1,1 @@
-python launcher_scripts/run_from_config.py configs/ffn_baseline.yaml
+python launcher_scripts/run_from_config.py configs/neims_ffn/ffn_baseline.yaml

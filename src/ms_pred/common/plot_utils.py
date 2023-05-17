@@ -13,14 +13,36 @@ from rdkit.Chem import Draw
 
 legend_params = dict(frameon=False, facecolor="none", fancybox=False)
 method_colors = {
-    # get dark gray color 
     "Random":  "#808080",
     "CFM-ID": "#C2AF53",
+    "3DMolMS": "#A56F8F",
+    "FixedVocab": "#41644A",
     "NEIMS (FFN)": "#B94346",
     "NEIMS (GNN)": "#DB8F76",
     "SCARF": "#479394",
     "ICEBERG": "#3D4A9F",
 }
+
+# List all marker symbols in list in commnet
+# https://matplotlib.org/3.1.1/api/markers_api.html
+# markers: [".", ",", "o", "v", "^", "<", ">", "1", "2", "3", "4", "8", "s",]
+
+method_markers = {
+    'Random': '<',
+    "3DMolMS": ".",
+    "FixedVocab": "s",
+    'NEIMS (FFN)': 'x',
+    'NEIMS (GNN)': 'v',
+    'SCARF': 'o',
+    'ICEBERG': '^'
+}
+
+plt_dataset_names = {
+    "canopus_train_public": "NPLIB1", 
+    "nist20": "NIST20"
+}
+
+
 
 def export_mol(
     mol,
@@ -41,7 +63,8 @@ def export_mol(
     opts.bondLineWidth = 1
     drawer.DrawMolecule(mol)
     drawer.FinishDrawing()
-    cairosvg.svg2pdf(bytestring=drawer.GetDrawingText().encode(), write_to=str(name))
+    cairosvg.svg2pdf(
+        bytestring=drawer.GetDrawingText().encode(), write_to=str(name))
 
 
 def export_mol_highlight(
@@ -71,7 +94,8 @@ def export_mol_highlight(
         highlightAtomColors={i: color for i in hatoms},
     )
     d.FinishDrawing()
-    cairosvg.svg2pdf(bytestring=d.GetDrawingText().encode(), write_to=str(name))
+    cairosvg.svg2pdf(bytestring=d.GetDrawingText().encode(),
+                     write_to=str(name))
 
 
 def set_style():

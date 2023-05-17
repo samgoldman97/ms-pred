@@ -6,3 +6,4 @@ ray[air]
 CairoSVG
 git+https://github.com/ray-project/ray_lightning#ray_lightning
 ipdb
+omegaconf
