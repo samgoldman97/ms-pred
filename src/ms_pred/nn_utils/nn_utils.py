@@ -310,6 +310,7 @@ class MLPBlocks(nn.Module):
         num_layers: int,
         output_size: int = None,
         use_residuals: bool = False,
+        use_batchnorm: bool = False,
     ):
         super().__init__()
         self.activation = nn.ReLU()
@@ -324,23 +325,50 @@ class MLPBlocks(nn.Module):
             self.output_layer = nn.Linear(hidden_size, self.output_size)
 
         self.use_residuals = use_residuals
+        self.use_batchnorm = use_batchnorm
+        if self.use_batchnorm: 
+            self.bn_input = nn.BatchNorm1d(hidden_size)
+            bn = nn.BatchNorm1d(hidden_size)
+            self.bn_mids = get_clones(bn, num_layers - 1)
+
+
+    def safe_apply_bn(self, x, bn):
+        """ transpose and untranspose after linear for 3 dim items to us
+        batchnorm """
+        temp_shape = x.shape
+        if len(x.shape) == 2:
+            return bn(x)
+        elif len(x.shape) == 3:
+            return bn(x.transpose(-1,-2)).transpose(-1,-2)
+        else:
+            raise NotImplementedError()
+
 
     def forward(self, x):
         output = x
         output = self.input_layer(x)
-        output = self.dropout_layer(output)
         output = self.activation(output)
+        output = self.dropout_layer(output)
+
+        if self.use_batchnorm:
+            output = self.safe_apply_bn(output, self.bn_input)
+
         old_op = output
         for layer_index, layer in enumerate(self.layers):
             output = layer(output)
-            output = self.dropout_layer(output)
             output = self.activation(output)
+            output = self.dropout_layer(output)
+
+            if self.use_batchnorm:
+                output = self.safe_apply_bn(output, self.bn_mids[layer_index])
+
             if self.use_residuals:
                 output += old_op
                 old_op = output
 
         if self.output_layer is not None:
             output = self.output_layer(output)
+
         return output
 
 
@@ -790,3 +818,13 @@ def random_walk_pe(g, k, eweight_name=None):
         PE.append(dgl_F.astype(dgl_F.tensor(RW_power.diagonal()), torch.float32))
     PE = dgl_F.stack(PE, dim=-1)
     return PE
+
+
+def dict_to_device(data_dict, device):
+    sent_dict = {}
+    for key, value in data_dict.items():
+        if torch.is_tensor(value):
+            sent_dict[key] = value.to(device)
+        else:
+            sent_dict[key] = value
+    return sent_dict

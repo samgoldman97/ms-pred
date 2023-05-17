@@ -3,10 +3,16 @@
 This repository contains implementations for the following spectrum simulator models predicting molecular tandem mass spectra from molecules: 
 
 
-- ️️️️ ❄️ ICEBER️️G ❄️: [Inferring CID by Estimating Breakage Events and Reconstructing their Graphs](http://arxiv.org/abs/2304.13136)
+- ️️️️ ❄️ ICEBER️️G ❄️: [Inferring CID by Estimating Breakage Events and Reconstructing their Graphs](http://arxiv.org/abs/2304.13136) (now available to run through [GNPS2](https://gnps2.org/))
 - 🧣 SCARF 🧣: [Subformula Classification for Autoregressively Reconstructing Fragmentations](https://arxiv.org/abs/2303.06470),
 
-ICEBERG predicts spectra at the level of molecular fragments, whereas SCARF predicts spectra at the level of chemical formula. Additional sensible baselines using neural networks to predict "binned" spectra are also included, along with CFM-ID instructions.
+ICEBERG predicts spectra at the level of molecular fragments, whereas SCARF predicts spectra at the level of chemical formula. In order to fairly compare various spectra models, we implement a number of baselines and alternative models using equivalent settings across models (i.e., same covariates, hyeprparmaeter sweeps for each, etc.):
+ 
+1. *NEIMS* using both FFN and GNN encoders from [Rapid prediction of electron–ionization mass spectrometry using neural networks](https://pubs.acs.org/doi/full/10.1021/acscentsci.9b00085)    
+2. *3DMolMS* from [3DMolMS: Prediction of Tandem Mass Spectra from Three Dimensional Molecular Conformations](https://www.biorxiv.org/content/10.1101/2023.03.15.532823v1)  
+3. *GRAFF-MS* from [Efficiently predicting high resolution mass spectra with graph neural networks](https://arxiv.org/pdf/2301.11419.pdf)
+4. *CFM-ID* from [CFM-ID 4.0: More Accurate ESI-MS/MS Spectral Prediction and Compound Identification](https://pubs.acs.org/doi/10.1021/acs.analchem.1c01465) (not retrained; instructions for running are provided)
+
 
 Contributors: Sam Goldman, John Bradshaw, Janet Li, Jiayi Xin, Connor W. Coley
 
@@ -37,7 +43,7 @@ python3 setup.py develop
 
 ## Quickstart <a name="quickstart"></a>
 
-To make predictions, we have released and made public a version of SCARF and ICEBERG both trained upon the CANOPUS dataset (renamed NPLIB1 in the ICEBERG manuscript). This can be downloaded and used to predict a set of 100 sample molecules contained in the NIST library, as included at `data/spec_datasets/sample_labels.tsv` (test set):
+To make predictions, we have released and made public a version of SCARF and ICEBERG both trained upon the CANOPUS dataset (renamed NPLIB1 for clarity in corresponding manuscripts). This can be downloaded and used to predict a set of 100 sample molecules contained in the NIST library, as included at `data/spec_datasets/sample_labels.tsv` (test set):
 
  
 ```
@@ -185,11 +191,36 @@ Experiment pipeline utilized:
 ### GNN Spec 
 
 Experiment pipeline:   
-1. *Hyperopt model*: `run_scripts/gnn_model/01_hyperopt_ffn.sh`
-2. *Train models*: `run_scripts/gnn_model/02_run_ffn_train.sh`
-3. *Predict and eval*: `run_scripts/gnn_model/03_predict_ffn.py`
+1. *Hyperopt model*: `run_scripts/gnn_model/01_hyperopt_gnn.sh`
+2. *Train models*: `run_scripts/gnn_model/02_run_gnn_train.sh`
+3. *Predict and eval*: `run_scripts/gnn_model/03_predict_gnn.py`
 4. *Retreival experiments*: `run_scripts/gnn_model/04_run_retrieval.py`
-5. *Time ffn*: `run_scripts/gnn_model/05_time_gnn.py`
+5. *Time gnn*: `run_scripts/gnn_model/05_time_gnn.py`
+
+
+### 3DMolMS
+
+We include a baseline implementation of 3DMolMS in which we utilize the same architecture as these authors. We note we do not include collision energy or machines as covariates for consistency with our other implemented models and data processing pipelines, which may affect performance. 
+
+Experiment pipeline:   
+1. *Hyperopt model*: `run_scripts/molnetms/01_hyperopt_ffn.sh`
+2. *Train models*: `run_scripts/molnetms/02_run_ffn_train.sh`
+3. *Predict and eval*: `run_scripts/molnetms/03_predict_ffn.py`
+4. *Retreival experiments*: `run_scripts/molnetms/04_run_retrieval.py`
+5. *Time ffn*: `run_scripts/molnetms/05_time_gnn.py`
+
+
+### GRAFF-MS 
+
+We include a baseline variation of GRAFF-MS in which we utilize a fixed formula vocabulary. We note we do not include collision energy or machines as covariates for consistency with our other implemented models and data processing pipelines, which may affect performance. In addition, because our data does not contain isotopic or varied adduct formula labels, we replace the marginal peak loss with a cosine similarity loss. Pleases see the [original paper](https://arxiv.org/abs/2301.11419) to better understand the release details.
+
+Experiment pipeline:   
+1. *Hyperopt model*: `run_scripts/graff_ms/01_hyperopt_ffn.sh`
+2. *Train models*: `run_scripts/graff_ms/02_run_ffn_train.sh`
+3. *Predict and eval*: `run_scripts/graff_ms/03_predict_ffn.py`
+4. *Retreival experiments*: `run_scripts/graff_ms/04_run_retrieval.py`
+5. *Time ffn*: `run_scripts/graff_ms/05_time_gnn.py`
+
 
 ### CFM-ID
 
@@ -235,12 +266,19 @@ We ask any user of this repository to cite the following works based upon the po
 ```
 @article{https://doi.org/10.48550/arxiv.2303.06470,
   doi = {10.48550/ARXIV.2303.06470},
+  
   url = {https://arxiv.org/abs/2303.06470},
+  
   author = {Goldman, Samuel and Bradshaw, John and Xin, Jiayi and Coley, Connor W.},
+  
   keywords = {Quantitative Methods (q-bio.QM), Machine Learning (cs.LG), FOS: Biological sciences, FOS: Biological sciences, FOS: Computer and information sciences, FOS: Computer and information sciences},
+  
   title = {Prefix-tree Decoding for Predicting Mass Spectra from Molecules},
+  
   publisher = {arXiv},
+  
   year = {2023},
+  
   copyright = {Creative Commons Attribution Share Alike 4.0 International}
 }
 
@@ -255,10 +293,10 @@ We ask any user of this repository to cite the following works based upon the po
 
 ```
 
-In addition, we utilize both the NEIMS approach for our binned FFN and GNN
-baselines, MAGMa for constructing formula labels, and CFM-ID as a baseline. We
-encourage the following additional citations:
+In addition, we utilize both the NEIMS approach for our binned FFN and GNN encoders, 3DMolMS, GRAFF-MS, MAGMa for constructing formula labels, and CFM-ID as a baseline. We encourage considering the following additional citations:
 
-1.   Wei, Jennifer N., et al. "Rapid prediction of electron–ionization mass spectrometry using neural networks." ACS central science 5.4 (2019): 700-708.
+1. Wei, Jennifer N., et al. "Rapid prediction of electron–ionization mass spectrometry using neural networks." ACS central science 5.4 (2019): 700-708.
 2. Ridder, Lars, Justin JJ van der Hooft, and Stefan Verhoeven. "Automatic compound annotation from mass spectrometry data using MAGMa." Mass Spectrometry 3.Special_Issue_2 (2014): S0033-S0033.
 3. Wang, Fei, et al. "CFM-ID 4.0: more accurate ESI-MS/MS spectral prediction and compound identification." Analytical chemistry 93.34 (2021): 11692-11700.
+4. Hong, Yuhui, et al. "3DMolMS: Prediction of Tandem Mass Spectra from Three Dimensional Molecular Conformations." bioRxiv (2023): 2023-03.
+5. Murphy, Michael, et al. "Efficiently predicting high resolution mass spectra with graph neural networks." arXiv preprint arXiv:2301.11419 (2023).

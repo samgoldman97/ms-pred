@@ -1,0 +1,48 @@
+# Predict dags
+launcher_args: {experiment_name: dag_gen, #dag_gen_,
+  script_name: "src/ms_pred/dag_pred/predict_gen.py",
+  slurm_script: launcher_scripts/generic_slurm.sh, 
+  launch_method: local, #local_parallel,
+  visible_devices: [2] #,2,3] #,1,2]
+}
+universal_args:
+  _slurm_args:
+  - {_num_gpu: 1, cpus-per-task: 7, job-name: forward_train, mem-per-cpu: 8G, #nodelist: 'node[1236]',
+    time: '1-18:00:00'}
+  debug: [false]
+  gpu: [False]
+
+  batch-size: [32]
+  dataset-name: [canopus_train_public]
+
+  num-workers: [16]
+  threshold: [0.1]
+  max-nodes: [100]
+
+iterative_args:
+  -  split-name: [split_1.tsv]
+     checkpoint: [results/dag_gen/split_1/version_0/best.ckpt]
+     save-dir: [split_1/preds_train_0005]
+     threshold: [0.005]
+     max-nodes: [100]
+     #-  split-name: [split_2.tsv]
+     #   save-dir: [split_2/preds_train_01]
+     #   checkpoint: [results/dag_gen/split_2/version_0/best.ckpt]
+     #   threshold: [0.1]
+     #-  split-name: [split_3.tsv]
+     #   save-dir: [split_3/preds_train_01]
+     #   checkpoint: [results/dag_gen/split_3/version_0/best.ckpt]
+     #   threshold: [0.1]
+
+  #-  split-name: [split_1.tsv]
+  #   checkpoint: [results/dag_gen/split_1/version_0/best.ckpt]
+  #   save-dir: [split_1/preds_train_02]
+  #   threshold: [0.2]
+  #-  split-name: [split_2.tsv]
+  #   save-dir: [split_2/preds_train_02]
+  #   checkpoint: [results/dag_gen/split_2/version_0/best.ckpt]
+  #   threshold: [0.2]
+  #-  split-name: [split_3.tsv]
+  #   save-dir: [split_3/preds_train_02]
+  #   checkpoint: [results/dag_gen/split_3/version_0/best.ckpt]
+  #   threshold: [0.2]

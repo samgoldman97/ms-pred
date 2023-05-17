@@ -1,0 +1,40 @@
+# Predict dag/s
+launcher_args: {experiment_name: scarf_nist_hplus_binary, #dag_gen_,
+  script_name: "src/ms_pred/scarf_pred/predict_gen.py",
+  slurm_script: launcher_scripts/generic_slurm.sh, 
+  launch_method: local, #local_parallel,
+  visible_devices: [2] #,2,3] #,1,2]
+}
+universal_args:
+  _slurm_args:
+  - {_num_gpu: 1, cpus-per-task: 7, job-name: forward_train, mem-per-cpu: 8G, #nodelist: 'node[1236]',
+    time: '1-18:00:00'}
+  debug: [false]
+  gpu: [True]
+
+  batch-size: [32]
+  dataset-name: [nist20_hplus]
+
+  num-workers: [0]
+  threshold: [0.0]
+  max-nodes: [100]
+
+iterative_args:
+
+  #-  split-name: [split_1.tsv]
+  #   checkpoint: [results/scarf_nist/split_1/version_0/best.ckpt]
+  #   save-dir: [split_1/preds_train_300]
+  #   threshold: [0.000]
+  #   max-nodes: [300]
+
+  -  split-name: [split_1.tsv]
+     checkpoint: [results/scarf_nist_hplus_binary/split_1/version_0/best.ckpt]
+     save-dir: [split_1/preds_train_300]
+     threshold: [0.000]
+     max-nodes: [300]
+
+  -  split-name: [split_1.tsv]
+     checkpoint: [results/scarf_nist_hplus_binary/split_1/version_0/best.ckpt]
+     save-dir: [split_1/preds_train_100]
+     threshold: [0.000]
+     max-nodes: [100]

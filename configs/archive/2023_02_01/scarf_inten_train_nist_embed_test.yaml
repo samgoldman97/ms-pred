@@ -1,0 +1,83 @@
+launcher_args: {experiment_name: scarf_inten_nist_hplus_embed_test, 
+
+  script_name: "src/ms_pred/scarf_pred/train_inten.py",
+  slurm_script: launcher_scripts/generic_slurm.sh, 
+  launch_method: local,
+  visible_devices: [2]
+}
+universal_args:
+  _slurm_args:
+  - {_num_gpu: 1, cpus-per-task: 7, job-name: forward_train, mem-per-cpu: 8G, #nodelist: 'node[1236]',
+    time: '1-18:00:00'}
+  debug: [false]
+  gpu: [true]
+
+  seed: [1]
+  num-workers: [10] #[20]
+  batch-size: [32]
+  max-epochs: [200]
+
+  dataset-name: [nist20_hplus]
+  split-name: [split_1.tsv] #[split_1.tsv, split_2.tsv, split_3.tsv]
+
+  learning-rate: [0.0005]
+  lr-decay-rate: [0.85]
+
+  dropout: [0.1]
+  mpnn-type: [GGNN]
+  pe-embed-k: [5]
+  pool-op: [attn]
+  hidden-size: [256] #128
+  weight-decay: [0]
+  set-layers: [3]
+  form-set-layers: [1]
+  mlp-layers: [1]
+  gnn-layers: [2]
+  residual-connections: [true]
+  embedder: [fourier]
+  use-logits: [false] 
+  binned-targs: [true] 
+  no-mol: [false]
+  info-join: [concat]
+  loss-fn: [cosine]
+
+iterative_args:
+  #-  split-name: [split_1.tsv]
+  #   save-dir: [fourier]
+  #   embedder: [fourier]
+  #   formula-folder: [results/scarf_nist_hplus_binary/split_1/preds_train_100_inten/]
+
+  #-  split-name: [split_1.tsv]
+  #   save-dir: [binary]
+  #   embedder: [binary]
+  #   formula-folder: [results/scarf_nist_hplus_binary/split_1/preds_train_100_inten/]
+
+  #-  split-name: [split_1.tsv]
+  #   save-dir: [rbf]
+  #   embedder: [rbf]
+  #   formula-folder: [results/scarf_nist_hplus_binary/split_1/preds_train_100_inten/]
+  #   
+  #-  split-name: [split_1.tsv]
+  #   save-dir: [one-hot]
+  #   embedder: [one-hot]
+  #   formula-folder: [results/scarf_nist_hplus_binary/split_1/preds_train_100_inten/]
+
+  #-  split-name: [split_1.tsv]
+  #   save-dir: [learnt]
+  #   embedder: [learnt]
+  #   formula-folder: [results/scarf_nist_hplus_binary/split_1/preds_train_100_inten/]
+ 
+  #-  split-name: [split_1.tsv]
+  #   save-dir: [fourier-sines]
+  #   embedder: [fourier-sines]
+  #   formula-folder: [results/scarf_nist_hplus_binary/split_1/preds_train_100_inten/]
+ 
+  #-  split-name: [split_1.tsv]
+  #   save-dir: [abs-sines]
+  #   embedder: [abs-sines]
+  #   formula-folder: [results/scarf_nist_hplus_binary/split_1/preds_train_100_inten/]
+
+  -  split-name: [split_1.tsv]
+     save-dir: [float]
+     embedder: [float]
+     formula-folder: [results/scarf_nist_hplus_binary/split_1/preds_train_100_inten/]

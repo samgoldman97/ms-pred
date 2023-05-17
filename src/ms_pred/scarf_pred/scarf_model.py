@@ -635,7 +635,7 @@ class ScarfNet(pl.LightningModule):
                 common.get_morgan_fp(x)[None, :]
             )
         else:
-            raise ValueError()
+            raise NotImplementedError()
 
         mol_graph = root_encode_fn(mol)
         base_form = common.form_from_smi(smi)

@@ -1,0 +1,57 @@
+launcher_args: {experiment_name: scarf_inten_magma, ##dag_gen_,
+  script_name: "src/ms_pred/scarf_pred/train_inten.py",
+  slurm_script: launcher_scripts/generic_slurm.sh, 
+  launch_method: local_parallel,
+  visible_devices: [1]
+}
+universal_args:
+  _slurm_args:
+  - {_num_gpu: 1, cpus-per-task: 7, job-name: forward_train, mem-per-cpu: 8G, #nodelist: 'node[1236]',
+    time: '1-18:00:00'}
+  debug: [false]
+  gpu: [true]
+
+  seed: [1]
+  num-workers: [10] #[20]
+  batch-size: [32]
+  max-epochs: [200]
+
+  dataset-name: [canopus_train_public]
+  split-name: [split_1.tsv] #[split_1.tsv, split_2.tsv, split_3.tsv]
+
+  learning-rate: [0.0005]
+  lr-decay-rate: [0.85]
+
+  dropout: [0.1]
+  mpnn-type: [GGNN]
+  pe-embed-k: [5]
+  pool-op: [attn]
+  hidden-size: [128]
+  weight-decay: [0]
+  set-layers: [3]
+  mlp-layers: [1]
+  gnn-layers: [2]
+
+  loss-fn: [cosine] #hurdle_norm]
+  #formula-folder: [subform_50]
+  formula-folder: [rdbe_50]
+  residual-connections: [true]
+  embedder: [fourier]
+
+iterative_args:
+  #-  split-name: [split_1.tsv]
+  #   save-dir: [split_1]
+  #   loss-fn: [cosine] #hurdle_norm]
+  #   formula-folder: [results/scarf_magma/split_1/preds_train_inten/]
+
+  #-  split-name: [split_1.tsv]
+  #   save-dir: [split_1_hurdle]
+  #   loss-fn: [hurdle_norm]
+  #   formula-folder: [results/scarf_magma/split_1/preds_train_inten/]
+
+  -  split-name: [split_1.tsv]
+     save-dir: [split_1_hurdle_09]
+     loss-fn: [hurdle_norm]
+     formula-folder: [results/scarf_magma/split_1/preds_train_inten/]
+     bce-weight: [0.9]
+

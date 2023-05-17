@@ -51,7 +51,7 @@ def run_hyperopt(
         param_space_function: Function to suggest new params
         initial_points: List of initial params to try
     """
-    ray.init()
+    ray.init("local")
 
     # Fix base_args based upon tune args
     kwargs["gpu"] = kwargs.get("gpus_per_trial", 0) > 0

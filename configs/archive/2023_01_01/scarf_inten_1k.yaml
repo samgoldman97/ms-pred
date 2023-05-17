@@ -1,0 +1,47 @@
+# Train the model s.t. it has isobaric mass consideratisons
+launcher_args: {experiment_name: scarf_inten_1k_no_scatter, ##dag_gen_,
+#scarf_inten_isobar_cos, ##dag_gen_,
+  script_name: "src/ms_pred/scarf_pred/train_inten.py",
+  slurm_script: launcher_scripts/generic_slurm.sh, 
+  launch_method: local,
+  visible_devices: [1]
+}
+universal_args:
+  _slurm_args:
+  - {_num_gpu: 1, cpus-per-task: 7, job-name: forward_train, mem-per-cpu: 8G, #nodelist: 'node[1236]',
+    time: '1-18:00:00'}
+  debug: [true]
+  gpu: [true]
+
+  seed: [1]
+  num-workers: [10] #[20]
+  batch-size: [32]
+  max-epochs: [200]
+
+  dataset-name: [canopus_train_public]
+  split-name: [split_1.tsv] #[split_1.tsv, split_2.tsv, split_3.tsv]
+
+  learning-rate: [0.0005]
+  lr-decay-rate: [0.85]
+
+  dropout: [0.1]
+  mpnn-type: [GGNN]
+  pe-embed-k: [20]
+  pool-op: [attn]
+  hidden-size: [128]
+  weight-decay: [0]
+  set-layers: [0]
+  mlp-layers: [3]
+  gnn-layers: [3]
+
+  #loss-fn: [cosine] #hurdle_norm]
+  #bce-weight: [cosine] #hurdle_norm]
+
+  loss-fn: [cosine] #hurdle_norm]
+  bce-weight: [0.99] #hurdle_norm]
+  formula-folder: [subform_50]
+
+iterative_args:
+  -  split-name: [split_1.tsv]
+     save-dir: [split_1]
+     formula-folder: [results/scarf_rdbe_1k//split_1/preds_train_inten_no_scatter/]
