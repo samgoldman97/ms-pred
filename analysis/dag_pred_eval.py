@@ -11,6 +11,9 @@ import json
 import argparse
 import yaml
 
+# import sem
+from scipy.stats import sem
+
 import ms_pred.common as common
 
 
@@ -92,6 +95,10 @@ def main(args):
 
     for k, v in running_lists.items():
         final_output[f"avg_{k}"] = float(np.mean(v))
+        # Also calc sem and std
+        final_output[f"sem_{k}"] = float(sem(v))
+        final_output[f"std_{k}"] = float(np.std(v))
+        
 
     df = pd.DataFrame(output_entries)
     df_grouped = pd.concat(

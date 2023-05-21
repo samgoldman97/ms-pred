@@ -13,6 +13,7 @@ import pickle
 from collections import defaultdict
 from functools import partial
 from numpy.linalg import norm
+from scipy.stats import sem
 
 import ms_pred.common as common
 
@@ -191,6 +192,9 @@ def main(args):
 
     for k, v in running_lists.items():
         final_output[f"avg_{k}"] = float(np.mean(v))
+        # Add std and sem
+        final_output[f"std_{k}"] = float(np.std(v))
+        final_output[f"sem_{k}"] = float(sem(v))
 
     df = pd.DataFrame(output_entries)
     df_grouped = pd.concat(

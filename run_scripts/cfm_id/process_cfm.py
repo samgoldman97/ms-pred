@@ -77,7 +77,7 @@ for max_node in max_nodes:
 
     to_export = [i for i in all_files if i.stem in test_specs]
     export_fn = lambda x: extract_cfm_file(x, export_dir, max_node=max_node)
-    [export_fn(i) for i in to_export]
+    #[export_fn(i) for i in to_export]
     common.chunked_parallel(to_export, export_fn)
     pred_dir_folders.append(export_dir)
 
@@ -98,7 +98,8 @@ for res_file in res_files:
     new_data = yaml.safe_load(open(res_file, "r"))
     thresh = res_file.parent.stem
     new_entry = {"nm_nodes": thresh}
-    new_entry.update({k: v for k, v in new_data.items() if "avg" in k})
+    new_entry.update({k: v for k, v in new_data.items() 
+                        if "avg" in k or "sem" in k or "std" in k})
     new_entries.append(new_entry)
 
 df = pd.DataFrame(new_entries)

@@ -1,14 +1,23 @@
 from pathlib import Path
 import subprocess
+import argparse
 
-dataset_name = "canopus_train_public"
-dataset_name = "nist20"
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--dataset", type=str, default="nist20")
+args = parser.parse_args()
+dataset_name = args.dataset
+
+
+#dataset_name = "canopus_train_public"
+#dataset_name = "nist20"
 
 res_folder = Path(f"results/gnn_baseline_{dataset_name}")
 python_file = "src/ms_pred/gnn_pred/predict.py"
-devices = ",".join(["0"])
-valid_splits = ["scaffold_1", "split_1"]
+devices = ",".join(["2"])
 valid_splits = ["scaffold_1"]
+valid_splits = ["scaffold_1", "split_1"]
+valid_splits = ["split_1"]
 
 for model in res_folder.rglob("version_0/*.ckpt"):
     save_dir = model.parent.parent

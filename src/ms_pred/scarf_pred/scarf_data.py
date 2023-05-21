@@ -14,6 +14,8 @@ from torch.utils.data.dataset import Dataset
 import dgl
 
 import ms_pred.common as common
+import ms_pred.massformer_pred._massformer_graph_featurizer as mformer 
+from  torch_geometric.data.data import Data as pyg_data
 
 
 def process_form_file(
@@ -95,6 +97,8 @@ class IntenDataset(Dataset):
             self.root_encode_fn = self.graph_featurizer.get_dgl_graph
         elif root_embedder == "fp":
             self.root_encode_fn = common.get_morgan_fp
+        elif root_embedder == "graphormer":
+            self.root_encode_fn = mformer.MassformerGraphFeaturizer()
         else:
             raise ValueError()
 
@@ -248,6 +252,8 @@ class IntenDataset(Dataset):
             batched_graph = dgl.batch(mol_graphs)
         elif isinstance(mol_graphs[0], np.ndarray):
             batched_graph = torch.FloatTensor(np.vstack(mol_graphs))
+        elif isinstance(mol_graphs[0], pyg_data):
+            batched_graph = mformer.MassformerGraphFeaturizer.collate_func(mol_graphs)
         else:
             raise NotImplementedError()
 
@@ -350,6 +356,8 @@ class ScarfDataset(Dataset):
             self.root_encode_fn = self.graph_featurizer.get_dgl_graph
         elif root_embedder == "fp":
             self.root_encode_fn = common.get_morgan_fp
+        elif root_embedder == "graphormer":
+            self.root_encode_fn = mformer.MassformerGraphFeaturizer()
         else:
             raise ValueError()
 
@@ -546,6 +554,8 @@ class ScarfDataset(Dataset):
             batched_graph = dgl.batch(mol_graphs)
         elif isinstance(mol_graphs[0], np.ndarray):
             batched_graph = torch.FloatTensor(np.vstack(mol_graphs))
+        elif isinstance(mol_graphs[0], pyg_data):
+            batched_graph = mformer.MassformerGraphFeaturizer.collate_func(mol_graphs)
         else:
             raise NotImplementedError()
 
