@@ -11,12 +11,9 @@ dataset_name = args.dataset_name
 #dataset_name = "canopus_train_public"
 #dataset_name = "nist20"
 
-res_folder = Path(f"results/molnetms_baseline_{dataset_name}")
-python_file = "src/ms_pred/molnetms/predict.py"
-devices = ",".join(["0"])
+res_folder = Path(f"results/massformer_baseline_{dataset_name}")
+python_file = "src/ms_pred/massformer_pred/predict.py"
 devices = ",".join(["3"])
-
-valid_splits = ["scaffold_1"]
 valid_splits = ["split_1"]
 valid_splits = ["scaffold_1", "split_1"]
 

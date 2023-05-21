@@ -10,8 +10,8 @@ import yaml
 import ms_pred.common as common
 
 
-dataset = "nist20"
 dataset = "canopus_train_public"
+dataset = "nist20"
 res_folder = Path(f"results/rand_baseline_{dataset}/")
 res_folder.mkdir(exist_ok=True)
 split_names = ["split_1"]
@@ -97,7 +97,7 @@ for split in split_names:
         ]
 
         # [predict_fn(predict_dict) for predict_dict in tqdm(predict_dicts)]
-        common.chunked_parallel(predict_dicts, predict_fn)
+        #common.chunked_parallel(predict_dicts, predict_fn)
         pred_dir_folders.append(export_dir)
 
     res_files = []
@@ -110,7 +110,7 @@ for split in split_names:
         """
         res_files.append(pred_dir.parent / "pred_eval.yaml")
         print(analysis_cmd + "\n")
-        subprocess.run(analysis_cmd, shell=True)
+        #subprocess.run(analysis_cmd, shell=True)
 
     # Run cleanup now
     new_entries = []
@@ -118,7 +118,8 @@ for split in split_names:
         new_data = yaml.safe_load(open(res_file, "r"))
         thresh = res_file.parent.stem
         new_entry = {"nm_nodes": thresh}
-        new_entry.update({k: v for k, v in new_data.items() if "avg" in k})
+        new_entry.update({k: v for k, v in new_data.items() 
+                          if "avg" in k or "sem" in k or "std" in k})
         new_entries.append(new_entry)
 
     df = pd.DataFrame(new_entries)

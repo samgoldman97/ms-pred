@@ -2,7 +2,7 @@ launcher_args: {experiment_name: graff_ms_baseline_nist20,
   script_name: "src/ms_pred/graff_ms/train.py",
   slurm_script: launcher_scripts/generic_slurm.sh, 
   launch_method: local,
-  visible_devices: [2],
+  visible_devices: [0],
 }
 universal_args:
   _slurm_args:
@@ -41,6 +41,5 @@ universal_args:
 iterative_args:
   #-  split-name: [split_1.tsv]
   #   save-dir: [split_1]
-  -  split-name: [split_1.tsv]
-     save-dir: [10k_forms]
-     num-fixed-forms: [10000]
+  -  split-name: [scaffold_1.tsv]
+     save-dir: [scaffold_1]

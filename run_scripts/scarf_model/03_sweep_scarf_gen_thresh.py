@@ -2,11 +2,30 @@ import yaml
 import pandas as pd
 from pathlib import Path
 import subprocess
+import argparse
 
-dataset = "canopus_train_public"  # canopus_train_public
-dataset = "nist20"  # canopus_train_public
-res_folder = Path(f"results/scarf_{dataset}_ablate/")
-res_folder = Path(f"results/scarf_{dataset}/")
+parser = argparse.ArgumentParser()
+
+# Get args for dataset name and if true ablation
+parser.add_argument("--dataset", default="nist20")
+parser.add_argument("--ablate", action="store_true")
+args = parser.parse_args()
+dataset = args.dataset
+ablate = args.ablate
+if ablate:
+    res_folder = Path(f"results/scarf_{dataset}_ablate/")
+else:
+    res_folder = Path(f"results/scarf_{dataset}/")
+
+
+# Overwrite with manual args below
+
+#dataset = "canopus_train_public"  # canopus_train_public
+#dataset = "nist20"  # canopus_train_public
+#res_folder = Path(f"results/scarf_{dataset}_ablate/")
+#res_folder = Path(f"results/scarf_{dataset}/")
+
+
 python_file = "src/ms_pred/scarf_pred/predict_gen.py"
 
 devices = ",".join(["2"])
@@ -17,14 +36,13 @@ subform_name = "rdbe_50"
 subform_name = "magma_subform_50"
 split_override = "split_1"
 split_override = None
+split_override = "split_1"
 
-splits = ["scaffold_1", "split_1"]
-valid_splits = ["scaffold_1"]
+valid_splits = ["split_1"]
 
 models = sorted(list(res_folder.rglob("version_0/*.ckpt")))
 
 for model in models:
-
     save_dir_base = model.parent.parent
     split = save_dir_base.name if split_override is None else split_override
 
@@ -57,7 +75,7 @@ for model in models:
         device_str = f"CUDA_VISIBLE_DEVICES={devices}"
         cmd = f"{device_str} {cmd}"
         print(cmd + "\n")
-        subprocess.run(cmd, shell=True)
+        #subprocess.run(cmd, shell=True)
 
     res_files = []
     for pred_dir in pred_dir_folders:
@@ -76,7 +94,8 @@ for model in models:
         new_data = yaml.safe_load(open(res_file, "r"))
         thresh = res_file.parent.stem
         new_entry = {"nm_nodes": thresh}
-        new_entry.update({k: v for k, v in new_data.items() if "avg" in k})
+        new_entry.update({k: v for k, v in new_data.items() 
+                          if "avg" in k or "sem" in k or "std" in k})
         new_entries.append(new_entry)
 
     df = pd.DataFrame(new_entries)

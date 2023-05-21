@@ -1,0 +1,60 @@
+launcher_args: {experiment_name: scarf_gf_canopus_train_public,
+  script_name: "src/ms_pred/scarf_pred/train_gen.py",
+  slurm_script: launcher_scripts/generic_slurm.sh, 
+  launch_method: local,
+  visible_devices: [2]
+}
+universal_args:
+  _slurm_args:
+  - {_num_gpu: 1, cpus-per-task: 7, job-name: forward_train, mem-per-cpu: 8G, #nodelist: 'node[1236]',
+    time: '1-18:00:00'}
+  debug: [false]
+  gpu: [true]
+
+  seed: [1]
+  num-workers: [10] #[20]
+  batch-size: [16]
+  max-epochs: [200]
+
+  formula-folder: [magma_subform_50]
+  dataset-name: [canopus_train_public]
+  split-name: [split_1.tsv] #[split_1.tsv, split_2.tsv, split_3.tsv]
+
+  # Training
+  learning-rate: [0.000577]
+  lr-decay-rate: [0.894]
+  weight-decay: [1.0e-06]
+  loss-fn: [bce]
+
+  # Architecture args
+  root-embedder: [graphormer] # gnn
+  info-join: ["concat"]
+  hidden-size: [512]
+  dropout: [0.3]
+  set-layers: [0]
+
+  # Formula top args
+  use-reverse: [true]
+  embedder: [abs-sines]
+  use-tbc: [true]
+  embed-adduct: [true]
+  mlp-layers: [2]
+
+  # GNN Args
+  mpnn-type: [GGNN]
+  pe-embed-k: [20]
+  pool-op: [avg]
+  gnn-layers: [4]
+
+
+
+
+iterative_args:
+  #-  split-name: [split_1.tsv]
+  #   save-dir: [split_1]
+  -  split-name: [split_1.tsv]
+     save-dir: [low_lr_pt_3]
+     learning-rate: [0.0002]
+
+  #-  split-name: [hyperopt.tsv]
+  #   save-dir: [hyperopt]

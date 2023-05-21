@@ -17,6 +17,10 @@ import dgl
 import ms_pred.common as common
 import ms_pred.nn_utils as nn_utils
 
+import ms_pred.massformer_pred._massformer_graph_featurizer as mformer 
+
+import ms_pred.massformer_pred.massformer_code.gf_model as gf_model
+
 
 class ScarfNet(pl.LightningModule):
     """ScarfNet."""
@@ -157,6 +161,19 @@ class ScarfNet(pl.LightningModule):
                 output_size=self.hidden_size,
                 use_residuals=True,
             )
+        elif self.root_embedder == "graphormer":
+            # Build gfv2 embedder with default args
+            self.root_embed_module = gf_model.GFv2Embedder(
+                gf_model_name="graphormer_base",
+                gf_pretrain_name="pcqm4mv2_graphormer_base",
+                fix_num_pt_layers=0,
+                reinit_num_pt_layers=-1,
+                reinit_layernorm=True
+            )
+            embed_dim = self.root_embed_module.get_embed_dim()
+            self.embed_to_hidden = nn.Linear(embed_dim + adduct_shift, 
+                                             self.hidden_size)
+
         else:
             raise NotImplementedError()
 
@@ -337,6 +354,13 @@ class ScarfNet(pl.LightningModule):
                 mol_embeds = self.pool(graphs, mol_outputs)
         elif self.root_embedder == "fp":
             mol_embeds = self.root_embed_module(graphs)
+        elif self.root_embedder == "graphormer":
+            mol_embeds = self.root_embed_module({"gf_v2_data": graphs})
+            if self.embed_adduct:
+                embed_adducts = self.adduct_embedder[adducts.long()]
+                mol_embeds = torch.cat([mol_embeds, embed_adducts], -1)
+            mol_embeds = self.embed_to_hidden(mol_embeds)
+
         else:
             raise NotImplementedError()
 
@@ -837,6 +861,19 @@ class ScarfIntenNet(pl.LightningModule):
                 output_size=self.hidden_size,
                 use_residuals=True,
             )
+        elif self.root_embedder == "graphormer":
+            # Build gfv2 embedder with default args
+            self.root_embed_module = gf_model.GFv2Embedder(
+                gf_model_name="graphormer_base",
+                gf_pretrain_name="pcqm4mv2_graphormer_base",
+                fix_num_pt_layers=0,
+                #reinit_num_pt_layers=-1,
+                reinit_num_pt_layers=-1,
+                reinit_layernorm=True
+            )
+            embed_dim = self.root_embed_module.get_embed_dim()
+            self.embed_to_hidden = nn.Linear(embed_dim + adduct_shift, 
+                                             self.hidden_size)
         else:
             raise NotImplementedError()
 
@@ -961,6 +998,12 @@ class ScarfIntenNet(pl.LightningModule):
         elif self.root_embedder == "fp":
             mol_embeds = self.root_embed_module(graphs)
             raise NotImplementedError()
+        elif self.root_embedder == "graphormer":
+            mol_embeds = self.root_embed_module({"gf_v2_data": graphs})
+            if self.embed_adduct:
+                embed_adducts = self.adduct_embedder[adducts.long()]
+                mol_embeds = torch.cat([mol_embeds, embed_adducts], -1)
+            mol_embeds = self.embed_to_hidden(mol_embeds)
         else:
             raise NotImplementedError()
 

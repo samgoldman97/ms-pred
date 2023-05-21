@@ -5,6 +5,7 @@ from pathlib import Path
 import subprocess
 import json
 from ms_pred import common
+import argparse
 
 
 def extract_cfm_file(spectra_file, out_dir, max_node):
@@ -46,8 +47,19 @@ def extract_cfm_file(spectra_file, out_dir, max_node):
         json.dump(json_out, fp, indent=2)
 
 
-dataset = "canopus_train_public"
-dataset = "nist20"  # canopus_train_public
+# Parse args
+parser = argparse.ArgumentParser()
+parser.add_argument("--dataset", type=str, default="nist20")
+args = parser.parse_args()
+
+dataset = args.dataset
+
+
+# Overwrite
+# dataset = "canopus_train_public"
+# dataset = "nist20"  # canopus_train_public
+
+
 res_folder = Path(f"results/cfm_id_{dataset}/")
 cfm_output_specs = res_folder / "cfm_out"
 all_files = list(cfm_output_specs.glob("*.log"))
@@ -59,6 +71,7 @@ split_override = None
 
 splits = ["split_1", "split_2", "split_3"]
 splits = ["scaffold_1"]
+splits = ["split_1"]#], "scaffold_1"]
 
 
 # Create full spec
@@ -78,7 +91,7 @@ for split in splits:
 
     to_export = [i for i in all_files if i.stem in test_specs]
     export_fn = lambda x: extract_cfm_file(x, export_dir, max_node=max_node)
-    common.chunked_parallel(to_export, export_fn)
+    # common.chunked_parallel(to_export, export_fn)
     pred_dir_folders.append(export_dir)
 
     # Convert all preds to binned
@@ -94,7 +107,7 @@ for split in splits:
     --out {out_binned} """
     cmd = f"{cmd}"
     print(cmd + "\n")
-    subprocess.run(cmd, shell=True)
+    # subprocess.run(cmd, shell=True)
 
     # Eval binned preds
     eval_cmd = f"""python analysis/spec_pred_eval.py \\
