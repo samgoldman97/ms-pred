@@ -59,6 +59,8 @@ To make predictions, we have released and made public a version of SCARF and ICE
 
 Model outputs will be contained in `quickstart/{model}/out/`. **We note that this model may be less performant than the model trained on the commercial NIST20 Library. Download links to models trained on NIST20 models are available upon request to any users with a NIST license.**  ICEBERG assigns intensities to various fragment masses. Refer to `notebooks/iceberg_demo.ipynb` for a walkthrough for how to process and interpret the output dictionary.
 
+Please note there is a small error in the adduct masses for `[M-H2O+H]+`. Because peak outputs are shifted by their adduct masses _after_ prediction, the final spectrum prediction may still be accurate. This will be corrected in the subsequent version of all models.
+
 
 ## Data <a name="data"></a>
 
