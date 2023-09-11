@@ -1,6 +1,7 @@
-""" assign_subformulae.py
+""" Assign subformulae
 
-Given a set of spectra and candidates from a labels file, assign subformulae and save to JSON files.
+Given a set of spectra and candidates from a labels file, assign subformulae
+and save to JSON files.
 
 """
 
@@ -77,6 +78,7 @@ def get_args():
     return parser.parse_args()
 
 
+
 def get_output_dict(
     spec_name: str,
     spec: np.ndarray,
@@ -91,20 +93,25 @@ def get_output_dict(
     use_magma: bool = False,
 ) -> dict:
     """get_output_dict.
+
     This function attemps to take an array of mass intensity values and assign
     formula subsets to subpeaks
+
     Args:
+        spec_name (str): spec_name
         spec (np.ndarray): spec
         form (str): form
-        abs_mass_diff (float): abs_mass_diff
-        inten_thresh (float): Intensity threshold
-        max_formulae (int): Max formulae to output
-        use_all (bool): If true, don't subset to formula
-        smiles (str): Smiles string
-        use_magma (bool): If true, use the magma algorithm
+        mass_diff_type (str): mass_diff_type
+        mass_diff_thresh (float): mass_diff_thresh
+        inten_thresh (float): inten_thresh
+        adduct_type (str): adduct_type
+        max_formulae (int): max_formulae
+        use_all:
+        smiles (str): smiles
+        use_magma (bool): use_magma
 
     Returns:
-        Dict
+        dict:
     """
     # This is the case for some erroneous MS2 files for which proc_spec_file return None
     # All the MS2 subpeaks in these erroneous MS2 files has mz larger than parentmass

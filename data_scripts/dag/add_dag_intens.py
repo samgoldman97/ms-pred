@@ -1,4 +1,4 @@
-""" 05_add_dag_intens.py
+""" Add dag intensities
 
 Given a set of predicted dags, add intensities to them from the gold standard
 
@@ -13,6 +13,8 @@ import ms_pred.common as common
 
 
 def get_args():
+    """get_args.
+    """
     parser = argparse.ArgumentParser()
     parser.add_argument("--num-workers", default=0, action="store", type=int)
     parser.add_argument("--pred-dag-folder", action="store")
@@ -40,7 +42,7 @@ def relabel_tree(
         true_dag_file (Path): true_dag_file
         out_dag_file (Path): out_dag_file
         max_bonds (int): max_bonds
-        add_raw
+        add_raw (bool): add_raw
 
     Returns:
         None:

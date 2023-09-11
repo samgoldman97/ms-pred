@@ -1,5 +1,3 @@
-
-
 python data_scripts/make_splits.py --data-dir data/spec_datasets/nist20 --label-file data/spec_datasets/nist20/labels.tsv  --seed 1 --split-type fingerprint --split-name fingerprint_1.tsv  
 
 python data_scripts/make_splits.py --data-dir data/spec_datasets/nist20/ --label-file data/spec_datasets/nist20/labels.tsv --seed 1 --split-type scaffold --split-name scaffold_1.tsv --greedy

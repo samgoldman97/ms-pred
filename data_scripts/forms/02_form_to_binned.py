@@ -1,4 +1,4 @@
-""" form_to_binned.py
+""" Form to binned
 
 Convert dag folder into a binned spec file
 
@@ -14,6 +14,8 @@ import ms_pred.common as common
 
 
 def get_args():
+    """get_args.
+    """
     parser = argparse.ArgumentParser()
     parser.add_argument("--num-workers", default=0, action="store", type=int)
     parser.add_argument("--form-folder", action="store")
@@ -35,7 +37,7 @@ def get_args():
 def bin_forms(
     forms: dict, max_peaks: int, upper_limit: int, num_bins: int, min_inten: float
 ) -> np.ndarray:
-    """bin_dag.
+    """bin_forms.
 
     Args:
         forms (dict): forms

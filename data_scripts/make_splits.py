@@ -1,7 +1,6 @@
-""" make_splits.py
+""" Make splits
 
 Make train-test-val splits by compound uniqueness.
-
 
 """
 import argparse
@@ -20,9 +19,7 @@ from ms_pred import common
 
 def get_args():
     args = argparse.ArgumentParser()
-    args.add_argument(
-        "--data-dir", default="data/spec_datasets/gnps2015_debug", help="Data directory"
-    )
+    args.add_argument("--data-dir", help="Data directory")
     args.add_argument(
         "--label-file",
         default="data/spec_datasets/gnps2015_debug/labels.tsv",

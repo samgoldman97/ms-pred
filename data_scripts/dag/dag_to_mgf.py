@@ -27,6 +27,7 @@ def dag_to_spec(dag: dict, max_peaks: int, min_inten: float, precision=4):
         dag (dict): dag
         max_peaks (int): max_peaks
         min_inten (float): min_inten
+        precision (float): precision
     """
     root = dag["root_inchi"]
     frags = dag["frags"]

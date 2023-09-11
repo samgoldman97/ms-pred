@@ -1,4 +1,4 @@
-""" dag_to_subform.py
+""" DAG to subform
 
 Convert dag folder into a subform folder
 

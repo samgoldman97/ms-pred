@@ -1,6 +1,6 @@
-""" 02_make_formula_subsets.py
+""" Make formula subsets
 
-Process pubchem smiles subsets
+Process pubchem smiles subsets.
 
 """
 import pandas as pd

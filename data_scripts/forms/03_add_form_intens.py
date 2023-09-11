@@ -1,8 +1,4 @@
-""" add_form_intens.py
-
-Add form intens
-
-"""
+""" Add formulae intensities """
 import json
 import numpy as np
 import argparse
@@ -14,6 +10,8 @@ import ms_pred.common as common
 
 
 def get_args():
+    """get_args.
+    """
     parser = argparse.ArgumentParser()
     parser.add_argument("--num-workers", default=0, action="store", type=int)
     parser.add_argument("--pred-form-folder", action="store")
@@ -37,8 +35,8 @@ def relabel_tree(
         pred_form_file (Path): pred_form_file
         true_form_file (Path): true_form_file
         out_form_file (Path): out_form_file
-        add_binned (bool)
-        add_raw
+        add_binned (bool): add_binned
+        add_raw (bool): add_raw
 
     Returns:
         None:

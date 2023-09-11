@@ -6,6 +6,8 @@ import numpy as np
 
 
 def get_args():
+    """get_args.
+    """
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--pickle-file", default="data/retrieval/pubchem/pubchem_formula_map.p"

@@ -1,4 +1,8 @@
-""" Convert dag folder into a binned spec file """
+""" DAG to binned
+
+Convert dag folder into a binned spec file 
+
+"""
 import json
 import yaml
 import argparse
@@ -12,6 +16,8 @@ import ms_pred.magma.fragmentation as fragmentation
 
 
 def get_args():
+    """get_args.
+    """
     parser = argparse.ArgumentParser()
     parser.add_argument("--num-workers", default=0, action="store", type=int)
     parser.add_argument("--dag-folder", action="store")

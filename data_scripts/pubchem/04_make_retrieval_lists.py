@@ -1,6 +1,6 @@
-""" 04_make_retrieval_lists.py
+""" Make retrieval lists
 
-Convert the dataset into a list of 10k different retrieval entries
+Convert the dataset into a list of 10k different retrieval entries.
 
 """
 from pathlib import Path
@@ -61,6 +61,15 @@ def process_example(obj, max_k=50) -> dict:
 
 
 def main(max_k, workers, input_map, input_dataset_folder, split_file):
+    """main.
+
+    Args:
+        max_k:
+        workers:
+        input_map:
+        input_dataset_folder:
+        split_file:
+    """
 
     retrieval_folder = input_dataset_folder / "retrieval"
     retrieval_folder.mkdir(exist_ok=True)
