@@ -10,38 +10,36 @@ import dgl
 import ms_pred.common as common
 
 
-class MolMSFeaturizer():
-    """ Create a 3D mol featurizer"""
+class MolMSFeaturizer:
+    """Create a 3D mol featurizer"""
 
     # Hardcoded
-    char_to_vec = {i: j.tolist() for i,j in common.element_to_position.items()}
-    num_atom_feats = 3 + char_to_vec['C'].__len__()
+    char_to_vec = {i: j.tolist() for i, j in common.element_to_position.items()}
+    num_atom_feats = 3 + char_to_vec["C"].__len__()
     num_atom_feats_full = 7 + num_atom_feats
 
     def __init__(self, num_points: int = 300):
 
         self.valid_letters = set(self.char_to_vec.keys())
-        
+
         # Max atoms
         self.num_points = num_points
-    
 
     @classmethod
     def atom_feats(cls):
         return cls.num_atom_feats_full
 
-
     def parse_mol_block(self, mol_block):
-        """ Parse the mol block to get the atom points and bonds
+        """Parse the mol block to get the atom points and bonds
 
-            Taken from 3dmolms code
+        Taken from 3dmolms code
 
-            Args:
-                mol_block (list): the lines of mol block
+        Args:
+            mol_block (list): the lines of mol block
 
-            Returns:
-                points (list): the atom points, (npoints, num feats)
-                bonds (list): the atom bonds, (npoints, 4)
+        Returns:
+            points (list): the atom points, (npoints, num feats)
+            bonds (list): the atom bonds, (npoints, 4)
         """
         points = []
         bonds = []
@@ -57,11 +55,16 @@ class MolMSFeaturizer():
                     # point = [float(atom[0]), float(atom[1]), float(atom[2])]
 
                     # x-y-z coordinates and atom type
-                    point = [float(atom[0]), float(atom[1]), float(
-                        atom[2])] + self.char_to_vec[atom[3]]
+                    point = [
+                        float(atom[0]),
+                        float(atom[1]),
+                        float(atom[2]),
+                    ] + self.char_to_vec[atom[3]]
                     points.append(point)
                 elif len(atom) == 16:  # check the atom type
-                    raise ValueError(f"Error: {atom[3]} is not in {self.valid_letters}, please check the dataset.")
+                    raise ValueError(
+                        f"Error: {atom[3]} is not in {self.valid_letters}, please check the dataset."
+                    )
 
             elif len(d) == 12:
                 bond = [int(i) for i in d.split()]
@@ -69,7 +72,7 @@ class MolMSFeaturizer():
                     bonds.append(bond)
 
         points = np.array(points)
-        assert (points.shape[1] == self.num_atom_feats)
+        assert points.shape[1] == self.num_atom_feats
 
         # center the points
         points_xyz = points[:, :3]
@@ -80,9 +83,8 @@ class MolMSFeaturizer():
 
         return points.tolist(), bonds
 
-
     def get_3d_graph(self, mol):
-        """ Get the 3D graph of the molecule.
+        """Get the 3D graph of the molecule.
 
         Args:
             smiles (str): the smiles of the molecule
@@ -96,13 +98,12 @@ class MolMSFeaturizer():
             point_set[idx].append(atom.GetDegree())
             # 4. valence minus the number of hydrogens;
             point_set[idx].append(atom.GetExplicitValence())
-            point_set[idx].append(atom.GetMass()/100)  # 5. atomic mass;
+            point_set[idx].append(atom.GetMass() / 100)  # 5. atomic mass;
             # 6. atomic charge;
             point_set[idx].append(atom.GetFormalCharge())
             # 7. number of implicit hydrogens;
             point_set[idx].append(atom.GetNumImplicitHs())
-            point_set[idx].append(
-                int(atom.GetIsAromatic()))  # 8. is aromatic;
+            point_set[idx].append(int(atom.GetIsAromatic()))  # 8. is aromatic;
             point_set[idx].append(int(atom.IsInRing()))  # 9. is in a ring;
 
         point_set = np.array(point_set).astype(np.float32)
@@ -110,16 +111,25 @@ class MolMSFeaturizer():
         # generate mask
         point_mask = np.ones_like(point_set[0])
 
-        point_set = torch.cat((torch.Tensor(point_set), torch.zeros(
-            (self.num_points-point_set.shape[0], point_set.shape[1]))), dim=0)
-        point_mask = torch.cat((torch.Tensor(point_mask), torch.zeros(
-            (self.num_points-point_mask.shape[0]))), dim=0)
-        assert(point_set.shape[1] == self.num_atom_feats_full)
+        point_set = torch.cat(
+            (
+                torch.Tensor(point_set),
+                torch.zeros((self.num_points - point_set.shape[0], point_set.shape[1])),
+            ),
+            dim=0,
+        )
+        point_mask = torch.cat(
+            (
+                torch.Tensor(point_mask),
+                torch.zeros((self.num_points - point_mask.shape[0])),
+            ),
+            dim=0,
+        )
+        assert point_set.shape[1] == self.num_atom_feats_full
 
         # 3D graph has 3 xyz poositions followed by atom features (1 hot and 7 others)
         return point_set, point_mask
 
-    
     @staticmethod
     def collate_3d(batch):
         raise NotImplementedError()
@@ -149,17 +159,18 @@ class BinnedDataset(Dataset):
 
         # Read in all molecules
         self.smiles = self.df["smiles"].values
-        
+
         self.graph_featurizer = graph_featurizer
 
         if self.num_workers == 0:
             self.mols = [Chem.MolFromSmiles(i) for i in self.smiles]
             self.weights = [common.ExactMolWt(i) for i in self.mols]
-            self.mol_graphs = [
-                self.graph_featurizer.get_3d_graph(i) for i in self.mols
-            ]
+            self.mol_graphs = [self.graph_featurizer.get_3d_graph(i) for i in self.mols]
         else:
-            def mol_from_smi(x): return Chem.MolFromSmiles(x)
+
+            def mol_from_smi(x):
+                return Chem.MolFromSmiles(x)
+
             self.mols = common.chunked_parallel(
                 self.smiles,
                 mol_from_smi,
@@ -193,14 +204,13 @@ class BinnedDataset(Dataset):
         # Read in all specs
         self.spec_names = self.df["spec"].values
         spec_files = [
-            (data_dir / "subformulae" /
-             f"{form_dir_name}" / f"{spec_name}.json")
+            (data_dir / "subformulae" / f"{form_dir_name}" / f"{spec_name}.json")
             for spec_name in self.spec_names
         ]
 
-        def process_spec_file(x): return common.bin_form_file(
-            x, num_bins=num_bins, upper_limit=upper_limit
-        )
+        def process_spec_file(x):
+            return common.bin_form_file(x, num_bins=num_bins, upper_limit=upper_limit)
+
         if self.num_workers == 0:
             spec_outputs = [process_spec_file(i) for i in spec_files]
         else:
@@ -224,8 +234,7 @@ class BinnedDataset(Dataset):
         self.df = self.df[mask]
         self.spec_names = np.array(self.spec_names)[mask].tolist()
         self.weights = np.array(self.weights)[mask].tolist()
-        self.mol_graphs = np.array(self.mol_graphs, dtype=object)[
-            mask].tolist()
+        self.mol_graphs = np.array(self.mol_graphs, dtype=object)[mask].tolist()
 
         self.adducts = [
             common.ion2onehot_pos[self.name_to_adduct[i]] for i in self.spec_names
@@ -267,8 +276,7 @@ class BinnedDataset(Dataset):
         adducts = [j["adduct"] for j in input_list]
 
         # Now pad everything else to the max channel dim
-        spectra_tensors = torch.stack(
-            [torch.tensor(spectra) for spectra in spec_ars])
+        spectra_tensors = torch.stack([torch.tensor(spectra) for spectra in spec_ars])
         full_weight = torch.FloatTensor(full_weight)
 
         # Stack graphs and graph mask
@@ -306,9 +314,7 @@ class MolDataset(Dataset):
         if self.num_workers == 0:
             self.mols = [Chem.MolFromSmiles(i) for i in self.smiles]
             self.weights = [common.ExactMolWt(i) for i in self.mols]
-            self.mol_graphs = [
-                self.graph_featurizer.get_3d_graph(i) for i in self.mols
-            ]
+            self.mol_graphs = [self.graph_featurizer.get_3d_graph(i) for i in self.mols]
         else:
             self.mols = common.chunked_parallel(
                 self.smiles,
@@ -386,6 +392,5 @@ class MolDataset(Dataset):
             "names": names,
             "full_weight": full_weight,
             "adducts": adducts,
-
         }
         return return_dict

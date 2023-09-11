@@ -14,8 +14,8 @@ from torch.utils.data.dataset import Dataset
 import dgl
 
 import ms_pred.common as common
-import ms_pred.massformer_pred._massformer_graph_featurizer as mformer 
-from  torch_geometric.data.data import Data as pyg_data
+import ms_pred.massformer_pred._massformer_graph_featurizer as mformer
+from torch_geometric.data.data import Data as pyg_data
 
 
 def process_form_file(

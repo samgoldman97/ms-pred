@@ -8,38 +8,30 @@ from . import algos2
 
 # allowable multiple choice node and edge features
 allowable_features = {
-    'possible_atomic_num_list': list(range(1, 119)) + ['misc'],
-    'possible_chirality_list': [
-        'CHI_UNSPECIFIED',
-        'CHI_TETRAHEDRAL_CW',
-        'CHI_TETRAHEDRAL_CCW',
-        'CHI_OTHER'
+    "possible_atomic_num_list": list(range(1, 119)) + ["misc"],
+    "possible_chirality_list": [
+        "CHI_UNSPECIFIED",
+        "CHI_TETRAHEDRAL_CW",
+        "CHI_TETRAHEDRAL_CCW",
+        "CHI_OTHER",
     ],
-    'possible_degree_list': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 'misc'],
-    'possible_formal_charge_list': [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 'misc'],
-    'possible_numH_list': [0, 1, 2, 3, 4, 5, 6, 7, 8, 'misc'],
-    'possible_number_radical_e_list': [0, 1, 2, 3, 4, 'misc'],
-    'possible_hybridization_list': [
-        'SP', 'SP2', 'SP3', 'SP3D', 'SP3D2', 'misc'
+    "possible_degree_list": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, "misc"],
+    "possible_formal_charge_list": [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, "misc"],
+    "possible_numH_list": [0, 1, 2, 3, 4, 5, 6, 7, 8, "misc"],
+    "possible_number_radical_e_list": [0, 1, 2, 3, 4, "misc"],
+    "possible_hybridization_list": ["SP", "SP2", "SP3", "SP3D", "SP3D2", "misc"],
+    "possible_is_aromatic_list": [False, True],
+    "possible_is_in_ring_list": [False, True],
+    "possible_bond_type_list": ["SINGLE", "DOUBLE", "TRIPLE", "AROMATIC", "misc"],
+    "possible_bond_stereo_list": [
+        "STEREONONE",
+        "STEREOZ",
+        "STEREOE",
+        "STEREOCIS",
+        "STEREOTRANS",
+        "STEREOANY",
     ],
-    'possible_is_aromatic_list': [False, True],
-    'possible_is_in_ring_list': [False, True],
-    'possible_bond_type_list': [
-        'SINGLE',
-        'DOUBLE',
-        'TRIPLE',
-        'AROMATIC',
-        'misc'
-    ],
-    'possible_bond_stereo_list': [
-        'STEREONONE',
-        'STEREOZ',
-        'STEREOE',
-        'STEREOCIS',
-        'STEREOTRANS',
-        'STEREOANY',
-    ],
-    'possible_is_conjugated_list': [False, True],
+    "possible_is_conjugated_list": [False, True],
 }
 
 
@@ -60,31 +52,44 @@ def atom_to_feature_vector(atom):
     :return: list
     """
     atom_feature = [
-        safe_index(allowable_features['possible_atomic_num_list'], atom.GetAtomicNum()),
-        allowable_features['possible_chirality_list'].index(str(atom.GetChiralTag())),
-        safe_index(allowable_features['possible_degree_list'], atom.GetTotalDegree()),
-        safe_index(allowable_features['possible_formal_charge_list'], atom.GetFormalCharge()),
-        safe_index(allowable_features['possible_numH_list'], atom.GetTotalNumHs()),
-        safe_index(allowable_features['possible_number_radical_e_list'], atom.GetNumRadicalElectrons()),
-        safe_index(allowable_features['possible_hybridization_list'], str(atom.GetHybridization())),
-        allowable_features['possible_is_aromatic_list'].index(atom.GetIsAromatic()),
-        allowable_features['possible_is_in_ring_list'].index(atom.IsInRing()),
+        safe_index(allowable_features["possible_atomic_num_list"], atom.GetAtomicNum()),
+        allowable_features["possible_chirality_list"].index(str(atom.GetChiralTag())),
+        safe_index(allowable_features["possible_degree_list"], atom.GetTotalDegree()),
+        safe_index(
+            allowable_features["possible_formal_charge_list"], atom.GetFormalCharge()
+        ),
+        safe_index(allowable_features["possible_numH_list"], atom.GetTotalNumHs()),
+        safe_index(
+            allowable_features["possible_number_radical_e_list"],
+            atom.GetNumRadicalElectrons(),
+        ),
+        safe_index(
+            allowable_features["possible_hybridization_list"],
+            str(atom.GetHybridization()),
+        ),
+        allowable_features["possible_is_aromatic_list"].index(atom.GetIsAromatic()),
+        allowable_features["possible_is_in_ring_list"].index(atom.IsInRing()),
     ]
     return atom_feature
 
 
 def get_atom_feature_dims():
-    return list(map(len, [
-        allowable_features['possible_atomic_num_list'],
-        allowable_features['possible_chirality_list'],
-        allowable_features['possible_degree_list'],
-        allowable_features['possible_formal_charge_list'],
-        allowable_features['possible_numH_list'],
-        allowable_features['possible_number_radical_e_list'],
-        allowable_features['possible_hybridization_list'],
-        allowable_features['possible_is_aromatic_list'],
-        allowable_features['possible_is_in_ring_list']
-    ]))
+    return list(
+        map(
+            len,
+            [
+                allowable_features["possible_atomic_num_list"],
+                allowable_features["possible_chirality_list"],
+                allowable_features["possible_degree_list"],
+                allowable_features["possible_formal_charge_list"],
+                allowable_features["possible_numH_list"],
+                allowable_features["possible_number_radical_e_list"],
+                allowable_features["possible_hybridization_list"],
+                allowable_features["possible_is_aromatic_list"],
+                allowable_features["possible_is_in_ring_list"],
+            ],
+        )
+    )
 
 
 def bond_to_feature_vector(bond):
@@ -94,55 +99,72 @@ def bond_to_feature_vector(bond):
     :return: list
     """
     bond_feature = [
-        safe_index(allowable_features['possible_bond_type_list'], str(bond.GetBondType())),
-        allowable_features['possible_bond_stereo_list'].index(str(bond.GetStereo())),
-        allowable_features['possible_is_conjugated_list'].index(bond.GetIsConjugated()),
+        safe_index(
+            allowable_features["possible_bond_type_list"], str(bond.GetBondType())
+        ),
+        allowable_features["possible_bond_stereo_list"].index(str(bond.GetStereo())),
+        allowable_features["possible_is_conjugated_list"].index(bond.GetIsConjugated()),
     ]
     return bond_feature
 
 
 def get_bond_feature_dims():
-    return list(map(len, [
-        allowable_features['possible_bond_type_list'],
-        allowable_features['possible_bond_stereo_list'],
-        allowable_features['possible_is_conjugated_list']
-    ]))
+    return list(
+        map(
+            len,
+            [
+                allowable_features["possible_bond_type_list"],
+                allowable_features["possible_bond_stereo_list"],
+                allowable_features["possible_is_conjugated_list"],
+            ],
+        )
+    )
 
 
 def atom_feature_vector_to_dict(atom_feature):
-    [atomic_num_idx,
-     chirality_idx,
-     degree_idx,
-     formal_charge_idx,
-     num_h_idx,
-     number_radical_e_idx,
-     hybridization_idx,
-     is_aromatic_idx,
-     is_in_ring_idx] = atom_feature
+    [
+        atomic_num_idx,
+        chirality_idx,
+        degree_idx,
+        formal_charge_idx,
+        num_h_idx,
+        number_radical_e_idx,
+        hybridization_idx,
+        is_aromatic_idx,
+        is_in_ring_idx,
+    ] = atom_feature
 
     feature_dict = {
-        'atomic_num': allowable_features['possible_atomic_num_list'][atomic_num_idx],
-        'chirality': allowable_features['possible_chirality_list'][chirality_idx],
-        'degree': allowable_features['possible_degree_list'][degree_idx],
-        'formal_charge': allowable_features['possible_formal_charge_list'][formal_charge_idx],
-        'num_h': allowable_features['possible_numH_list'][num_h_idx],
-        'num_rad_e': allowable_features['possible_number_radical_e_list'][number_radical_e_idx],
-        'hybridization': allowable_features['possible_hybridization_list'][hybridization_idx],
-        'is_aromatic': allowable_features['possible_is_aromatic_list'][is_aromatic_idx],
-        'is_in_ring': allowable_features['possible_is_in_ring_list'][is_in_ring_idx]}
+        "atomic_num": allowable_features["possible_atomic_num_list"][atomic_num_idx],
+        "chirality": allowable_features["possible_chirality_list"][chirality_idx],
+        "degree": allowable_features["possible_degree_list"][degree_idx],
+        "formal_charge": allowable_features["possible_formal_charge_list"][
+            formal_charge_idx
+        ],
+        "num_h": allowable_features["possible_numH_list"][num_h_idx],
+        "num_rad_e": allowable_features["possible_number_radical_e_list"][
+            number_radical_e_idx
+        ],
+        "hybridization": allowable_features["possible_hybridization_list"][
+            hybridization_idx
+        ],
+        "is_aromatic": allowable_features["possible_is_aromatic_list"][is_aromatic_idx],
+        "is_in_ring": allowable_features["possible_is_in_ring_list"][is_in_ring_idx],
+    }
 
     return feature_dict
 
 
 def bond_feature_vector_to_dict(bond_feature):
-    [bond_type_idx,
-     bond_stereo_idx,
-     is_conjugated_idx] = bond_feature
+    [bond_type_idx, bond_stereo_idx, is_conjugated_idx] = bond_feature
 
     feature_dict = {
-        'bond_type': allowable_features['possible_bond_type_list'][bond_type_idx],
-        'bond_stereo': allowable_features['possible_bond_stereo_list'][bond_stereo_idx],
-        'is_conjugated': allowable_features['possible_is_conjugated_list'][is_conjugated_idx]}
+        "bond_type": allowable_features["possible_bond_type_list"][bond_type_idx],
+        "bond_stereo": allowable_features["possible_bond_stereo_list"][bond_stereo_idx],
+        "is_conjugated": allowable_features["possible_is_conjugated_list"][
+            is_conjugated_idx
+        ],
+    }
 
     return feature_dict
 
@@ -192,28 +214,28 @@ def smiles2graph(smiles_or_mol):
         # num_edge_features]
         edge_attr = np.array(edge_features_list, dtype=np.int64)
 
-    else:   # mol has no bonds
+    else:  # mol has no bonds
         edge_index = np.empty((2, 0), dtype=np.int64)
         edge_attr = np.empty((0, num_bond_features), dtype=np.int64)
 
     graph = dict()
-    graph['edge_index'] = edge_index
-    graph['edge_feat'] = edge_attr
-    graph['node_feat'] = x
-    graph['num_nodes'] = len(x)
+    graph["edge_index"] = edge_index
+    graph["edge_feat"] = edge_attr
+    graph["node_feat"] = x
+    graph["num_nodes"] = len(x)
 
     return graph
 
 
 def graph2data(graph):
-    """ taken from process() in https://github.com/snap-stanford/ogb/blob/master/ogb/lsc/pcqm4mv2_pyg.py """
+    """taken from process() in https://github.com/snap-stanford/ogb/blob/master/ogb/lsc/pcqm4mv2_pyg.py"""
     data = Data()
-    assert (len(graph['edge_feat']) == graph['edge_index'].shape[1])
-    assert (len(graph['node_feat']) == graph['num_nodes'])
-    data.__num_nodes__ = int(graph['num_nodes'])
-    data.edge_index = torch.from_numpy(graph['edge_index']).to(torch.int64)
-    data.edge_attr = torch.from_numpy(graph['edge_feat']).to(torch.int64)
-    data.x = torch.from_numpy(graph['node_feat']).to(torch.int64)
+    assert len(graph["edge_feat"]) == graph["edge_index"].shape[1]
+    assert len(graph["node_feat"]) == graph["num_nodes"]
+    data.__num_nodes__ = int(graph["num_nodes"])
+    data.edge_index = torch.from_numpy(graph["edge_index"]).to(torch.int64)
+    data.edge_attr = torch.from_numpy(graph["edge_feat"]).to(torch.int64)
+    data.x = torch.from_numpy(graph["node_feat"]).to(torch.int64)
     data.y = torch.Tensor([-1])  # dummy
     return data
 
@@ -221,10 +243,7 @@ def graph2data(graph):
 @torch.jit.script
 def convert_to_single_emb(x, offset: int = 512):
     feature_num = x.size(1) if len(x.size()) > 1 else 1
-    feature_offset = 1 + torch.arange(0,
-                                      feature_num * offset,
-                                      offset,
-                                      dtype=torch.long)
+    feature_offset = 1 + torch.arange(0, feature_num * offset, offset, dtype=torch.long)
     x = x + feature_offset
     return x
 
@@ -234,6 +253,7 @@ def preprocess_item(item, algos_v):
         raise RuntimeError("have not ported algos 1 over")
     elif algos_v == "algos2":
         from . import algos2
+
         algos_module = algos2
     else:
         raise ValueError(f"invalid algos version: {algos_v}")
@@ -256,11 +276,9 @@ def preprocess_item(item, algos_v):
 
     shortest_path_result, path = algos_module.floyd_warshall(adj.numpy())
     max_dist = np.amax(shortest_path_result)
-    edge_input = algos_module.gen_edge_input(
-        max_dist, path, attn_edge_type.numpy())
+    edge_input = algos_module.gen_edge_input(max_dist, path, attn_edge_type.numpy())
     spatial_pos = torch.from_numpy((shortest_path_result)).long()
-    attn_bias = torch.zeros(
-        [N + 1, N + 1], dtype=torch.float)  # with graph token
+    attn_bias = torch.zeros([N + 1, N + 1], dtype=torch.float)  # with graph token
 
     # combine
     item.x = x
@@ -305,8 +323,7 @@ def pad_2d_unsqueeze(x, padlen):
 def pad_attn_bias_unsqueeze(x, padlen):
     xlen = x.size(0)
     if xlen < padlen:
-        new_x = x.new_zeros(
-            [padlen, padlen], dtype=x.dtype).fill_(float("-inf"))
+        new_x = x.new_zeros([padlen, padlen], dtype=x.dtype).fill_(float("-inf"))
         new_x[:xlen, :xlen] = x
         new_x[xlen:, :xlen] = 0
         x = new_x
@@ -343,8 +360,7 @@ def pad_3d_unsqueeze(x, padlen1, padlen2, padlen3):
 
 
 def collator(items, max_node=128, multi_hop_max_dist=5, spatial_pos_max=1024):
-    items = [
-        item for item in items if item is not None and item.x.size(0) <= max_node]
+    items = [item for item in items if item is not None and item.x.size(0) <= max_node]
     items = [
         (
             item.idx,
@@ -372,14 +388,14 @@ def collator(items, max_node=128, multi_hop_max_dist=5, spatial_pos_max=1024):
     ) = zip(*items)
 
     for idx, _ in enumerate(attn_biases):
-        attn_biases[idx][1:, 1:][spatial_poses[idx]
-                                 >= spatial_pos_max] = float("-inf")
+        attn_biases[idx][1:, 1:][spatial_poses[idx] >= spatial_pos_max] = float("-inf")
     max_node_num = max(i.size(0) for i in xs)
     max_dist = max(i.size(-2) for i in edge_inputs)
     y = torch.cat(ys)
     x = torch.cat([pad_2d_unsqueeze(i, max_node_num) for i in xs])
-    edge_input = torch.cat([pad_3d_unsqueeze(
-        i, max_node_num, max_node_num, max_dist) for i in edge_inputs])
+    edge_input = torch.cat(
+        [pad_3d_unsqueeze(i, max_node_num, max_node_num, max_dist) for i in edge_inputs]
+    )
     attn_bias = torch.cat(
         [pad_attn_bias_unsqueeze(i, max_node_num + 1) for i in attn_biases]
     )
@@ -389,8 +405,7 @@ def collator(items, max_node=128, multi_hop_max_dist=5, spatial_pos_max=1024):
     spatial_pos = torch.cat(
         [pad_spatial_pos_unsqueeze(i, max_node_num) for i in spatial_poses]
     )
-    in_degree = torch.cat([pad_1d_unsqueeze(i, max_node_num)
-                          for i in in_degrees])
+    in_degree = torch.cat([pad_1d_unsqueeze(i, max_node_num) for i in in_degrees])
 
     return dict(
         idx=torch.LongTensor(idxs),

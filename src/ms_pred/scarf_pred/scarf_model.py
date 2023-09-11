@@ -17,7 +17,7 @@ import dgl
 import ms_pred.common as common
 import ms_pred.nn_utils as nn_utils
 
-import ms_pred.massformer_pred._massformer_graph_featurizer as mformer 
+import ms_pred.massformer_pred._massformer_graph_featurizer as mformer
 
 import ms_pred.massformer_pred.massformer_code.gf_model as gf_model
 
@@ -168,11 +168,10 @@ class ScarfNet(pl.LightningModule):
                 gf_pretrain_name="pcqm4mv2_graphormer_base",
                 fix_num_pt_layers=0,
                 reinit_num_pt_layers=-1,
-                reinit_layernorm=True
+                reinit_layernorm=True,
             )
             embed_dim = self.root_embed_module.get_embed_dim()
-            self.embed_to_hidden = nn.Linear(embed_dim + adduct_shift, 
-                                             self.hidden_size)
+            self.embed_to_hidden = nn.Linear(embed_dim + adduct_shift, self.hidden_size)
 
         else:
             raise NotImplementedError()
@@ -867,13 +866,12 @@ class ScarfIntenNet(pl.LightningModule):
                 gf_model_name="graphormer_base",
                 gf_pretrain_name="pcqm4mv2_graphormer_base",
                 fix_num_pt_layers=0,
-                #reinit_num_pt_layers=-1,
+                # reinit_num_pt_layers=-1,
                 reinit_num_pt_layers=-1,
-                reinit_layernorm=True
+                reinit_layernorm=True,
             )
             embed_dim = self.root_embed_module.get_embed_dim()
-            self.embed_to_hidden = nn.Linear(embed_dim + adduct_shift, 
-                                             self.hidden_size)
+            self.embed_to_hidden = nn.Linear(embed_dim + adduct_shift, self.hidden_size)
         else:
             raise NotImplementedError()
 

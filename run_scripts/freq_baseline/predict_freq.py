@@ -39,7 +39,7 @@ def extract_diff_freqs(subform_file):
             freqs[i] += 1
         for i in new_forms:
             freqs[i] += 1
-#
+    #
     return freqs
 
 
@@ -175,8 +175,13 @@ for split in split_names:
         new_data = yaml.safe_load(open(res_file, "r"))
         thresh = res_file.parent.stem
         new_entry = {"nm_nodes": thresh}
-        new_entry.update({k: v for k, v in new_data.items() 
-                          if "avg" in k or "sem" in k or "std" in k})
+        new_entry.update(
+            {
+                k: v
+                for k, v in new_data.items()
+                if "avg" in k or "sem" in k or "std" in k
+            }
+        )
         new_entries.append(new_entry)
 
     df = pd.DataFrame(new_entries)

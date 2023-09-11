@@ -10,8 +10,8 @@ retrieve_file = "src/ms_pred/retrieval/retrieval_binned.py"
 devices = ",".join(["3"])
 subform_name = "no_subform"
 
-split_override = "split_1_500" 
-maxk=None
+split_override = "split_1_500"
+maxk = None
 
 
 for model in res_folder.rglob("version_0/*.ckpt"):

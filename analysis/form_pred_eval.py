@@ -99,9 +99,11 @@ def main(args):
 
         total_true_inten = np.sum(true_intens)
         overlap_inten = np.sum(
-            [true_form_to_inten[i]
-             for i in true_form_to_inten
-             if i in pred_frag_forms_set]
+            [
+                true_form_to_inten[i]
+                for i in true_form_to_inten
+                if i in pred_frag_forms_set
+            ]
         )
         inten_covg = float(overlap_inten / (total_true_inten + 1e-22))
 
@@ -138,7 +140,7 @@ def main(args):
         dict(pred_tree=pred_tree, data_folder=data_folder) for pred_tree in pred_trees
     ]
     eval_fn = lambda x: eval_item(**x)
-    #output_entries = [eval_fn(i) for i in eval_entries]
+    # output_entries = [eval_fn(i) for i in eval_entries]
     output_entries = common.chunked_parallel(eval_entries, eval_fn)
     output_entries = [i for i in output_entries if i is not None]
 

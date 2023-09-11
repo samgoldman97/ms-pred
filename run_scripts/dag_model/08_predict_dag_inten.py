@@ -10,9 +10,8 @@ args = parser.parse_args()
 
 dataset = args.dataset
 
-#dataset = "canopus_train_public"  # canopus_train_public
-#dataset = "nist20"  # canopus_train_public
-
+# dataset = "canopus_train_public"  # canopus_train_public
+# dataset = "nist20"  # canopus_train_public
 
 
 devices = ",".join(["3"])
@@ -34,7 +33,9 @@ for model in ckpts:
     save_dir = save_dir / "preds"
 
     # Note: Must use preds_train_01
-    magma_dag_folder = base_formula_folder / split / f"preds_train_{node_num}/tree_preds"
+    magma_dag_folder = (
+        base_formula_folder / split / f"preds_train_{node_num}/tree_preds"
+    )
     print(magma_dag_folder)
     cmd = f"""python {python_file} \\
     --batch-size 32 \\

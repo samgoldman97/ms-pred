@@ -96,7 +96,8 @@ def predict():
     model = massformer_model.MassFormer.load_from_checkpoint(best_checkpoint)
     logging.info(f"Loaded model with from {best_checkpoint}")
     pred_dataset = massformer_data.MolDataset(
-        df, num_workers=num_workers, 
+        df,
+        num_workers=num_workers,
     )
 
     # Define dataloaders
@@ -110,7 +111,7 @@ def predict():
     )
 
     model.eval()
-    device = "cuda"  if kwargs['gpu'] else "cpu"
+    device = "cuda" if kwargs["gpu"] else "cpu"
     device = torch.device(device)
     model = model.to(device)
 
@@ -165,6 +166,7 @@ def predict():
 
 if __name__ == "__main__":
     import time
+
     start_time = time.time()
     predict()
     end_time = time.time()

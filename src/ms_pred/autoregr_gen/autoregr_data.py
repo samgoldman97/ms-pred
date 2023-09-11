@@ -79,8 +79,7 @@ class AutoregrDataset(Dataset):
             self.name_to_dict = {}
         else:
             self.spec_names = self.df_sub["spec"].values
-            self.name_to_dict = self.df_sub.set_index(
-                "spec").to_dict(orient="index")
+            self.name_to_dict = self.df_sub.set_index("spec").to_dict(orient="index")
 
         for i in self.name_to_dict:
             self.name_to_dict[i]["formula_file"] = self.file_map[i]
@@ -106,7 +105,10 @@ class AutoregrDataset(Dataset):
             self.mols = [Chem.MolFromSmiles(i) for i in self.smiles]
             self.mol_graphs = [self.root_encode_fn(i) for i in self.mols]
         else:
-            def mol_from_smi(x): return Chem.MolFromSmiles(x)
+
+            def mol_from_smi(x):
+                return Chem.MolFromSmiles(x)
+
             self.mols = common.chunked_parallel(
                 self.smiles,
                 mol_from_smi,
@@ -126,8 +128,7 @@ class AutoregrDataset(Dataset):
                 use_ray=use_ray,
             )
 
-        logging.info(
-            f"{len(self.df_sub)} of {len(self.df)} spec have form dicts.")
+        logging.info(f"{len(self.df_sub)} of {len(self.df)} spec have form dicts.")
         self.form_files = [
             self.name_to_dict[i]["formula_file"] for i in self.spec_names
         ]
@@ -190,7 +191,8 @@ class AutoregrDataset(Dataset):
         form_intens = np.array(form_intens)[sorted_intens]
         all_form_vecs = np.array(all_form_vecs)[sorted_intens]
         atom_inds = np.array(
-            [nonzero_inds for i in range(all_form_vecs.shape[0])]).reshape(-1)
+            [nonzero_inds for i in range(all_form_vecs.shape[0])]
+        ).reshape(-1)
 
         all_form_vecs = all_form_vecs[:, nonzero_inds]
         all_form_vecs = all_form_vecs.reshape(-1)
@@ -203,7 +205,6 @@ class AutoregrDataset(Dataset):
             "mol_graph": mol_graph,
             "base_formula": full_vec,
             "adduct": adduct,
-
             # outputs
             "all_forms": all_form_vecs,
             "atom_inds": atom_inds,
@@ -227,24 +228,21 @@ class AutoregrDataset(Dataset):
         elif isinstance(mol_graphs[0], np.ndarray):
             batched_graph = torch.FloatTensor(np.vstack(mol_graphs))
         elif isinstance(mol_graphs[0], pyg_data):
-            batched_graph = mformer.MassformerGraphFeaturizer.collate_func(
-                mol_graphs)
+            batched_graph = mformer.MassformerGraphFeaturizer.collate_func(mol_graphs)
         else:
             raise NotImplementedError()
 
         formula_ars = [j["base_formula"] for j in input_list]
         formula_tensors = torch.FloatTensor(formula_ars)
 
-        targ_vectors = [torch.FloatTensor(i['all_forms']) for i in input_list]
-        ind_vectors = [torch.FloatTensor(i['atom_inds']) for i in input_list]
+        targ_vectors = [torch.FloatTensor(i["all_forms"]) for i in input_list]
+        ind_vectors = [torch.FloatTensor(i["atom_inds"]) for i in input_list]
 
         targ_lens = torch.FloatTensor([len(i) for i in targ_vectors])
 
         # Pad and stack targ vectors with torch rnn
-        targ_vectors = torch.nn.utils.rnn.pad_sequence(targ_vectors,
-                                                       batch_first=True)
-        ind_vectors = torch.nn.utils.rnn.pad_sequence(ind_vectors,
-                                                      batch_first=True)
+        targ_vectors = torch.nn.utils.rnn.pad_sequence(targ_vectors, batch_first=True)
+        ind_vectors = torch.nn.utils.rnn.pad_sequence(ind_vectors, batch_first=True)
 
         output = {
             "names": names,
@@ -252,7 +250,6 @@ class AutoregrDataset(Dataset):
             "formula_tensors": formula_tensors,
             "adducts": adducts,
             "targ_lens": targ_lens,
-
             # Atom inds
             "atom_inds": ind_vectors,
             "targ_vectors": targ_vectors,

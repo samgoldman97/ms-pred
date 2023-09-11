@@ -14,8 +14,8 @@ subform_name = "no_subform"
 num_workers = 32
 
 valid_splits = ["split_1"]
-split_override = "split_1" 
-maxk=50 # None
+split_override = "split_1"
+maxk = 50  # None
 
 for model in res_folder.rglob("version_0/*.ckpt"):
     split = model.parent.parent.name

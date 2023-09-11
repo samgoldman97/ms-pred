@@ -59,10 +59,11 @@ def add_graff_ms_train_args(parser):
     )
     parser.add_argument("--dropout", default=0.1, action="store", type=float)
     parser.add_argument("--hidden-size", default=256, action="store", type=int)
-    parser.add_argument("--form-dir-name", default="magma_subform_50_with_raw", action="store")
+    parser.add_argument(
+        "--form-dir-name", default="magma_subform_50_with_raw", action="store"
+    )
     parser.add_argument("--embed-adduct", default=False, action="store_true")
-    parser.add_argument("--num-fixed-forms", default=10000, action="store",
-                        type=int)
+    parser.add_argument("--num-fixed-forms", default=10000, action="store", type=int)
     return parser
 
 
@@ -106,7 +107,7 @@ def train_model():
     val_df = df.iloc[val_inds]
     test_df = df.iloc[test_inds]
 
-    subform_stem = kwargs['form_dir_name']
+    subform_stem = kwargs["form_dir_name"]
     subformula_folder = Path(data_dir) / "subformulae" / subform_stem
     form_map = {i.stem: Path(i) for i in subformula_folder.glob("*.json")}
     graph_featurizer = nn_utils.MolDGLGraph(pe_embed_k=kwargs["pe_embed_k"])
@@ -145,11 +146,11 @@ def train_model():
     new_entry = train_dataset[0]
 
     # Losses will be negatives and others will be positives
-    num_fixed_forms = kwargs['num_fixed_forms']
+    num_fixed_forms = kwargs["num_fixed_forms"]
     top_forms = train_dataset.get_top_forms()
     logging.info(f"Found {top_forms['forms'].shape[0]} formulae")
-    num_fixed_forms = min(num_fixed_forms, len(top_forms['forms']))
-    fixed_forms = top_forms['forms'][:num_fixed_forms]
+    num_fixed_forms = min(num_fixed_forms, len(top_forms["forms"]))
+    fixed_forms = top_forms["forms"][:num_fixed_forms]
     logging.info(f"Selected {fixed_forms.shape[0]} formulae")
 
     # Define dataloaders
@@ -197,7 +198,7 @@ def train_model():
         num_bond_feats=graph_featurizer.num_bond_feats,
         lr_decay_rate=kwargs["lr_decay_rate"],
         embed_adduct=kwargs["embed_adduct"],
-        num_fixed_forms=num_fixed_forms
+        num_fixed_forms=num_fixed_forms,
     )
     model.set_fixed_forms(fixed_forms)
 
@@ -258,6 +259,7 @@ def train_model():
 
 if __name__ == "__main__":
     import time
+
     start_time = time.time()
     train_model()
     end_time = time.time()

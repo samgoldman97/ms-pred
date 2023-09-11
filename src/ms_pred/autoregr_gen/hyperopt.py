@@ -21,7 +21,7 @@ from ray import tune
 
 import ms_pred.common as common
 import ms_pred.nn_utils as nn_utils
-from ms_pred.autoregr_gen import autoregr_data, autoregr_model, train  
+from ms_pred.autoregr_gen import autoregr_data, autoregr_model, train
 
 
 def score_function(config, base_args, orig_dir=""):
@@ -68,7 +68,6 @@ def score_function(config, base_args, orig_dir=""):
     atom_feats = graph_featurizer.atom_feats
     bond_feats = graph_featurizer.bond_feats
 
-
     train_dataset = autoregr_data.AutoregrDataset(
         df=train_df,
         data_dir=data_dir,
@@ -88,7 +87,6 @@ def score_function(config, base_args, orig_dir=""):
         root_embedder=kwargs["root_embedder"],
         num_workers=num_workers,
     )
-
 
     # Define dataloaders
     collate_fn = train_dataset.get_collate_fn()

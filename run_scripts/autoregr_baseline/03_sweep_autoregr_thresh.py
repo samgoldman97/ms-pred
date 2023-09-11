@@ -17,25 +17,25 @@ res_folder = Path(f"results/autoregr_{dataset}/")
 
 # Overwrite with manual args below
 
-#dataset = "canopus_train_public"  # canopus_train_public
-#dataset = "nist20"  # canopus_train_public
-#res_folder = Path(f"results/scarf_{dataset}_ablate/")
+# dataset = "canopus_train_public"  # canopus_train_public
+# dataset = "nist20"  # canopus_train_public
+# res_folder = Path(f"results/scarf_{dataset}_ablate/")
 res_folder = Path(f"results/autoregr_{dataset}/")
 
 python_file = "src/ms_pred/autoregr_gen/predict.py"
 
 devices = ",".join(["2"])
 
-max_nodes = [10, 20, 30, 40, 50, 100] 
+max_nodes = [10, 20, 30, 40, 50, 100]
 max_nodes = [10, 20, 30]
 max_nodes = [10, 20, 30, 40, 50, 100, 200, 300, 500, 1000]
 subform_name = "rdbe_50"
 subform_name = "magma_subform_50"
 split_override = "split_1"
 split_override = None
-#split_override = "split_1_10"
+# split_override = "split_1_10"
 
-valid_splits = ["split_1"]#, "split_1_10"]
+valid_splits = ["split_1"]  # , "split_1_10"]
 
 models = sorted(list(res_folder.rglob("version_0/*.ckpt")))
 
@@ -90,8 +90,13 @@ for model in models:
         new_data = yaml.safe_load(open(res_file, "r"))
         thresh = res_file.parent.stem
         new_entry = {"nm_nodes": thresh}
-        new_entry.update({k: v for k, v in new_data.items() 
-                          if "avg" in k or "sem" in k or "std" in k})
+        new_entry.update(
+            {
+                k: v
+                for k, v in new_data.items()
+                if "avg" in k or "sem" in k or "std" in k
+            }
+        )
         new_entries.append(new_entry)
 
     df = pd.DataFrame(new_entries)

@@ -4,7 +4,7 @@ import subprocess
 dataset = "canopus_train_public"
 dataset = "nist20"
 
-#res_folder = Path(f"results/ffn_baseline_epoch_ablation_canopus_train_public")
+# res_folder = Path(f"results/ffn_baseline_epoch_ablation_canopus_train_public")
 res_folder = Path(f"results/ffn_baseline_{dataset}/")
 
 pred_file = "src/ms_pred/ffn_pred/predict.py"
@@ -14,8 +14,8 @@ subform_name = "no_subform"
 dist = "cos"
 split_override = "split_1"
 split_override = None
-split_override = "split_1_500" 
-maxk=50
+split_override = "split_1_500"
+maxk = 50
 valid_splits = ["split_1"]
 
 

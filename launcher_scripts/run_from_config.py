@@ -138,7 +138,7 @@ def build_python_string(
 
     all_flags = [i for i in all_flags if len(str(i).strip()) > 0]
     all_flags = f" \\\n".join(all_flags)
-    python_string = f"{python_string} \\\n {all_flags}" 
+    python_string = f"{python_string} \\\n {all_flags}"
     return (slurm_args, python_string)
 
 
@@ -180,13 +180,13 @@ def convert_flag(flag_key, flag_value):
 
 def get_launcher_log_name(experiment_folder):
     """Return an appropriate launcher log file"""
-    launcher_path = Path(experiment_folder) /  "launcher_log_1.log"
+    launcher_path = Path(experiment_folder) / "launcher_log_1.log"
 
     # Keep incrementing the counter
     ctr = 1
     while launcher_path.exists():
         new_file = f"launcher_log_{ctr}.log"
-        launcher_path = Path(experiment_folder) /  new_file
+        launcher_path = Path(experiment_folder) / new_file
         ctr += 1
     return launcher_path
 
@@ -289,7 +289,9 @@ def main(
             gpu_num = str_num % len(vis_devices)
             gpu = vis_devices[gpu_num]
             cmd_str_new = f"CUDA_VISIBLE_DEVICES={gpu} {cmd_str}"
-            output_name = f"{launcher_path.parent / launcher_path.stem}_python_{gpu_num}.sh"
+            output_name = (
+                f"{launcher_path.parent / launcher_path.stem}_python_{gpu_num}.sh"
+            )
 
             with open(output_name, "a") as fp:
                 fp.write(f"{cmd_str_new}\n")
@@ -300,8 +302,9 @@ def main(
         logdir = Path(launch_all).parent / "logs"
         logdir.mkdir(exist_ok=True, parents=True)
         with open(launch_all, "w") as fp:
-            temp_str = [f"sh {i} > {logdir / Path(i).name}.log &" 
-                        for i in list(sh_run_files)]
+            temp_str = [
+                f"sh {i} > {logdir / Path(i).name}.log &" for i in list(sh_run_files)
+            ]
             fp.write("\n".join(temp_str))
         print(f"Runnings script: {launch_all}")
         subprocess.call(f"sh {launch_all}", shell=True)

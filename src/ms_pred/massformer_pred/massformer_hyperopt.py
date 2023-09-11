@@ -105,14 +105,12 @@ def score_function(config, base_args, orig_dir=""):
         mf_layer_type=kwargs["mf_layer_type"],
         mf_dropout=kwargs["mf_dropout"],
         use_reverse=kwargs["use_reverse"],
-        embed_adduct=kwargs['embed_adduct'],
-
+        embed_adduct=kwargs["embed_adduct"],
         gf_model_name=kwargs["gf_model_name"],
         gf_pretrain_name=kwargs["gf_pretrain_name"],
         gf_fix_num_pt_layers=kwargs["gf_fix_num_pt_layers"],
         gf_reinit_num_pt_layers=kwargs["gf_reinit_num_pt_layers"],
         gf_reinit_layernorm=kwargs["gf_reinit_layernorm"],
-
         learning_rate=kwargs["learning_rate"],
         lr_decay_rate=kwargs["lr_decay_rate"],
         output_dim=num_bins,
@@ -188,7 +186,6 @@ def get_param_space(trial):
     trial.suggest_int("mf_num_ff_num_layers", 1, 5)
 
 
-
 def get_initial_points() -> List[Dict]:
     """get_intiial_points.
 
@@ -201,14 +198,11 @@ def get_initial_points() -> List[Dict]:
         "batch_size": 64,
         "weight_decay": 0,
         "dropout": 0.2,
-
         "mf_ff_h_dim": 256,
         "mf_num_ff_num_layers": 3,
         "mf_dropout": 0.2,
         "mf_ff_skip": True,
         "mf_layer_type": "neims",
-
-
         # Define defaults from above
         "embed_adduct": True,
         "use_reverse": True,

@@ -56,7 +56,7 @@ dataset = args.dataset
 
 
 # Overwrite
-#dataset = "canopus_train_public"
+# dataset = "canopus_train_public"
 # dataset = "nist20"  # canopus_train_public
 
 
@@ -71,7 +71,7 @@ split_override = None
 
 splits = ["split_1", "split_2", "split_3"]
 splits = ["scaffold_1"]
-splits = ["split_1"]#], "scaffold_1"]
+splits = ["split_1"]  # ], "scaffold_1"]
 
 
 # Create full spec

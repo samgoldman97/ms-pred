@@ -11,7 +11,7 @@ devices = ",".join(["2"])
 subform_name = "no_subform"
 valid_splits = ["split_1"]
 split_override = None
-maxk=50
+maxk = 50
 
 
 for model in res_folder.rglob("version_0/*.ckpt"):

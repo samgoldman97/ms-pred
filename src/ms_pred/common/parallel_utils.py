@@ -37,7 +37,6 @@ def simple_parallel(
     return results
 
 
-
 def chunked_parallel(
     input_list,
     function,

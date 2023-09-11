@@ -165,7 +165,7 @@ def train_model():
         hidden_size=kwargs["hidden_size"],
         neighbors=kwargs["neighbors"],
         layers=kwargs["layers"],
-        top_layers=kwargs['top_layers'],
+        top_layers=kwargs["top_layers"],
         dropout=kwargs["dropout"],
         output_dim=num_bins,
         use_reverse=kwargs["use_reverse"],

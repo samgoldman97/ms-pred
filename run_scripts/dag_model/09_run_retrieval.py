@@ -11,7 +11,7 @@ dataset = "nist20"
 dataset = "canopus_train_public"
 dist = "cos"
 split_override = None
-maxk=None
+maxk = None
 
 inten_dir = Path(f"results/dag_inten_{dataset}")  # _{max_nodes}")
 valid_splits = ["split_1"]
@@ -50,7 +50,7 @@ for inten_model in inten_dir.rglob("version_0/*.ckpt"):
     device_str = f"CUDA_VISIBLE_DEVICES={devices}"
     cmd = f"{device_str} {cmd}"
     print(cmd + "\n")
-    #subprocess.run(cmd, shell=True)
+    # subprocess.run(cmd, shell=True)
 
     # Run retrieval
     cmd = f"""python {retrieve_file} \\
@@ -61,7 +61,7 @@ for inten_model in inten_dir.rglob("version_0/*.ckpt"):
     """
 
     print(cmd + "\n")
-    #subprocess.run(cmd, shell=True)
+    # subprocess.run(cmd, shell=True)
 
     # Run retrieval random baseline
     cmd = f"""python {retrieve_file} \\

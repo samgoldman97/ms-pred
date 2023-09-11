@@ -104,7 +104,6 @@ def main(args):
         if true_spec is None:
             continue
 
-
         # Don't norm spec
         ## Norm pred spec by max
         # if np.max(pred_ar) > 0:
@@ -139,7 +138,7 @@ def main(args):
         else:
             possible = []
             smiles_mass = 0
-            max_possible_bin = 0 
+            max_possible_bin = 0
             ikey = ""
 
         copy_pred, copy_true = np.copy(pred_ar), np.copy(true_spec)

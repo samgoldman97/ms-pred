@@ -19,6 +19,7 @@ class MassFormer(pl.LightningModule):
     The other parts, e.g., spectral attention, l1 normalization etc have not been
     copied to ensure consistency with other models.
     """
+
     def __init__(
         self,
         # MF FFN Args:
@@ -27,15 +28,12 @@ class MassFormer(pl.LightningModule):
         mf_ff_skip,
         mf_layer_type,
         mf_dropout,
-
         # MF graphformer embedder arguments
         gf_model_name,
         gf_pretrain_name,
         gf_fix_num_pt_layers,
         gf_reinit_num_pt_layers,
         gf_reinit_layernorm,
-
-
         learning_rate: float = 7e-4,
         lr_decay_rate: float = 1.0,
         output_dim: int = 1000,
@@ -47,8 +45,7 @@ class MassFormer(pl.LightningModule):
         embed_adduct: bool = True,
         **kwargs,
     ):
-        """
-        """
+        """ """
         super().__init__()
         self.save_hyperparameters()
 
@@ -68,14 +65,13 @@ class MassFormer(pl.LightningModule):
             self.adduct_embedder.requires_grad = False
             adduct_shift = adduct_types
 
-
         # Embedder
         self.graphormer_embedder = gf_model.GFv2Embedder(
             gf_model_name=gf_model_name,
             gf_pretrain_name=gf_pretrain_name,
             fix_num_pt_layers=gf_fix_num_pt_layers,
             reinit_num_pt_layers=gf_reinit_num_pt_layers,
-            reinit_layernorm=gf_reinit_layernorm
+            reinit_layernorm=gf_reinit_layernorm,
         )
 
         # MLP on top
@@ -89,11 +85,7 @@ class MassFormer(pl.LightningModule):
             ff_layer = model_extract.NeimsBlock
         self.ff_layers.append(nn.Linear(embed_dim + adduct_shift, mf_ff_h_dim))
         for i in range(mf_num_ff_num_layers):
-            self.ff_layers.append(
-                ff_layer(
-                    mf_ff_h_dim,
-                    mf_ff_h_dim,
-                    self.mf_dropout))
+            self.ff_layers.append(ff_layer(mf_ff_h_dim, mf_ff_h_dim, self.mf_dropout))
 
         # Get bin masses
         self.upper_limit = upper_limit
@@ -124,7 +116,6 @@ class MassFormer(pl.LightningModule):
         self.output_layer = nn.Linear(
             mf_ff_h_dim, self.num_outputs * self.output_dim * reverse_mult
         )
-
 
     def cos_loss(self, pred, targ):
         """loss_fn."""

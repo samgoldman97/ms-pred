@@ -30,10 +30,10 @@ def get_splits(
     folds = set(split_df.columns)
 
     # Compatibility across split types
-    if "spec" in folds: 
+    if "spec" in folds:
         spec_key = "spec"
         folds.remove("spec")
-    elif "name" in folds: 
+    elif "name" in folds:
         spec_key = "name"
         folds.remove("name")
     else:

@@ -23,11 +23,10 @@ splits = ["scaffold_1", "split_1"]
 valid_splits = ["scaffold_1"]
 
 
-
 if debug:
     max_nodes = max_nodes[:3]
 
-#split_override = "split_1"
+# split_override = "split_1"
 
 models = sorted(list(res_folder.rglob("version_0/*.ckpt")))
 
@@ -66,7 +65,6 @@ for model in models:
         print(cmd + "\n")
         subprocess.run(cmd, shell=True)
 
-
         # Convert to form files from dag
     for pred_dir in pred_dir_folders:
         tree_pred_folder = pred_dir / "tree_preds"
@@ -80,7 +78,6 @@ for model in models:
         """
         subprocess.run(cmd, shell=True)
         form_dir_folders.append(form_pred_folder)
-
 
     res_files = []
     for pred_dir in form_dir_folders:

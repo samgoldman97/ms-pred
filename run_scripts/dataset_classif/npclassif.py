@@ -13,14 +13,16 @@ from ms_pred import common
 
 
 output_folder = "results/dataset_analyses/"
-labels_files = ["data/spec_datasets/nist20/labels.tsv", 
-                "data/spec_datasets/canopus_train_public/labels.tsv",]
+labels_files = [
+    "data/spec_datasets/nist20/labels.tsv",
+    "data/spec_datasets/canopus_train_public/labels.tsv",
+]
 save_str = "ikey_to_classes.p"
 debug = False
 
 # Get large cache with everything
 big_dict = {}
-for file in labels_files: 
+for file in labels_files:
     file = Path(file)
     dataset_name = file.parent.name
     save_name = Path(output_folder) / dataset_name / save_str
@@ -31,7 +33,7 @@ for file in labels_files:
             big_dict.update(full_out)
 
 
-for file in labels_files: 
+for file in labels_files:
     file = Path(file)
     dataset_name = file.parent.name
     save_name = Path(output_folder) / dataset_name / save_str

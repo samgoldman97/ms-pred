@@ -20,10 +20,10 @@ else:
 
 # Overwrite with manual args below
 
-#dataset = "canopus_train_public"  # canopus_train_public
-#dataset = "nist20"  # canopus_train_public
-#res_folder = Path(f"results/scarf_{dataset}_ablate/")
-#res_folder = Path(f"results/scarf_{dataset}/")
+# dataset = "canopus_train_public"  # canopus_train_public
+# dataset = "nist20"  # canopus_train_public
+# res_folder = Path(f"results/scarf_{dataset}_ablate/")
+# res_folder = Path(f"results/scarf_{dataset}/")
 
 
 python_file = "src/ms_pred/scarf_pred/predict_gen.py"
@@ -75,7 +75,7 @@ for model in models:
         device_str = f"CUDA_VISIBLE_DEVICES={devices}"
         cmd = f"{device_str} {cmd}"
         print(cmd + "\n")
-        #subprocess.run(cmd, shell=True)
+        # subprocess.run(cmd, shell=True)
 
     res_files = []
     for pred_dir in pred_dir_folders:
@@ -94,8 +94,13 @@ for model in models:
         new_data = yaml.safe_load(open(res_file, "r"))
         thresh = res_file.parent.stem
         new_entry = {"nm_nodes": thresh}
-        new_entry.update({k: v for k, v in new_data.items() 
-                          if "avg" in k or "sem" in k or "std" in k})
+        new_entry.update(
+            {
+                k: v
+                for k, v in new_data.items()
+                if "avg" in k or "sem" in k or "std" in k
+            }
+        )
         new_entries.append(new_entry)
 
     df = pd.DataFrame(new_entries)

@@ -238,6 +238,7 @@ def predict():
 
 if __name__ == "__main__":
     import time
+
     start_time = time.time()
     predict()
     end_time = time.time()

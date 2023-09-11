@@ -107,7 +107,7 @@ def score_function(config, base_args, orig_dir=""):
         hidden_size=kwargs["hidden_size"],
         neighbors=kwargs["neighbors"],
         layers=kwargs["layers"],
-        top_layers=kwargs['top_layers'],
+        top_layers=kwargs["top_layers"],
         dropout=kwargs["dropout"],
         output_dim=num_bins,
         use_reverse=kwargs["use_reverse"],
@@ -167,7 +167,7 @@ def get_param_space(trial):
     trial.suggest_categorical("weight_decay", [1e-6, 1e-7, 0])
     trial.suggest_categorical("batch_size", [16, 32, 64])
 
-    #trial.suggest_categorical("use_reverse", [True, False])
+    # trial.suggest_categorical("use_reverse", [True, False])
     trial.suggest_categorical("use_reverse", [False])
     trial.suggest_float("dropout", 0, 0.3, step=0.1)
     trial.suggest_categorical("hidden_size", [64, 128, 256, 512])
@@ -192,7 +192,7 @@ def get_initial_points() -> List[Dict]:
         "hidden_size": 64,
         "layers": 3,
         "top_layers": 1,
-        #"use_reverse": True,
+        # "use_reverse": True,
         "use_reverse": False,
         "neighbors": 4,
         "embed_adduct": True,

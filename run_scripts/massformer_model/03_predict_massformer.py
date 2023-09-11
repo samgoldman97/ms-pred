@@ -8,8 +8,8 @@ parser.add_argument("--dataset-name", type=str, default="nist20")
 args = parser.parse_args()
 dataset_name = args.dataset_name
 
-#dataset_name = "canopus_train_public"
-#dataset_name = "nist20"
+# dataset_name = "canopus_train_public"
+# dataset_name = "nist20"
 
 res_folder = Path(f"results/massformer_baseline_{dataset_name}")
 python_file = "src/ms_pred/massformer_pred/predict.py"

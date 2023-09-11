@@ -58,7 +58,7 @@ def single_form_from_smi(smi: str) -> Tuple[str, Tuple[str, str]]:
 
 
 def build_form_map(smi_file, dump_file=None, debug=False):
-    """ build_form_map. """
+    """build_form_map."""
     smi_list = read_smi_txt(smi_file, debug=debug)
     form_to_mols = calc_formula_to_moltuples(smi_list)
 
@@ -74,14 +74,13 @@ if __name__ == "__main__":
     data_labels = "data/spec_datasets/canopus_train_public/labels.tsv"
     pubchem_out = "data/retrieval/pubchem/pubchem_formula_map.p"
     pubchem_sub_out = "data/retrieval/pubchem/pubchem_formula_map_subset.p"
-    built_map = build_form_map(smi_file=pubchem_file,
-                               dump_file=pubchem_out,
-                               debug=False)
+    built_map = build_form_map(
+        smi_file=pubchem_file, dump_file=pubchem_out, debug=False
+    )
 
     full_map = pickle.load(open(pubchem_out, "rb"))
-    uniq_forms = pd.unique(pd.read_csv(data_labels, sep="\t")['formula'])
-    sub_map = {uniq_form: full_map.get(uniq_form, [])
-               for uniq_form in uniq_forms}
+    uniq_forms = pd.unique(pd.read_csv(data_labels, sep="\t")["formula"])
+    sub_map = {uniq_form: full_map.get(uniq_form, []) for uniq_form in uniq_forms}
 
     with open(pubchem_sub_out, "wb") as f:
         pickle.dump(sub_map, f)

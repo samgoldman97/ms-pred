@@ -7,7 +7,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--dataset", type=str, default="nist20")
 args = parser.parse_args()
 dataset_name = args.dataset
-num_workers=32
+num_workers = 32
 
 
 dataset_name = "canopus_train_public"

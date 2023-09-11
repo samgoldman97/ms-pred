@@ -20,8 +20,7 @@ def get_args():
     return parser.parse_args()
 
 
-def dag_to_spec(dag: dict, max_peaks: int,
-                min_inten: float, precision=4):
+def dag_to_spec(dag: dict, max_peaks: int, min_inten: float, precision=4):
     """bin_dag.
 
     Args:
@@ -29,17 +28,16 @@ def dag_to_spec(dag: dict, max_peaks: int,
         max_peaks (int): max_peaks
         min_inten (float): min_inten
     """
-    root = dag['root_inchi']
-    frags = dag['frags']
-    engine = fragmentation.FragmentEngine(mol_str=root,
-                                          mol_str_type="inchi")
-    adduct = dag['adduct']
+    root = dag["root_inchi"]
+    frags = dag["frags"]
+    engine = fragmentation.FragmentEngine(mol_str=root, mol_str_type="inchi")
+    adduct = dag["adduct"]
     parentmass = engine.full_weight + common.ion2mass[adduct]
 
     mz, intens = [], []
     for k, v in frags.items():
-        new_masses = v['mz_charge']
-        new_intens = v['intens']
+        new_masses = v["mz_charge"]
+        new_intens = v["intens"]
         mz.extend(new_masses)
         intens.extend(new_intens)
 
@@ -49,7 +47,7 @@ def dag_to_spec(dag: dict, max_peaks: int,
     mz = mz[min_inten_mask]
     intens = intens[min_inten_mask]
 
-    fused_tuples = [[x,y] for x,y in zip(mz, intens)]
+    fused_tuples = [[x, y] for x, y in zip(mz, intens)]
 
     # Merge by max function
     mz_to_inten_pair = {}
@@ -74,16 +72,17 @@ def dag_to_spec(dag: dict, max_peaks: int,
     mz = mz[inds]
     intens = intens[inds]
 
-    meta = dict(inchi=dag['root_inchi'],
-                parentmass=parentmass,
-                smiles=common.smiles_from_inchi(dag['root_inchi']),
-                ID=dag['name'],
-                ionization=adduct,
-                adduct=adduct)
+    meta = dict(
+        inchi=dag["root_inchi"],
+        parentmass=parentmass,
+        smiles=common.smiles_from_inchi(dag["root_inchi"]),
+        ID=dag["name"],
+        ionization=adduct,
+        adduct=adduct,
+    )
     spec_ar = np.vstack([mz, intens]).transpose(1, 0)
     spec_obj = [("spec", spec_ar)]
     return meta, spec_obj
-
 
 
 def file_to_spec(dag_file: dict, max_peaks: int, min_inten: float):
@@ -101,8 +100,7 @@ def file_to_spec(dag_file: dict, max_peaks: int, min_inten: float):
 
 
 def main():
-    """main.
-    """
+    """main."""
     args = get_args()
     out = args.out_mgf
     num_workers = args.num_workers
@@ -114,15 +112,15 @@ def main():
 
     # Test case
     dag_file = dag_files[0]
-    out_obj = file_to_spec(dag_file, max_peaks=max_peaks,
-                           min_inten=min_inten)
-    read_dag_file = partial(file_to_spec, max_peaks=max_peaks,
-                            min_inten=min_inten)
+    out_obj = file_to_spec(dag_file, max_peaks=max_peaks, min_inten=min_inten)
+    read_dag_file = partial(file_to_spec, max_peaks=max_peaks, min_inten=min_inten)
 
     if num_workers > 0:
-        outs = common.chunked_parallel(dag_files,
-                                       read_dag_file,
-                                       max_cpu=num_workers,)
+        outs = common.chunked_parallel(
+            dag_files,
+            read_dag_file,
+            max_cpu=num_workers,
+        )
     else:
         outs = [read_dag_file(i) for i in dag_files]
 
@@ -131,6 +129,5 @@ def main():
         fp.write(mgf_str)
 
 
-
-if __name__=="__main__": 
+if __name__ == "__main__":
     main()

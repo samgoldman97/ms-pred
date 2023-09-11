@@ -39,9 +39,7 @@ class BinnedDataset(Dataset):
         if self.num_workers == 0:
             self.mols = [Chem.MolFromSmiles(i) for i in self.smiles]
             self.weights = [common.ExactMolWt(i) for i in self.mols]
-            self.mol_graphs = [
-                self.graph_featurizer(el) for el in self.mols
-            ]
+            self.mol_graphs = [self.graph_featurizer(el) for el in self.mols]
         else:
             mol_from_smi = lambda x: Chem.MolFromSmiles(x)
             self.mols = common.chunked_parallel(
@@ -106,7 +104,9 @@ class BinnedDataset(Dataset):
         self.df = self.df[mask]
         self.spec_names = np.array(self.spec_names)[mask].tolist()
         self.weights = np.array(self.weights)[mask].tolist()
-        self.mol_graphs = [el for el, valid in zip(self.mol_graphs, mask.tolist()) if valid]
+        self.mol_graphs = [
+            el for el, valid in zip(self.mol_graphs, mask.tolist()) if valid
+        ]
 
         self.adducts = [
             common.ion2onehot_pos[self.name_to_adduct[i]] for i in self.spec_names
@@ -141,7 +141,9 @@ class BinnedDataset(Dataset):
         """collate_fn"""
         names = [j["name"] for j in input_list]
         spec_ars = [j["binned"] for j in input_list]
-        graphs = MassformerGraphFeaturizer.collate_func([j["gf_v2_data"] for j in input_list])
+        graphs = MassformerGraphFeaturizer.collate_func(
+            [j["gf_v2_data"] for j in input_list]
+        )
         full_weight = [j["full_weight"] for j in input_list]
         adducts = [j["adduct"] for j in input_list]
 
@@ -183,9 +185,7 @@ class MolDataset(Dataset):
         if self.num_workers == 0:
             self.mols = [Chem.MolFromSmiles(i) for i in self.smiles]
             self.weights = [common.ExactMolWt(i) for i in self.mols]
-            self.mol_graphs = [
-                self.graph_featurizer(el) for el in self.mols
-            ]
+            self.mol_graphs = [self.graph_featurizer(el) for el in self.mols]
         else:
             self.mols = common.chunked_parallel(
                 self.smiles,
@@ -245,7 +245,9 @@ class MolDataset(Dataset):
         """collate_fn"""
         names = [j["smi"] for j in input_list]
         spec_names = [j["spec_name"] for j in input_list]
-        graphs = MassformerGraphFeaturizer.collate_func([j["gf_v2_data"] for j in input_list])
+        graphs = MassformerGraphFeaturizer.collate_func(
+            [j["gf_v2_data"] for j in input_list]
+        )
         full_weight = [j["full_weight"] for j in input_list]
         adducts = [j["adduct"] for j in input_list]
         adducts = torch.FloatTensor(adducts)

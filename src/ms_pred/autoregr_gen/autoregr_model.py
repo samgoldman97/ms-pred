@@ -87,8 +87,7 @@ class AutoregrNet(pl.LightningModule):
         self.warmup = warmup
 
         # Define input to RNN
-        self.formula_onehot = nn.Parameter(
-            torch.eye(self.formula_dim + 1)).float()
+        self.formula_onehot = nn.Parameter(torch.eye(self.formula_dim + 1)).float()
         self.formula_onehot.requires_grad = False
 
         # Create start token
@@ -116,8 +115,7 @@ class AutoregrNet(pl.LightningModule):
             if self.pool_op == "avg":
                 self.pool = dgl_nn.AvgPooling()
             elif self.pool_op == "attn":
-                self.pool = dgl_nn.GlobalAttentionPooling(
-                    nn.Linear(hidden_size, 1))
+                self.pool = dgl_nn.GlobalAttentionPooling(nn.Linear(hidden_size, 1))
             else:
                 raise NotImplementedError()
         elif self.root_embedder == "fp":
@@ -136,29 +134,28 @@ class AutoregrNet(pl.LightningModule):
                 gf_pretrain_name="pcqm4mv2_graphormer_base",
                 fix_num_pt_layers=0,
                 reinit_num_pt_layers=-1,
-                reinit_layernorm=True
+                reinit_layernorm=True,
             )
             embed_dim = self.root_embed_module.get_embed_dim()
-            self.embed_to_hidden = nn.Linear(embed_dim + adduct_shift,
-                                             self.hidden_size)
+            self.embed_to_hidden = nn.Linear(embed_dim + adduct_shift, self.hidden_size)
 
         else:
             raise NotImplementedError()
 
         # Define context layer
         self.context_layer = nn.Linear(
-            self.hidden_size + self.formula_in_dim, self.hidden_size)
+            self.hidden_size + self.formula_in_dim, self.hidden_size
+        )
 
         # Hidden size, diff formula, option formula, atom index being predicted
         self.max_atom_out = common.MAX_ATOM_CT
         self.use_reverse_mult = max(self.use_reverse * 3, 1)
-        output_size = (
-            self.max_atom_out * self.use_reverse_mult
+        output_size = self.max_atom_out * self.use_reverse_mult
+        self.output_layer = nn.Sequential(
+            nn.Linear(self.hidden_size, output_size),
         )
-        self.output_layer = nn.Sequential(nn.Linear(self.hidden_size, output_size),)
 
-        self.atom_ct_onehot = nn.Parameter(
-            torch.eye(self.max_atom_out)).float()
+        self.atom_ct_onehot = nn.Parameter(torch.eye(self.max_atom_out)).float()
         self.atom_ct_onehot.requires_grad = False
         rnn_input_dim = self.formula_dim + self.max_atom_out + 1
 
@@ -171,7 +168,6 @@ class AutoregrNet(pl.LightningModule):
             batch_first=True,
         )
         self.loss_fn = torch.nn.CrossEntropyLoss(reduction="none")
-
 
     def get_hidden(self, graphs, full_formula, adducts):
         # [Mols x hidden]
@@ -214,15 +210,17 @@ class AutoregrNet(pl.LightningModule):
         full_formula: torch.FloatTensor,
         atom_inds: torch.FloatTensor,
         adducts: torch.LongTensor = None,
-        atom_ct_inputs : torch.FloatTensor = None,
+        atom_ct_inputs: torch.FloatTensor = None,
         hidden_state: torch.FloatTensor = None,
     ):
         full_formula = full_formula.float()
         device = full_formula.device
-        batch  = full_formula.shape[0]
+        batch = full_formula.shape[0]
 
         if hidden_state is None:
-            h0, c0 = self.get_hidden(graphs=graphs, full_formula=full_formula, adducts=adducts) 
+            h0, c0 = self.get_hidden(
+                graphs=graphs, full_formula=full_formula, adducts=adducts
+            )
         else:
             h0, c0 = hidden_state
 
@@ -257,51 +255,60 @@ class AutoregrNet(pl.LightningModule):
             output = outputs
 
         # Mask final output and return logits
-        output = (~mask * -1e12)  + output
+        output = (~mask * -1e12) + output
         return output, out_hidden
 
-    def make_prediction(
-        self, formula_tensors, mol_graphs, max_nodes=500, adducts=None
-    ):
+    def make_prediction(self, formula_tensors, mol_graphs, max_nodes=500, adducts=None):
         """make_prediction."""
 
         device = formula_tensors.device
         with torch.no_grad():
             full_formula = formula_tensors
 
-            nonzero_inds= [torch.where(i > 0)[0] for i in full_formula]
+            nonzero_inds = [torch.where(i > 0)[0] for i in full_formula]
             atom_inds = [torch.tile(i, (max_nodes,)) for i in nonzero_inds]
             lens = [len(i) for i in atom_inds]
 
             # pad and pack
-            atom_inds = torch.nn.utils.rnn.pad_sequence(atom_inds, batch_first=True, padding_value=0)
+            atom_inds = torch.nn.utils.rnn.pad_sequence(
+                atom_inds, batch_first=True, padding_value=0
+            )
             prev_tokens = torch.zeros_like(atom_inds[:, 0])[:, None]
 
-            # Now generate... 
-            cur_hidden = self.get_hidden(graphs=mol_graphs, full_formula=full_formula, adducts=adducts)
+            # Now generate...
+            cur_hidden = self.get_hidden(
+                graphs=mol_graphs, full_formula=full_formula, adducts=adducts
+            )
             output_list = []
 
             for seq_pos in range(atom_inds.shape[1]):
-                atom_ind = atom_inds[:, seq_pos:seq_pos+1]
-                new_out, cur_hidden = self.forward(graphs=mol_graphs, full_formula=full_formula, atom_inds=atom_ind, 
-                                                   adducts=adducts, hidden_state=cur_hidden,
-                                                   atom_ct_inputs=prev_tokens)
+                atom_ind = atom_inds[:, seq_pos : seq_pos + 1]
+                new_out, cur_hidden = self.forward(
+                    graphs=mol_graphs,
+                    full_formula=full_formula,
+                    atom_inds=atom_ind,
+                    adducts=adducts,
+                    hidden_state=cur_hidden,
+                    atom_ct_inputs=prev_tokens,
+                )
                 new_tokens = torch.argmax(new_out, -1)
                 prev_tokens = new_tokens
                 output_list.append(new_tokens.detach().cpu().numpy())
 
         inten_outputs, formula_outputs = [], []
-        all_outs = np.array(output_list).squeeze(-1).transpose(1,0)
-        for output_list, ex_len, ex_atom_inds, ex_nonzero  in zip(all_outs, lens, atom_inds, nonzero_inds):
+        all_outs = np.array(output_list).squeeze(-1).transpose(1, 0)
+        for output_list, ex_len, ex_atom_inds, ex_nonzero in zip(
+            all_outs, lens, atom_inds, nonzero_inds
+        ):
             # Counts vec
             output_list = output_list[:ex_len]
 
-            # Which positions 
+            # Which positions
             ex_atom_inds = ex_atom_inds[:ex_len].cpu().numpy()
             ex_nonzero = ex_nonzero.cpu().numpy()
             num_pos = len(ex_nonzero)
 
-            # Index into which new formula 
+            # Index into which new formula
             new_form_inds = np.arange(max_nodes).repeat(len(ex_nonzero))
 
             # Place to store these
@@ -309,9 +316,11 @@ class AutoregrNet(pl.LightningModule):
 
             new_form_vecs[new_form_inds, ex_atom_inds] = output_list
 
-            keep_formulas = [ common.vec_to_formula(ex_option) for ex_option in new_form_vecs ]
+            keep_formulas = [
+                common.vec_to_formula(ex_option) for ex_option in new_form_vecs
+            ]
 
-            # Arbitrarily assign descending intensities 
+            # Arbitrarily assign descending intensities
             keep_intens = np.linspace(1, 0.1, len(keep_formulas))
 
             inten_outputs.append(keep_intens)
@@ -319,11 +328,10 @@ class AutoregrNet(pl.LightningModule):
 
         return formula_outputs, inten_outputs
 
-
     def _common_step(self, batch, name="train"):
-        targets = batch["targ_vectors"] 
+        targets = batch["targ_vectors"]
         zero_tokens = torch.zeros_like(targets[:, 0])
-        targ_lens = batch['targ_lens']
+        targ_lens = batch["targ_lens"]
 
         # Add start token and offset by 1
         atom_ct_inputs = torch.cat([zero_tokens[:, None], targets], -1)[:, :-1]
@@ -336,7 +344,7 @@ class AutoregrNet(pl.LightningModule):
             atom_ct_inputs=atom_ct_inputs,
         )
 
-        loss_output = self.loss_fn(outputs.transpose(1,2), targets.long())
+        loss_output = self.loss_fn(outputs.transpose(1, 2), targets.long())
 
         # Zero out loss for invalid targets
         ar_vals = torch.arange(loss_output.shape[1], device=loss_output.device)
@@ -347,8 +355,7 @@ class AutoregrNet(pl.LightningModule):
 
         loss_dict = {"loss": loss_ag_batch}
 
-        self.log(f"{name}_loss", loss_dict.get(
-            "loss"), on_epoch=True, logger=True)
+        self.log(f"{name}_loss", loss_dict.get("loss"), on_epoch=True, logger=True)
         return loss_dict
 
     def training_step(self, batch, batch_idx):

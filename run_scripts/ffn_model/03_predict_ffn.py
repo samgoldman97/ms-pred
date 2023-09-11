@@ -9,7 +9,7 @@ args = parser.parse_args()
 dataset = args.dataset
 
 dataset = "canopus_train_public"
-#dataset = "nist20"
+# dataset = "nist20"
 
 
 res_folder = Path(f"results/ffn_baseline_{dataset}/")
@@ -35,7 +35,7 @@ for model in res_folder.rglob("version_0/*.ckpt"):
     device_str = f"CUDA_VISIBLE_DEVICES={devices}"
     cmd = f"{device_str} {cmd}"
     print(cmd + "\n")
-    #subprocess.run(cmd, shell=True)
+    # subprocess.run(cmd, shell=True)
 
     out_binned = save_dir / "fp_preds.p"
     eval_cmd = f"""

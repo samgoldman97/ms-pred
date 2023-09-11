@@ -12,7 +12,7 @@ dataset = args.dataset
 
 
 dataset = "canopus_train_public"  # canopus_train_public
-#dataset = "nist20"  # canopus_train_public
+# dataset = "nist20"  # canopus_train_public
 devices = ",".join(["3"])
 node_num = 300
 res_folder = Path(f"results/scarf_inten_{dataset}/")

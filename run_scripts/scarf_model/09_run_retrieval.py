@@ -18,8 +18,8 @@ inten_dir = Path(f"results/scarf_inten_{dataset}_100")  # _{max_nodes}")
 inten_dir = Path(f"results/scarf_inten_{dataset}")  # _{max_nodes}")
 
 valid_splits = ["split_1"]
-split_override = "split_1_500" 
-maxk=None
+split_override = "split_1_500"
+maxk = None
 
 for inten_model in inten_dir.rglob("version_0/*.ckpt"):
     split = inten_model.parent.parent.name

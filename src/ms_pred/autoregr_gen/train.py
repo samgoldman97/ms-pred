@@ -112,21 +112,29 @@ def train_model():
 
         # Test specific debug overfit
         # Get 2
-        
-        keep_list = ["nist_1135173", "nist_1561727", "nist_3162017", "nist_1908759", "nist_1156216", 
-                     "nist_1489699", "nist_3150042", "nist_1167122",
-                     "nist_1431271", "nist_3275065"]
+
+        keep_list = [
+            "nist_1135173",
+            "nist_1561727",
+            "nist_3162017",
+            "nist_1908759",
+            "nist_1156216",
+            "nist_1489699",
+            "nist_3150042",
+            "nist_1167122",
+            "nist_1431271",
+            "nist_3275065",
+        ]
         keep_list = ["nist_1489699"]
 
-        #interest_ind = np.argwhere("CCMSLIB00000001568" == spec_names).flatten()[0]
+        # interest_ind = np.argwhere("CCMSLIB00000001568" == spec_names).flatten()[0]
         interest_inds = np.argwhere([i in keep_list for i in spec_names]).flatten()
 
         train_inds = np.array(interest_inds, dtype=np.int64)
         val_inds = np.array([1])
         test_inds = np.array([1])
 
-
-        #train_inds = train_inds[:1]
+        # train_inds = train_inds[:1]
         kwargs["warmup"] = 0
     else:
         train_inds, val_inds, test_inds = common.get_splits(spec_names, split_file)
@@ -227,13 +235,13 @@ def train_model():
     )
 
     # Debug
-    #outputs = model.forward(
+    # outputs = model.forward(
     #    test_batch["graphs"],
     #    test_batch["formula_tensors"].float(),
     #    test_batch["atom_inds"].float(),
     #    adducts=test_batch["adducts"],
     #    targ_vectors=test_batch["targ_vectors"].float(),
-    #)
+    # )
 
     # Create trainer
     monitor = "val_loss"

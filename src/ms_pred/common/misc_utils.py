@@ -498,4 +498,3 @@ def build_mgf_str(
 
     full_out = "\n\n".join(entries)
     return full_out
-
