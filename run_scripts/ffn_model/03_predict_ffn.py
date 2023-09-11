@@ -8,7 +8,7 @@ parser.add_argument("--dataset", type=str, default="nist20")
 args = parser.parse_args()
 dataset = args.dataset
 
-#dataset = "canopus_train_public"
+dataset = "canopus_train_public"
 #dataset = "nist20"
 
 
@@ -17,6 +17,7 @@ python_file = "src/ms_pred/ffn_pred/predict.py"
 devices = ",".join(["3"])
 valid_splits = ["scaffold_1"]
 valid_splits = ["scaffold_1", "split_1"]
+valid_splits = ["split_1"]
 
 for model in res_folder.rglob("version_0/*.ckpt"):
     save_dir = model.parent.parent

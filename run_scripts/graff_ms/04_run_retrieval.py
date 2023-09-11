@@ -1,20 +1,34 @@
 from pathlib import Path
 import subprocess
 
-dataset = "nist20"
 dataset = "canopus_train_public"
+dataset = "nist20"
+res_folder = Path(f"results/graff_ms_baseline_{dataset}_with_zero/")
 res_folder = Path(f"results/graff_ms_baseline_{dataset}/")
+res_folder = Path(f"results/graff_ms_baseline_{dataset}_with_zero/")
 pred_file = "src/ms_pred/graff_ms/predict.py"
 retrieve_file = "src/ms_pred/retrieval/retrieval_binned.py"
-devices = ",".join(["2"])
+devices = ",".join(["0"])
 subform_name = "no_subform"
 
+num_workers = 32
+
+valid_splits = ["split_1"]
+split_override = "split_1" 
+maxk=50 # None
+
 for model in res_folder.rglob("version_0/*.ckpt"):
-    save_dir = model.parent.parent / f"retrieval_{dataset}"
-    split = save_dir.parent.name
+    split = model.parent.parent.name
+    if split not in valid_splits:
+        continue
+
+    if split_override is not None:
+        split = split_override
+
+    save_dir = model.parent.parent / f"retrieval_{dataset}_{split}_{maxk}"
     save_dir.mkdir(exist_ok=True)
 
-    labels = f"retrieval/cands_df_{split}.tsv"
+    labels = f"retrieval/cands_df_{split}_{maxk}.tsv"
     save_dir = save_dir
     save_dir.mkdir(exist_ok=True)
     cmd = f"""python {pred_file} \\
@@ -22,6 +36,7 @@ for model in res_folder.rglob("version_0/*.ckpt"):
     --dataset-name {dataset} \\
     --sparse-out \\
     --sparse-k 100 \\
+    --num-workers {num_workers} \\
     --split-name {split}.tsv   \\
     --checkpoint {model} \\
     --save-dir {save_dir} \\

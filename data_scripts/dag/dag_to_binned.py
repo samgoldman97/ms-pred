@@ -1,8 +1,4 @@
-""" 04_dag_to_binned.py
-
-Convert dag folder into a binned spec file
-
-"""
+""" Convert dag folder into a binned spec file """
 import json
 import yaml
 import argparse

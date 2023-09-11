@@ -21,16 +21,17 @@ universal_args:
 
 iterative_args:
 
-  #-  split-name: [split_1.tsv]
-  #   checkpoint: [results/scarf_nist20/split_1/version_0/best.ckpt]
-  #   save-dir: [split_1/preds_train_300]
+  -  split-name: [split_1.tsv]
+     checkpoint: [results/scarf_nist20/split_1/version_0/best.ckpt]
+     save-dir: [split_1/preds_train_100]
+     threshold: [0.000]
+     max-nodes: [100]
+
+  #-  split-name: [scaffold_1.tsv]
+  #   checkpoint: [results/scarf_nist20/scaffold_1/version_0/best.ckpt]
+  #   save-dir: [scaffold_1/preds_train_300]
   #   threshold: [0.000]
   #   max-nodes: [300]
-  -  split-name: [scaffold_1.tsv]
-     checkpoint: [results/scarf_nist20/scaffold_1/version_0/best.ckpt]
-     save-dir: [scaffold_1/preds_train_300]
-     threshold: [0.000]
-     max-nodes: [300]
 
   #-  split-name: [hyperopt.tsv]
   #   checkpoint: [results/scarf_nist_hyperopt_adduct_mol/hyperopt/version_0/best.ckpt]

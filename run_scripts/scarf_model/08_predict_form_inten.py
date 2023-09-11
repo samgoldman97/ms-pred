@@ -10,7 +10,8 @@ parser.add_argument("--dataset", default="nist20")
 args = parser.parse_args()
 dataset = args.dataset
 
-#dataset = "canopus_train_public"  # canopus_train_public
+
+dataset = "canopus_train_public"  # canopus_train_public
 #dataset = "nist20"  # canopus_train_public
 devices = ",".join(["3"])
 node_num = 300
@@ -21,6 +22,7 @@ ckpts = sorted(ckpts)
 
 valid_splits = ["scaffold_1"]
 valid_splits = ["scaffold_1", "split_1"]
+valid_splits = ["split_1"]
 
 for model in ckpts:
     save_dir = model.parent.parent

@@ -6,7 +6,7 @@ pred_file = "src/ms_pred/scarf_pred/predict_smis.py"
 devices = ",".join(["3"])
 subform_name = "no_subform"
 max_nodes = 300
-dataset = "nist20"
+dataset = "canopus_train_public"
 dist = "cos"
 binned_out = False
 
@@ -15,6 +15,7 @@ binned_out_flag = "--binned-out" if binned_out else ""
 inten_dir = Path(f"results/scarf_inten_{dataset}")  # _{max_nodes}")
 
 for inten_model in inten_dir.rglob("version_0/*.ckpt"):
+    print(inten_model)
     save_dir = inten_model.parent.parent / f"preds_export_{dataset}"
     args = yaml.safe_load(open(inten_model.parent.parent / "args.yaml", "r"))
     form_folder = Path(args["formula_folder"])

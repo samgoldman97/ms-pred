@@ -72,8 +72,8 @@ def build_form_map(smi_file, dump_file=None, debug=False):
 if __name__ == "__main__":
     pubchem_file = "data/retrieval/pubchem/pubchem_full.txt"
     data_labels = "data/spec_datasets/canopus_train_public/labels.tsv"
-    pubchem_out = "data/retrieval/pubchem/pubchem_formua_map.p"
-    pubchem_sub_out = "data/retrieval/pubchem/pubchem_formua_map_subset.p"
+    pubchem_out = "data/retrieval/pubchem/pubchem_formula_map.p"
+    pubchem_sub_out = "data/retrieval/pubchem/pubchem_formula_map_subset.p"
     built_map = build_form_map(smi_file=pubchem_file,
                                dump_file=pubchem_out,
                                debug=False)

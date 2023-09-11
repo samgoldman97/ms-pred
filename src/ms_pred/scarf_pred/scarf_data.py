@@ -22,7 +22,9 @@ def process_form_file(
     form_dict_file,
 ):
     """process_form_file."""
-    form_dict = json.load(open(form_dict_file, "r"))
+    with open(str(form_dict_file), "r") as fp:
+        form_dict = json.load(fp)
+
     root_form = form_dict["cand_form"]
     out_tbl = form_dict["output_tbl"]
 

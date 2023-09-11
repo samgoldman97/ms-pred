@@ -8,7 +8,7 @@ import numpy as np
 def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--pickle-file",
-                        default="data/retrieval/pubchem/pubchem_formua_map.p")
+                        default="data/retrieval/pubchem/pubchem_formula_map.p")
     parser.add_argument("--dataset-labels")
     return parser.parse_args()
 
@@ -19,7 +19,7 @@ if __name__=="__main__":
     pickle_file = args.pickle_file
 
     dataset_name = Path(data_labels).parent.stem
-    pubchem_sub_out = f"data/retrieval/pubchem/pubchem_formua_map_{dataset_name}.p"
+    pubchem_sub_out = f"data/retrieval/pubchem/pubchem_formula_map_{dataset_name}.p"
 
     full_map = pickle.load(open(pickle_file, "rb"))
     uniq_forms = pd.unique(pd.read_csv(data_labels, sep="\t")['formula'])

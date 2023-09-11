@@ -2,28 +2,41 @@ import yaml
 from pathlib import Path
 import subprocess
 
+num_workers = 64
 pred_file = "src/ms_pred/scarf_pred/predict_smis.py"
 retrieve_file = "src/ms_pred/retrieval/retrieval_binned.py"
 devices = ",".join(["3"])
 subform_name = "no_subform"
+max_nodes = 100
 max_nodes = 300
-dataset = "nist20"
+
 dataset = "canopus_train_public"
+dataset = "nist20"
 dist = "cos"
 
+inten_dir = Path(f"results/scarf_inten_{dataset}_100")  # _{max_nodes}")
 inten_dir = Path(f"results/scarf_inten_{dataset}")  # _{max_nodes}")
 
+valid_splits = ["split_1"]
+split_override = "split_1_500" 
+maxk=None
+
 for inten_model in inten_dir.rglob("version_0/*.ckpt"):
-    save_dir = inten_model.parent.parent / f"retrieval_{dataset}"
+    split = inten_model.parent.parent.name
+    if split not in valid_splits:
+        continue
+
+    if split_override is not None:
+        split = split_override
+
+    save_dir = inten_model.parent.parent / f"retrieval_{dataset}_{split}_{maxk}"
+    save_dir.mkdir(exist_ok=True)
+
     args = yaml.safe_load(open(inten_model.parent.parent / "args.yaml", "r"))
     form_folder = Path(args["formula_folder"])
     gen_model = form_folder.parent / "version_0/best.ckpt"
 
-    split = save_dir.parent.name
-    save_dir.mkdir(exist_ok=True)
-    # split = "split_nist"
-
-    labels = f"retrieval/cands_df_{split}.tsv"
+    labels = f"retrieval/cands_df_{split}_{maxk}.tsv"
     save_dir = save_dir
     save_dir.mkdir(exist_ok=True)
     cmd = f"""python {pred_file} \\

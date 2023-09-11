@@ -10,25 +10,28 @@ max_nodes = 100
 dataset = "nist20"
 dataset = "canopus_train_public"
 dist = "cos"
+split_override = None
+maxk=None
 
 inten_dir = Path(f"results/dag_inten_{dataset}")  # _{max_nodes}")
 valid_splits = ["split_1"]
 
 for inten_model in inten_dir.rglob("version_0/*.ckpt"):
-    save_dir = inten_model.parent.parent / f"retrieval_{dataset}"
     args = yaml.safe_load(open(inten_model.parent.parent / "args.yaml", "r"))
     form_folder = Path(args["magma_dag_folder"])
     gen_model = form_folder.parent / "version_0/best.ckpt"
 
-    split = save_dir.parent.name
+    split = inten_model.parent.parent.name
 
     if split not in valid_splits:
         continue
 
+    save_dir = inten_model.parent.parent / f"retrieval_{dataset}_{split}_{maxk}"
     save_dir.mkdir(exist_ok=True)
-    # split = "split_nist"
+    if split_override is not None:
+        split = split_override
 
-    labels = f"retrieval/cands_df_{split}.tsv"
+    labels = f"retrieval/cands_df_{split}_{maxk}.tsv"
     save_dir = save_dir
     save_dir.mkdir(exist_ok=True)
     cmd = f"""python {pred_file} \\

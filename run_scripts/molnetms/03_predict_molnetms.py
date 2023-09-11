@@ -8,7 +8,7 @@ parser.add_argument("--dataset-name", type=str, default="nist20")
 args = parser.parse_args()
 dataset_name = args.dataset_name
 
-#dataset_name = "canopus_train_public"
+dataset_name = "canopus_train_public"
 #dataset_name = "nist20"
 
 res_folder = Path(f"results/molnetms_baseline_{dataset_name}")
@@ -19,6 +19,7 @@ devices = ",".join(["3"])
 valid_splits = ["scaffold_1"]
 valid_splits = ["split_1"]
 valid_splits = ["scaffold_1", "split_1"]
+valid_splits = ["split_1"]
 
 for model in res_folder.rglob("version_0/*.ckpt"):
     save_dir = model.parent.parent
@@ -40,7 +41,7 @@ for model in res_folder.rglob("version_0/*.ckpt"):
     device_str = f"CUDA_VISIBLE_DEVICES={devices}"
     cmd = f"{device_str} {cmd}"
     print(cmd + "\n")
-    subprocess.run(cmd, shell=True)
+    #subprocess.run(cmd, shell=True)
 
     out_binned = save_dir / "binned_preds.p"
     eval_cmd = f"""python analysis/spec_pred_eval.py \\

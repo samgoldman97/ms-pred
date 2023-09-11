@@ -28,6 +28,8 @@ Contributors: Sam Goldman, John Bradshaw, Janet Li, Jiayi Xin, Connor W. Coley
 3. [Data](#data)  
 4. [Experiments](#experiments)    
 5. [Analysis](#analysis)    
+6. [Augmentation](#augmentation)    
+7. [Citation](#citation)    
 
 
 ## Install & setup <a name="setup"></a>
@@ -271,8 +273,12 @@ predictios `analysis/form_pred_eval.py` and spectra predictions
 
 Additional analyses used for figure generation were conducted in `notebooks/`.
 
+## Augmentation <a name="augmentation"></a>
 
-## Citation
+A common use case for forward spectrum prediction models is to use the trained model as a surrogate model for augmenting an inverse model (e.g., [MIST](http://github.com/samgoldman97/mist/)). An example workflow for doing this is shown in `run_scripts/iceberg_augmentation`. The target dataset including a labels file, spectrum files, split, and target augmetnation file for prediction should first be coppied into the `data/spec_datasets`. Once this is complete, the runscripts folder can be copied, modified to use the datset of interest, and run. The ideal output will be a single MGF and labels files including the ouptut predictions. 
+
+
+## Citation <a name="citation"></a>
 
 We ask any user of this repository to cite the following works based upon the portion of the repository used:
 

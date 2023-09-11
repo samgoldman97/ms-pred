@@ -1,8 +1,9 @@
 from pathlib import Path
 import subprocess
 
-dataset = "nist20"
 dataset = "canopus_train_public"
+dataset = "nist20"
+
 #res_folder = Path(f"results/ffn_baseline_epoch_ablation_canopus_train_public")
 res_folder = Path(f"results/ffn_baseline_{dataset}/")
 
@@ -13,16 +14,22 @@ subform_name = "no_subform"
 dist = "cos"
 split_override = "split_1"
 split_override = None
+split_override = "split_1_500" 
+maxk=50
+valid_splits = ["split_1"]
 
 
 for model in res_folder.rglob("version_0/*.ckpt"):
-    save_dir = model.parent.parent / f"retrieval_{dataset}"
-    split = save_dir.parent.name
+    split = model.parent.parent.name
+    if split not in valid_splits:
+        continue
     if split_override is not None:
         split = split_override
+
+    save_dir = model.parent.parent / f"retrieval_{dataset}_{split}_{maxk}"
     save_dir.mkdir(exist_ok=True)
 
-    labels = f"retrieval/cands_df_{split}.tsv"
+    labels = f"retrieval/cands_df_{split}_{maxk}.tsv"
     save_dir = save_dir
     save_dir.mkdir(exist_ok=True)
     cmd = f"""python {pred_file} \\

@@ -439,7 +439,9 @@ class DAGDataset(Dataset):
         self.name_to_smiles = dict(self.df[["spec", "smiles"]].values)
 
     def load_tree(self, x):
-        return json.load(open(self.name_to_dict[x]["magma_file"], "r"))
+        filename = self.name_to_dict[x]["magma_file"]
+        with open(str(filename), "r") as fp:
+            return json.load(fp)
 
     def __len__(self):
         return len(self.spec_names)

@@ -2,21 +2,31 @@ from pathlib import Path
 import subprocess
 
 
-dataset = "nist20"
 dataset = "canopus_train_public"
+dataset = "nist20"
 res_folder = Path(f"results/gnn_baseline_{dataset}/")
 pred_file = "src/ms_pred/gnn_pred/predict.py"
 retrieve_file = "src/ms_pred/retrieval/retrieval_binned.py"
 devices = ",".join(["3"])
 subform_name = "no_subform"
 
+split_override = "split_1_500" 
+maxk=None
+
 
 for model in res_folder.rglob("version_0/*.ckpt"):
-    save_dir = model.parent.parent / f"retrieval_{dataset}"
-    split = save_dir.parent.name
+    split = model.parent.parent.name
+    valid_splits = ["split_1"]
+    if split not in valid_splits:
+        continue
+
+    if split_override is not None:
+        split = split_override
+
+    save_dir = model.parent.parent / f"retrieval_{dataset}_{split}_{maxk}"
     save_dir.mkdir(exist_ok=True)
 
-    labels = f"retrieval/cands_df_{split}.tsv"
+    labels = f"retrieval/cands_df_{split}_{maxk}.tsv"
     save_dir = save_dir
     save_dir.mkdir(exist_ok=True)
     cmd = f"""python {pred_file} \\

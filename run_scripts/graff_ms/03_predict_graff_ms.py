@@ -7,18 +7,21 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--dataset", type=str, default="nist20")
 args = parser.parse_args()
 dataset_name = args.dataset
+num_workers=32
 
 
-#dataset_name = "canopus_train_public"
-#dataset_name = "nist20"
+dataset_name = "canopus_train_public"
+dataset_name = "nist20"
 
 res_folder = Path(f"results/graff_ms_baseline_{dataset_name}")
+res_folder = Path(f"results/graff_ms_baseline_{dataset_name}_with_zero")
 python_file = "src/ms_pred/graff_ms/predict.py"
 devices = ",".join(["3"])
 
 valid_splits = ["scaffold_1"]
 valid_splits = ["split_1"]
 valid_splits = ["scaffold_1", "split_1"]
+valid_splits = ["split_1"]
 
 for model in res_folder.rglob("version_0/*.ckpt"):
     save_dir = model.parent.parent
@@ -33,6 +36,7 @@ for model in res_folder.rglob("version_0/*.ckpt"):
     --batch-size 32 \\
     --dataset-name {dataset_name} \\
     --split-name {split}.tsv \\
+    --num-workers {num_workers} \\
     --subset-datasets test_only  \\
      --checkpoint {model} \\
     --save-dir {save_dir} \\

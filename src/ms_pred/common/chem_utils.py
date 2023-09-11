@@ -94,8 +94,8 @@ ion2mass = {
     "[M+H]+": ELEMENT_TO_MASS["H"] - ELECTRON_MASS,
     "[M+Na]+": ELEMENT_TO_MASS["Na"] - ELECTRON_MASS,
     "[M+K]+": ELEMENT_TO_MASS["K"] - ELECTRON_MASS,
-    "[M-H2O+H]+": -ELEMENT_TO_MASS["O"] + ELEMENT_TO_MASS["H"] - ELECTRON_MASS,
-    "[M+H-H2O]+": -ELEMENT_TO_MASS["O"] + ELEMENT_TO_MASS["H"] - ELECTRON_MASS,
+    "[M-H2O+H]+": -ELEMENT_TO_MASS["O"] - ELEMENT_TO_MASS["H"] - ELECTRON_MASS,
+    "[M+H-H2O]+": -ELEMENT_TO_MASS["O"] - ELEMENT_TO_MASS["H"] - ELECTRON_MASS,
     "[M+H3N+H]+": ELEMENT_TO_MASS["N"] + ELEMENT_TO_MASS["H"] * 4 - ELECTRON_MASS,
     "[M+NH4]+": ELEMENT_TO_MASS["N"] + ELEMENT_TO_MASS["H"] * 4 - ELECTRON_MASS,
     "[M]+": 0 - ELECTRON_MASS,
@@ -537,3 +537,22 @@ def has_valid_els(chem_formula: str) -> bool:
         if chem_symbol not in VALID_ELEMENTS:
             return False
     return True
+
+
+def npclassifer_query(smiles):
+    """npclassifier_query.
+
+    Args:
+        input: Tuple of name, molecule
+    Return:
+        Dict of name to molecule
+    """
+    import requests
+
+    ikey = inchikey_from_smiles(smiles)
+    endpoint = "https://npclassifier.ucsd.edu/classify"
+    req_data = {"smiles": smiles}
+    out = requests.get(f"{endpoint}", data=req_data)
+    out.raise_for_status()
+    out_json = out.json()
+    return {ikey: out_json}

@@ -16,9 +16,7 @@ splits = ["hyperopt"]
 nums = [100, 300]
 
 splits = ["split_1"]
-splits = ["hyperopt"]
-splits = ["scaffold_1"]
-nums = [300]
+nums = [100]
 
 for split in splits:
     for num in nums:

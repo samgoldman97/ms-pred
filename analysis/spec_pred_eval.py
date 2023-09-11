@@ -18,6 +18,13 @@ from scipy.stats import sem
 import ms_pred.common as common
 
 
+def cos_sim_fn(pred_ar, true_spec):
+    norm_pred = max(norm(pred_ar), 1e-6)
+    norm_true = max(norm(true_spec), 1e-6)
+    cos_sim = np.dot(pred_ar, true_spec) / (norm_pred * norm_true)
+    return cos_sim
+
+
 def get_args():
     """get_args."""
     parser = argparse.ArgumentParser()
@@ -97,6 +104,7 @@ def main(args):
         if true_spec is None:
             continue
 
+
         # Don't norm spec
         ## Norm pred spec by max
         # if np.max(pred_ar) > 0:
@@ -111,9 +119,7 @@ def main(args):
         new_pred[pos_bins] = pred_ar[pos_bins]
         pred_ar = new_pred
 
-        norm_pred = max(norm(pred_ar), 1e-6)
-        norm_true = max(norm(true_spec), 1e-6)
-        cos_sim = np.dot(pred_ar, true_spec) / (norm_pred * norm_true)
+        cos_sim = cos_sim_fn(pred_ar, true_spec)
         mse = np.mean((pred_ar - true_spec) ** 2)
 
         # Compute validity
@@ -127,10 +133,19 @@ def main(args):
             )
             smiles_mass = common.mass_from_smi(pred_smi)
             ikey = common.inchikey_from_smiles(pred_smi)
+
+            max_possible_bin = np.max(possible)
+
         else:
             possible = []
             smiles_mass = 0
+            max_possible_bin = 0 
             ikey = ""
+
+        copy_pred, copy_true = np.copy(pred_ar), np.copy(true_spec)
+        copy_pred[max_possible_bin] = 0
+        copy_true[max_possible_bin] = 0
+        cos_sim_zero_pep = cos_sim_fn(copy_pred, copy_true)
 
         possible_set = set(possible)
         pred_set = set(pos_bins)
@@ -165,6 +180,7 @@ def main(args):
             "name": pred_spec,
             "inchi": ikey,
             "cos_sim": float(cos_sim),
+            "cos_sim_zero_pep": float(cos_sim_zero_pep),
             "mse": float(mse),
             "frac_valid": float(frac_valid),
             "overlap_coeff": float(overlap_coeff),
@@ -177,6 +193,7 @@ def main(args):
 
         output_entries.append(output_entry)
         running_lists["cos_sim"].append(cos_sim)
+        running_lists["cos_sim_zero_pep"].append(cos_sim_zero_pep)
         running_lists["mse"].append(mse)
         running_lists["frac_valid"].append(frac_valid)
         running_lists["overlap_coeff"].append(overlap_coeff)

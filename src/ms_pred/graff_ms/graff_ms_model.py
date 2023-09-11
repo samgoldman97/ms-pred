@@ -159,10 +159,14 @@ class GraffGNN(pl.LightningModule):
         new_val = torch.from_numpy(new_fixed)
         assert(self.fixed_forms.data.shape == new_val.shape)
         self.fixed_forms.data = new_val.float()
-        self.is_loss.data = torch.any(new_val < 0, -1).float()
+        bool_1 = torch.any(new_val < 0, -1)
+
+        # If we want to include the ability to predict the precursor
+        bool_2 = torch.all(new_val <= 0 , -1)
+        self.is_loss.data = torch.logical_or(bool_1, bool_2).float()
+
         self.is_loss.requires_grad = False
         self.fixed_forms.data.requires_grad = False
-
 
     def cos_loss(self, pred, targ):
         """loss_fn."""

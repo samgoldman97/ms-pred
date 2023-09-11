@@ -27,13 +27,12 @@ def process_example(obj, max_k=50) -> dict:
     Returns:
         dict:
     """
+    if max_k is None: max_k=int(1e10)
     # Note this takes a while and should be done upfront
-    # Some didn't pass roudn trip in frag engine, so repeat it here
-    cands_list = [i for i in obj['cands']
+    # Some didn't pass round trip in frag engine, so repeat it here
+    cands_list = [i for i in obj['cands'] 
                   if common.smi_inchi_round_mol(i[0]) is not None]
     cands_list = np.array(cands_list, dtype=object)
-
-    cands = [common.get_morgan_fp_smi(j[0]) for j in cands_list]
     cands = [common.get_morgan_fp_smi(j[0]) for j in cands_list]
     true_cand = np.array([obj['smiles'], obj['inchikey']])[None, :]
     true_tani = np.array([1.0])
@@ -81,8 +80,8 @@ def main(max_k, workers, input_map, input_dataset_folder, split_file):
         df_mask = df['spec'].isin(test_names)
         df = df[df_mask].reset_index()
 
-    output_pickle = retrieval_folder / f"cands_pickled{split_stem}.p"
-    output_df = retrieval_folder / f"cands_df{split_stem}.tsv"
+    output_pickle = retrieval_folder / f"cands_pickled{split_stem}_{max_k}.p"
+    output_df = retrieval_folder / f"cands_df{split_stem}_{max_k}.tsv"
 
     input_smiles_labels = input_dataset_folder / "labels.tsv"
 
@@ -172,15 +171,18 @@ if __name__ == "__main__":
     rdBase.DisableLog('rdApp.error')
     RDLogger.DisableLog('rdApp.*') 
     max_k = 50
+    max_k = None
     workers = 32
     debug = False
     dataset = "canopus_train_public"
     dataset = "nist20"
-    input_map = f"data/retrieval/pubchem/pubchem_formua_map_{dataset}.p"
+    input_map = f"data/retrieval/pubchem/pubchem_formula_map_{dataset}.p"
     input_dataset_folder = Path(f"data/spec_datasets/{dataset}/")
 
     split_files = ["split_1.tsv", "split_2.tsv", "split_3.tsv", None]
     split_files = ["scaffold_1.tsv"]
+    split_files = ["split_1.tsv"]
+    split_files = ["split_1_500.tsv"]
     #split_files = ["split_nist.tsv"]
     for split_file in split_files:
         print(f"Starting split {split_file}")

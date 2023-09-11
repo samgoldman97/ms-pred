@@ -1,4 +1,4 @@
-launcher_args: {experiment_name: graff_ms_baseline_canopus_train_public,
+launcher_args: {experiment_name: graff_ms_baseline_canopus_train_public_with_zero,
   script_name: "src/ms_pred/graff_ms/train.py",
   slurm_script: launcher_scripts/generic_slurm.sh, 
   launch_method: local,

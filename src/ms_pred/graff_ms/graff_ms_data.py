@@ -77,7 +77,8 @@ def process_form_file(
     """process_form_file."""
     if form_dict_file is None or not form_dict_file.exists():
         return None
-    form_dict = json.load(open(form_dict_file, "r"))
+    with open(form_dict_file, "r") as fp:
+        form_dict = json.load(fp)
     root_form = form_dict["cand_form"]
     out_tbl = form_dict["output_tbl"]
 
@@ -331,7 +332,7 @@ class MolDataset(Dataset):
         else:
             self.mols = common.chunked_parallel(
                 self.smiles,
-                Chem.MolFromSmiles,
+                lambda x: Chem.MolFromSmiles(x),
                 chunks=100,
                 max_cpu=self.num_workers,
                 timeout=4000,

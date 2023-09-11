@@ -36,32 +36,6 @@ def simple_parallel(
     pool.join()
     return results
 
-    #async_results = [pool.apply_async(function, args=(i,)) for i in input_list]
-    #pool.close()
-
-    #retries = 0
-    #while True:
-    #    try:
-    #        list_outputs = []
-    #        for async_result in tqdm(async_results, total=len(input_list)):
-    #            result = async_result.get(timeout)
-    #            list_outputs.append(result)
-
-    #        break
-    #    except TimeoutError:
-    #        retries += 1
-    #        logging.info(f"Timeout Error (s > {timeout})")
-    #        if retries <= max_retries:
-    #            pool = mp.Pool(processes=cpus)
-    #            async_results = [
-    #                pool.apply_async(function, args=(i,)) for i in input_list
-    #            ]
-    #            pool.close()
-    #            logging.info(f"Retry attempt: {retries}")
-    #        else:
-    #            raise ValueError()
-
-    #return list_outputs
 
 
 def chunked_parallel(

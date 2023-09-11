@@ -56,7 +56,7 @@ dataset = args.dataset
 
 
 # Overwrite
-# dataset = "canopus_train_public"
+#dataset = "canopus_train_public"
 # dataset = "nist20"  # canopus_train_public
 
 
