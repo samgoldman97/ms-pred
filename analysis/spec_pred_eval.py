@@ -1,4 +1,4 @@
-""" spec_pred_eval.py
+""" Spectrum prediction evaluation
 
 Use to compare binned predictions to ground truth spec values
 
@@ -19,6 +19,12 @@ import ms_pred.common as common
 
 
 def cos_sim_fn(pred_ar, true_spec):
+    """cos_sim_fn.
+
+    Args:
+        pred_ar:
+        true_spec:
+    """
     norm_pred = max(norm(pred_ar), 1e-6)
     norm_true = max(norm(true_spec), 1e-6)
     cos_sim = np.dot(pred_ar, true_spec) / (norm_pred * norm_true)
@@ -30,9 +36,7 @@ def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--dataset", default="canopus_train_public")
     parser.add_argument("--formula-dir-name", default="subform_20")
-    parser.add_argument(
-        "--binned-pred-file", default="results/2022_12_18_ffn_pred/fp_preds.p"
-    )
+    parser.add_argument("--binned-pred-file")
     parser.add_argument("--outfile", default=None)
     parser.add_argument(
         "--min-inten",
@@ -122,7 +126,6 @@ def main(args):
         mse = np.mean((pred_ar - true_spec) ** 2)
 
         # Compute validity
-
         # Get all possible bins that would be valid
         if pred_smi is not None:
             true_form = common.form_from_smi(pred_smi)
@@ -157,11 +160,6 @@ def main(args):
             frac_valid = 1.0
         else:
             frac_valid = len(overlap) / len(pred_set)
-
-        # Bin 2420 from pred set
-        # 2421 in the possible set, grrr. Must be a boundary decision?
-        # nist_3143557
-        # mass n;umber 3854, masss 242.01614gt
 
         # Compute true overlap
         true_inds = np.argwhere(true_spec > min_inten).flatten()

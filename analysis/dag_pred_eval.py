@@ -20,10 +20,7 @@ def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--dataset", default="canopus_train_public")
     parser.add_argument("--magma-name", default="magma_outputs")
-    parser.add_argument(
-        "--tree-pred-folder",
-        default="results/2022_12_15_tree_pred/overfit_debug_preds/tree_preds",
-    )
+    parser.add_argument("--tree-pred-folder",)
     parser.add_argument("--outfile", default=None)
     return parser.parse_args()
 

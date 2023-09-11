@@ -6,21 +6,19 @@ launcher_args: {experiment_name: dag_inten_canopus_train_public,
 }
 universal_args:
   _slurm_args:
-  - {_num_gpu: 1, cpus-per-task: 7, job-name: forward_train, mem-per-cpu: 8G, #nodelist: 'node[1236]',
-    time: '1-18:00:00'}
-    #debug: [true]
-    #debug-overfit: [true]
+  - {_num_gpu: 1, cpus-per-task: 7, job-name: forward_train, mem-per-cpu: 8G, 
+    nodelist: 'node[1236]', time: '1-18:00:00'}
   debug: [false]
   debug-overfit: [false]
   gpu: [true]
 
   seed: [1]
-  num-workers: [16] #[20]
+  num-workers: [16]
   batch-size: [32]
   max-epochs: [200]
 
   dataset-name: [canopus_train_public]
-  split-name: [split_1.tsv] #[split_1.tsv, split_2.tsv, split_3.tsv]
+  split-name: [split_1.tsv]
 
   learning-rate: [0.000736]
   lr-decay-rate: [0.825]
@@ -49,5 +47,4 @@ universal_args:
 iterative_args:
   -  split-name: [split_1.tsv]
      save-dir: [split_1]
-     batch-size: [32]
      magma-dag-folder: [results/dag_canopus_train_public/split_1/preds_train_100_inten/]

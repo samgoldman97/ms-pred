@@ -1,4 +1,4 @@
-""" form_pred_eval.py
+""" Formula prediction evaluation
 
 Use to compare scarf predicted formula to actual formulae
 
@@ -24,10 +24,7 @@ def get_args():
         default="magma_outputs",
     )
     parser.add_argument("--num-bins", default=15000, type=int)
-    parser.add_argument(
-        "--tree-pred-folder",
-        default="results/2022_12_15_tree_pred/overfit_debug_preds/tree_preds",
-    )
+    parser.add_argument("--tree-pred-folder",)
     parser.add_argument("--outfile", default=None)
     return parser.parse_args()
 

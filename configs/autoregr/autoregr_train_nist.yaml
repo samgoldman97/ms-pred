@@ -6,42 +6,40 @@ launcher_args: {experiment_name: autoregr_nist20,
 }
 universal_args:
   _slurm_args:
-  - {_num_gpu: 1, cpus-per-task: 7, job-name: forward_train, mem-per-cpu: 8G, #nodelist: 'node[1236]',
-    time: '1-18:00:00'}
-  debug: [false] # Test
-  debug-overfit: [false] # Test
-  gpu: [true] # test
+  - {_num_gpu: 1, cpus-per-task: 7, job-name: forward_train, mem-per-cpu: 8G, 
+    nodelist: 'node[1236]', time: '1-18:00:00'}
+  debug: [false]
+  debug-overfit: [false]
+  gpu: [true]
 
   seed: [1]
-  num-workers: [10] #[20]
-  batch-size: [64] # hyperparam
+  num-workers: [10]
+  batch-size: [64]
   max-epochs: [200]
 
   dataset-name: [nist20]
-  split-name: [split_1.tsv] #[split_1.tsv, split_2.tsv, split_3.tsv]
-
-  learning-rate: [0.0009] # hyperparam
-  lr-decay-rate: [0.85] # hyperparam
-
-  dropout: [0.2] # hyperparam
-  mpnn-type: [GGNN]
-  pe-embed-k: [20] # hyperparam
-  pool-op: [avg] # hyperparam
-  hidden-size: [512] # hyperparam
-  weight-decay: [1.0e-06] # hyperparam
-  rnn-layers: [3]  # hyperparam
-  set-layers: [0]
-  gnn-layers: [1] # hyperparam
+  split-name: [split_1.tsv]
 
   use-reverse: [true]
   formula-folder: [magma_subform_50]
   embedder: [abs-sines]
   embed-adduct: [true]
 
+  # Hyperparameters
+  learning-rate: [0.0009]
+  lr-decay-rate: [0.85]
+
+  dropout: [0.2]
+  mpnn-type: [GGNN]
+  pe-embed-k: [20]
+  pool-op: [avg]
+  hidden-size: [512]
+  weight-decay: [1.0e-06]
+  rnn-layers: [3]
+  set-layers: [0]
+  gnn-layers: [1]
+
 
 iterative_args:
   -  split-name: [split_1.tsv]
      save-dir: [split_1]
-
-  #-  split-name: [hyperopt.tsv]
-  #   save-dir: [hyperopt]

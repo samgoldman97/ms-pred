@@ -1,14 +1,13 @@
-# Predict forms
-launcher_args: {experiment_name: scarf_nist20, #scarf_nist_hyperopt_adduct_mol,
+launcher_args: {experiment_name: scarf_nist20,
   script_name: "src/ms_pred/scarf_pred/predict_gen.py",
   slurm_script: launcher_scripts/generic_slurm.sh, 
-  launch_method: local, #local_parallel,
-  visible_devices: [2] #,2,3] #,1,2]
+  launch_method: local,
+  visible_devices: [2]
 }
 universal_args:
   _slurm_args:
-  - {_num_gpu: 1, cpus-per-task: 7, job-name: forward_train, mem-per-cpu: 8G, #nodelist: 'node[1236]',
-    time: '1-18:00:00'}
+  - {_num_gpu: 1, cpus-per-task: 7, job-name: forward_train, mem-per-cpu: 8G, 
+     nodelist: 'node[1236]', time: '1-18:00:00'}
   debug: [false]
   gpu: [True]
 
@@ -32,15 +31,3 @@ iterative_args:
   #   save-dir: [scaffold_1/preds_train_300]
   #   threshold: [0.000]
   #   max-nodes: [300]
-
-  #-  split-name: [hyperopt.tsv]
-  #   checkpoint: [results/scarf_nist_hyperopt_adduct_mol/hyperopt/version_0/best.ckpt]
-  #   save-dir: [hyperopt/preds_train_300]
-  #   threshold: [0.000]
-  #   max-nodes: [300]
-
-  #-  split-name: [hyperopt.tsv]
-  #   checkpoint: [results/scarf_nist_hyperopt_adduct_mol/hyperopt/version_0/best.ckpt]
-  #   save-dir: [hyperopt/preds_train_100]
-  #   threshold: [0.000]
-  #   max-nodes: [100]

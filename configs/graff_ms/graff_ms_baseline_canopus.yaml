@@ -1,4 +1,4 @@
-launcher_args: {experiment_name: graff_ms_baseline_canopus_train_public_with_zero,
+launcher_args: {experiment_name: graff_ms_baseline_canopus_train_public,
   script_name: "src/ms_pred/graff_ms/train.py",
   slurm_script: launcher_scripts/generic_slurm.sh, 
   launch_method: local,
@@ -6,8 +6,8 @@ launcher_args: {experiment_name: graff_ms_baseline_canopus_train_public_with_zer
 }
 universal_args:
   _slurm_args:
-  - {_num_gpu: 1, cpus-per-task: 7, job-name: forward_train, mem-per-cpu: 8G, #nodelist: 'node[1236]',
-    time: '1-18:00:00'}
+  - {_num_gpu: 1, cpus-per-task: 7, job-name: forward_train, mem-per-cpu: 8G, 
+    nodelist: 'node[1236]', time: '1-18:00:00'}
   debug: [false]
   gpu: [true]
 

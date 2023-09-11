@@ -6,7 +6,7 @@ launcher_args: {experiment_name: massformer_baseline_nist20,
 }
 universal_args:
   _slurm_args:
-  - {_num_gpu: 1, cpus-per-task: 7, job-name: forward_train, mem-per-cpu: 8G, #nodelist: 'node[1236]',
+  - {_num_gpu: 1, cpus-per-task: 7, job-name: forward_train, mem-per-cpu: 8G,
     time: '1-18:00:00'}
   debug: [false]
   gpu: [True]

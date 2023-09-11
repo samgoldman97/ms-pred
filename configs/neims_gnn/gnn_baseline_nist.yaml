@@ -6,8 +6,8 @@ launcher_args: {experiment_name: gnn_baseline_nist20,
 }
 universal_args:
   _slurm_args:
-  - {_num_gpu: 1, cpus-per-task: 7, job-name: forward_train, mem-per-cpu: 8G, #nodelist: 'node[1236]',
-    time: '1-18:00:00'}
+  - {_num_gpu: 1, cpus-per-task: 7, job-name: forward_train, mem-per-cpu: 8G, 
+     nodelist: 'node[1236]', time: '1-18:00:00'}
   debug: [false]
   gpu: [true]
 
@@ -38,8 +38,6 @@ universal_args:
   embed-adduct: [true]
 
 iterative_args:
-  #-  split-name: [fingerprint_1.tsv]
-  #   save-dir: [fingerprint_1]
   -  split-name: [scaffold_1.tsv]
      save-dir: [scaffold_1]
      #-  split-name: [split_1.tsv]
