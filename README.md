@@ -124,9 +124,11 @@ python data_scripts/pubchem/03_make_retrieval_lists.py
 To quickly download tables for canopus:  
 
 ```
+
 cd data/spec_datasets/canopus_train_public/
 wget https://www.dropbox.com/s/7zr6euhuhz3ohi9/retrieval_tbls.tar
 tar -xvf canopus_train_public.tar
+
 ```
 
 ## Experiments <a name="experiments"></a>
@@ -136,17 +138,15 @@ tar -xvf canopus_train_public.tar
 
 SCARF models trained in two parts: a prefix tree generator and an intensity predictor. The pipeline for training and evaluating this model can be accessed in `run_scripts/scarf_model/`. The internal pipeline used to conduct experiments can be followed below:
 
-1. *Hyperopt scarf model*: `run_scripts/scarf_model/01_hyperopt_scarf.sh`
-2. *Train scarf model*: `run_scripts/scarf_model/02_run_scarf_gen_train.sh`
-3. *Sweep number of prefixes to generate*: `run_scripts/scarf_model/03_sweep_scarf_gen_thresh.py`  
-4. *Use model 1 to predict model 2 training set*: `run_scripts/scarf_model/04_scarf_gen_predict.sh`   
-5. *Add intensity targets to predictions*: `run_scripts/scarf_model/05_process_scarf_train.py`
-6. *Hyperopt scarf inten model*: `run_scripts/scarf_model/06_hyperopt_scarf_inten.sh`
-7. *Train intensity model*: `run_scripts/scarf_model/07_train_scarf_inten.sh`
-8. *Make and evaluate intensity predictions*: `run_scripts/scarf_model/08_predict_form_inten.py`
-9. *Run retrieval*: `run_scripts/scarf_model/09_run_retrieval.py`  
-10. *Time scarf*: `run_scripts/scarf_model/10_time_scarf.py`  
-11. *Export scarf forms* `run_scripts/scarf_model/11_export_forms.py`
+1. *Train scarf model*: `run_scripts/scarf_model/01_run_scarf_gen_train.sh`
+2. *Sweep number of prefixes to generate*: `run_scripts/scarf_model/02_sweep_scarf_gen_thresh.py`  
+3. *Use model 1 to predict model 2 training set*: `run_scripts/scarf_model/03_scarf_gen_predict.sh`   
+4. *Add intensity targets to predictions*: `run_scripts/scarf_model/04_process_scarf_train.py`
+5. *Train intensity model*: `run_scripts/scarf_model/05_train_scarf_inten.sh`
+6. *Make and evaluate intensity predictions*: `run_scripts/scarf_model/06_predict_form_inten.py`
+7. *Run retrieval*: `run_scripts/scarf_model/07_run_retrieval.py`  
+8. *Time scarf*: `run_scripts/scarf_model/08_time_scarf.py`  
+9. *Export scarf forms* `run_scripts/scarf_model/09_export_forms.py`
 
 
 Instead of running in batched pipeline model, individual gen training, inten
@@ -156,22 +156,25 @@ training, and predict calls can be  made using the following scripts respectivel
 2.  `python src/ms_pred/scarf_pred/train_inten.py`
 3.  `python src/ms_pred/scarf_pred/predict_smis.py`
 
+We provide scripts showing how we conducted hyperparameter optimization as
+well:
+1. *Hyperopt scarf model*: `run_scripts/scarf_model/hyperopt_01_scarf.sh`  
+2. *Hyperopt scarf inten model*: `run_scripts/scarf_model/02_sweep_scarf_gen_thresh.py`  
+
 
 ### ICEBERG
 
 ICEBRG models, like SCARF, are trained in two parts: a learned fragment generator and an intensity predictor. The pipeline for training and evaluating this model can be accessed in `run_scripts/dag_model/`. The internal pipeline used to conduct experiments can be followed below:
 
-1. *Hyperopt dag model*: `run_scripts/dag_model/01_hyperopt_dag.sh`   
-2. *Train dag model*: `run_scripts/dag_model/02_run_dag_gen_train.sh`   
-3. *Sweep over the number of fragments to generate*: `run_scripts/dag_model/03_sweep_gen_thresh.py`    
-4. *Use model 1 to predict model 2 training set*: `run_scripts/dag_model/04_run_dag_gen_predict.sh`   
-5. *Add intensity targets to predictions*: `run_scripts/dag_model/05_process_dag_train.py`
-6. *Hyperopt dag inten model*: `run_scripts/dag_model/06_hyperopt_inten.sh`
-7. *Train intensity model*: `run_scripts/dag_model/07_train_dag_inten.sh`
-8. *Make and evaluate intensity predictions*: `run_scripts/dag_model/08_predict_dag_inten.py`
-9. *Run retrieval*: `run_scripts/dag_model/09_run_retrieval.py`  
-10. *Time iceberg*: `run_scripts/dag_model/10_time_dag.py`  
-11. *Export dag predictions* `run_scripts/dag_model/11_export_preds.py`
+1. *Train dag model*: `run_scripts/dag_model/01_run_dag_gen_train.sh`   
+2. *Sweep over the number of fragments to generate*: `run_scripts/dag_model/02_sweep_gen_thresh.py`     
+3. *Use model 1 to predict model 2 training set*: `run_scripts/dag_model/03_run_dag_gen_predict.sh`   
+4. *Add intensity targets to predictions*: `run_scripts/dag_model/04_process_dag_train.py`   
+5. *Train intensity model*: `run_scripts/dag_model/05_train_dag_inten.sh`   
+6. *Make and evaluate intensity predictions*: `run_scripts/dag_model/06_predict_dag_inten.py`  
+7. *Run retrieval*: `run_scripts/dag_model/07_run_retrieval.py`  
+8. *Time iceberg*: `run_scripts/dag_model/08_time_dag.py`  
+9. *Export dag predictions* `run_scripts/dag_model/09_export_preds.py`  
 
 
 Instead of running in batched pipeline model, individual gen training, inten
@@ -183,34 +186,57 @@ training, and predict calls can be  made using the following scripts respectivel
 
 An additional notebook showcasing how to individually load models and make predictions can be found at `notebooks/iceberg_fig_qualitative.ipynb`.
 
+The models were hyperoptimized using the following scripts:  
+1. `run_scripts/dag_model/hyperopt_01_dag.sh`   
+2. `run_scripts/dag_model/hyperopt_02_inten.sh`  
+
+
 ### FFN Spec 
 
 Experiment pipeline utilized:  
-1. *Hyperopt model*: `run_scripts/ffn_model/01_hyperopt_ffn.sh`
-2. *Train models*: `run_scripts/ffn_model/02_run_ffn_train.sh`
-3. *Predict and eval*: `run_scripts/ffn_model/03_predict_ffn.py`
-4. *Retreival experiments*: `run_scripts/ffn_model/04_run_retrieval.py`
-5. *Time ffn*: `run_scripts/ffn_model/05_time_ffn.py`
+1. *Train models*: `run_scripts/ffn_model/01_run_ffn_train.sh`
+2. *Predict and eval*: `run_scripts/ffn_model/02_predict_ffn.py`
+3. *Retreival experiments*: `run_scripts/ffn_model/03_run_retrieval.py`
+4. *Time ffn*: `run_scripts/ffn_model/04_time_ffn.py`
+
+Hyperopt FFN: `run_scripts/ffn_model/hyperopt_01_ffn.sh`  
+
+
+### Autoregressive baseline
+
+Baseline used to show the effect of successively generating formula, rather
+than decoding with SCARF. 
+
+Experiment pipeline utilized:   
+1. *Train models*: `run_scripts/autoregr_baseline/01_run_autoregr_train.sh`  
+2. *Sweep model*: `run_scripts/autoregr_baseline/02_sweep_autoregr_thresh.py`  
+
+
+Model hyperparameter optimization:   
+1. `run_scripts/autoregr_baseline/hyperopt_01_autoregr.sh`   
+
 
 
 ### GNN Spec 
 
 Experiment pipeline:   
-1. *Hyperopt model*: `run_scripts/gnn_model/01_hyperopt_gnn.sh`
-2. *Train models*: `run_scripts/gnn_model/02_run_gnn_train.sh`
-3. *Predict and eval*: `run_scripts/gnn_model/03_predict_gnn.py`
-4. *Retreival experiments*: `run_scripts/gnn_model/04_run_retrieval.py`
-5. *Time gnn*: `run_scripts/gnn_model/05_time_gnn.py`
+1. *Train models*: `run_scripts/gnn_model/01_run_gnn_train.sh`
+2. *Predict and eval*: `run_scripts/gnn_model/02_predict_gnn.py`
+3. *Retreival experiments*: `run_scripts/gnn_model/03_run_retrieval.py`
+4. *Time gnn*: `run_scripts/gnn_model/04_time_gnn.py`
+
+Hyperopt GNN:  `run_scripts/gnn_model/hyperopt_01_gnn.sh`
 
 
 ### Massformer
 
-Experiment pipeline:   
-1. *Hyperopt model*: `run_scripts/massformer_pred/01_hyperopt_massformer.sh`
-2. *Train models*: `run_scripts/massformer_pred/02_run_massformer_train.sh`
-3. *Predict and eval*: `run_scripts/massformer_pred/03_predict_massformer.py`
-4. *Retreival experiments*: `run_scripts/massformer_pred/04_run_retrieval.py`
-5. *Time massformer*: `run_scripts/massformer_pred/05_time_gnn.py`
+Experiment pipeline:     
+1. *Train models*: `run_scripts/massformer_model/01_run_massformer_train.sh`  
+2. *Predict and eval*: `run_scripts/massformer_model/02_predict_massformer.py`  
+3. *Retreival experiments*: `run_scripts/massformer_model/03_run_retrieval.py`  
+4. *Time massformer*: `run_scripts/massformer_model/04_time_gnn.py`   
+
+Hyperopt Massformer: `run_scripts/massformer_model/hyperopt_01_massformer.sh`  
 
 
 ### 3DMolMS
@@ -218,11 +244,12 @@ Experiment pipeline:
 We include a baseline implementation of 3DMolMS in which we utilize the same architecture as these authors. We note we do not include collision energy or machines as covariates for consistency with our other implemented models and data processing pipelines, which may affect performance. 
 
 Experiment pipeline:   
-1. *Hyperopt model*: `run_scripts/molnetms/01_hyperopt_ffn.sh`
-2. *Train models*: `run_scripts/molnetms/02_run_ffn_train.sh`
-3. *Predict and eval*: `run_scripts/molnetms/03_predict_ffn.py`
-4. *Retreival experiments*: `run_scripts/molnetms/04_run_retrieval.py`
-5. *Time ffn*: `run_scripts/molnetms/05_time_gnn.py`
+1. *Train models*: `run_scripts/molnetms/01_run_ffn_train.sh`
+2. *Predict and eval*: `run_scripts/molnetms/02_predict_ffn.py`
+3. *Retreival experiments*: `run_scripts/molnetms/03_run_retrieval.py`
+4. *Time 3d mol ms*: `run_scripts/molnetms/04_time_gnn.py`
+
+Hyperopt 3DMolMS:  `run_scripts/molnetms/hyperopt_01_molnetms.sh`
 
 
 ### GRAFF-MS 
@@ -230,11 +257,12 @@ Experiment pipeline:
 We include a baseline variation of GRAFF-MS in which we utilize a fixed formula vocabulary. We note we do not include collision energy or machines as covariates for consistency with our other implemented models and data processing pipelines, which may affect performance. In addition, because our data does not contain isotopic or varied adduct formula labels, we replace the marginal peak loss with a cosine similarity loss. Pleases see the [original paper](https://arxiv.org/abs/2301.11419) to better understand the release details.
 
 Experiment pipeline:   
-1. *Hyperopt model*: `run_scripts/graff_ms/01_hyperopt_ffn.sh`
-2. *Train models*: `run_scripts/graff_ms/02_run_ffn_train.sh`
-3. *Predict and eval*: `run_scripts/graff_ms/03_predict_ffn.py`
-4. *Retreival experiments*: `run_scripts/graff_ms/04_run_retrieval.py`
-5. *Time ffn*: `run_scripts/graff_ms/05_time_gnn.py`
+1. *Train models*: `run_scripts/graff_ms/01_run_ffn_train.sh`
+2. *Predict and eval*: `run_scripts/graff_ms/02_predict_ffn.py`
+3. *Retreival experiments*: `run_scripts/graff_ms/03_run_retrieval.py`
+4. *Time graff MS*: `run_scripts/graff_ms/04_time_gnn.py`
+
+Hyperopt graff ms:  `run_scripts/graff_ms/hyperopt_01_graff_ms.sh`
 
 
 ### CFM-ID

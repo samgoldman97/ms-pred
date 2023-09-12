@@ -1,1 +1,0 @@
-python launcher_scripts/run_from_config.py configs/scarf/scarf_train_nist.yaml

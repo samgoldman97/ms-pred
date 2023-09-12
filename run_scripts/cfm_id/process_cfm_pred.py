@@ -107,7 +107,7 @@ for split in splits:
     --out {out_binned} """
     cmd = f"{cmd}"
     print(cmd + "\n")
-    # subprocess.run(cmd, shell=True)
+     subprocess.run(cmd, shell=True)
 
     # Eval binned preds
     eval_cmd = f"""python analysis/spec_pred_eval.py \\

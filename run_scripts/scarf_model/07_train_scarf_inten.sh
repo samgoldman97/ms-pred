@@ -1,1 +1,0 @@
-python launcher_scripts/run_from_config.py configs/scarf/scarf_inten_train_canopus.yaml
