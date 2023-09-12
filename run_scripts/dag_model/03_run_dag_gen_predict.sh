@@ -1,0 +1,1 @@
+python launcher_scripts/run_from_config.py configs/iceberg/dag_gen_predict_train_canopus.yaml
