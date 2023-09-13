@@ -27,4 +27,5 @@ python data_scripts/dag/dag_to_mgf.py \
         --num-workers 16
 
 # Delete memory intensive tree preds inten
-rm -r $save_dir/tree_preds_inten
+echo "Please run the following command to save space"
+echo "rm -r $save_dir/tree_preds_inten"
