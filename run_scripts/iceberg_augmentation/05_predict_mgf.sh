@@ -25,3 +25,6 @@ python data_scripts/dag/dag_to_mgf.py \
         --dag-folder $save_dir/tree_preds_inten \
         --out $save_dir/full_out.mgf \
         --num-workers 16
+
+# Delete memory intensive tree preds inten
+rm -r $save_dir/tree_preds_inten
