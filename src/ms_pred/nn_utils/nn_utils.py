@@ -1,13 +1,4 @@
 """ nn_utils.py
-
-Hold basic GNN Types:
-1. GGNN
-2. PNA
-
-These classes should accept graphs and return featurizations at each node
-
-The calling class should be responsible for pooling however is best
-
 """
 import copy
 import math

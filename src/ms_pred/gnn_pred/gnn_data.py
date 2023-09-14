@@ -11,7 +11,7 @@ import ms_pred.common as common
 
 
 class BinnedDataset(Dataset):
-    """SmiDataset."""
+    """BinnedDataset."""
 
     def __init__(
         self,

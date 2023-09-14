@@ -675,9 +675,14 @@ class IntenPredDataset(DAGDataset):
         num_workers=0,
         **kwargs,
     ):
-        """__init__.
+        """__init__ _summary_
 
         Args:
+            df (pd.DataFrame): _description_
+            data_dir (Path): _description_
+            tree_processor (TreeProcessor): _description_
+            magma_map (dict): _description_
+            num_workers (int, optional): _description_. Defaults to 0.
         """
         self.tree_processor = tree_processor
         self.read_tree = self.tree_processor.process_tree_inten_pred

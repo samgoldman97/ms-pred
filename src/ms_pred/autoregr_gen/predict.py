@@ -86,7 +86,6 @@ def predict():
 
             names = splits[splits[fold_name] == "train"]["spec"].tolist()
             names = names[:6]
-            # names = ["CCMSLIB00000001568"]
         else:
             raise NotImplementedError()
         df = df[df["spec"].isin(names)]

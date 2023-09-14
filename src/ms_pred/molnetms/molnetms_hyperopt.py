@@ -1,6 +1,6 @@
-"""gnn_hyperopt.py
+"""molnet hyperoptimizer. 
 
-Hyperopt parameters for FFN model
+Hyperopt parameters for MolNet model
 
 """
 import os

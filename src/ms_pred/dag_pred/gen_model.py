@@ -1,4 +1,4 @@
-"""frag_model."""
+"""DAG Gen model """
 import numpy as np
 import torch
 import pytorch_lightning as pl
@@ -37,24 +37,31 @@ class FragGNN(pl.LightningModule):
         add_hs: bool = False,
         **kwargs,
     ):
-        """__init__.
+        """__init__ _summary_
+
         Args:
-            hidden_size (int): Hidden size
-            layers (int): Num layers
-            set_layers (int): Set layers
-            learning_rate (float): Learning rate
-            lr_decay_rate (float)
-            weight_decay (float): amt of weight decay
-            dropout (float): Dropout
-            mpnn_type (str): Type of MPNN
-            pool_op (str):
-            node_feats
-            pe_embed_k
-            max_broken
-            root_encode
-            inject_early (bool)
-            warmup
-            add_hs
+            hidden_size (int): _description_
+            layers (int, optional): _description_. Defaults to 2.
+            set_layers (int, optional): _description_. Defaults to 2.
+            learning_rate (float, optional): _description_. Defaults to 7e-4.
+            lr_decay_rate (float, optional): _description_. Defaults to 1.0.
+            weight_decay (float, optional): _description_. Defaults to 0.
+            dropout (float, optional): _description_. Defaults to 0.
+            mpnn_type (str, optional): _description_. Defaults to "GGNN".
+            pool_op (str, optional): _description_. Defaults to "avg".
+            node_feats (int, optional): _description_. Defaults to common.ELEMENT_DIM+common.MAX_H.
+            pe_embed_k (int, optional): _description_. Defaults to 0.
+            max_broken (int, optional): _description_. Defaults to magma.FRAGMENT_ENGINE_PARAMS["max_broken_bonds"].
+            root_encode (str, optional): _description_. Defaults to "gnn".
+            inject_early (bool, optional): _description_. Defaults to False.
+            warmup (int, optional): _description_. Defaults to 1000.
+            embed_adduct (bool, optional): _description_. Defaults to False.
+            encode_forms (bool, optional): _description_. Defaults to False.
+            add_hs (bool, optional): _description_. Defaults to False.
+
+        Raises:
+            ValueError: _description_
+            NotImplementedError: _description_
         """
         super().__init__()
         self.save_hyperparameters()
@@ -180,17 +187,23 @@ class FragGNN(pl.LightningModule):
         root_forms=None,
         frag_forms=None,
     ):
-        """predict spec from graphs
+        """forward _summary_
 
-        graphs: DGL Graphs of all mols in batch
-        root_repr: DGL graphs of roots for each or FP
-        ind_maps: Mapping to pair graphs to root graphs (allows parallel)
-        broken: number of broken bonds
-        adducts
-        root_forms
-        frag_forms
+        Args:
+            graphs (_type_): _description_
+            root_repr (_type_): _description_
+            ind_maps (_type_): _description_
+            broken (_type_): _description_
+            adducts (_type_): _description_
+            root_forms (_type_, optional): _description_. Defaults to None.
+            frag_forms (_type_, optional): _description_. Defaults to None.
+
+        Raises:
+            NotImplementedError: _description_
+
+        Returns:
+            _type_: _description_
         """
-        # if root fingerprints:
         embed_adducts = self.adduct_embedder[adducts.long()]
         if self.root_encode == "fp":
             root_embeddings = self.root_module(root_repr)

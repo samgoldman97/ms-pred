@@ -14,7 +14,7 @@ import json
 
 from tqdm import tqdm
 from ms_pred import common
-from ms_pred.magma import frag_subform
+from ms_pred.magma import fragmentation
 
 
 def get_args():
@@ -153,8 +153,7 @@ def get_output_dict(
 
     if use_magma:
 
-        # TODO: Replace with new magma generator
-        fe = frag_subform.FragmentEngine(
+        fe = fragmentation.FragmentEngine(
             mol_str=smiles,
             # max_tree_depth=3,
         )

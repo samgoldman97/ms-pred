@@ -78,7 +78,7 @@ for file in labels_files:
     print(f"Number of smiles to run: {len(all_smiles)}")
     for input_ex in tqdm(all_batches):
         all_datas = common.simple_parallel(
-            input_ex, common.npclassifer_query, max_cpu=20
+            input_ex, common.npclassifier_query, max_cpu=20
         )
         temp_out = {}
         for i in all_datas:

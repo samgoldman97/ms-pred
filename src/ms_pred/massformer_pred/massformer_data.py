@@ -12,7 +12,7 @@ from ._massformer_graph_featurizer import MassformerGraphFeaturizer
 
 
 class BinnedDataset(Dataset):
-    """SmiDataset."""
+    """BinnedDataset."""
 
     def __init__(
         self,

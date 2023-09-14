@@ -372,6 +372,7 @@ def bin_spectra(
             [(header, spec array)]
         num_bins (int): Number of discrete bins from [0, upper_limit)
         upper_limit (int): Max m/z to consider featurizing
+        pool_fn (str): Pooling function to use for binning (max or add)
 
     Return:
         np.ndarray of shape [channels, num_bins]
@@ -439,6 +440,7 @@ def bin_mass_results(
 
     Args:
         mass:
+        mass_bins:
     """
     for i, j in mass_bins:
         m_str = f"{i} - {j}"

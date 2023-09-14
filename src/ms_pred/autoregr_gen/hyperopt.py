@@ -1,6 +1,5 @@
-"""gen_hyperopt.py
-
-Hyperopt parameters for scarf model
+"""
+Hyperopt autoregressive model
 
 """
 import os

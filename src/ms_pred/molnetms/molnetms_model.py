@@ -1,4 +1,4 @@
-""" gnn_model. """
+""" Molnet model. """
 from typing import Tuple
 import pytorch_lightning as pl
 

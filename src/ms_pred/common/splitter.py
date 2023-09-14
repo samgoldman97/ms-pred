@@ -10,13 +10,11 @@ import pandas as pd
 def get_splits(
     names: List[str],
     split_file: str,
-    val_frac: float = 0.1,
 ) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
     """get_splits.
     Args:
         names (List[str]): Names to be split
         split_file (str): Split file
-        val_frac (float): Fraction of validation
     Return:
         Train, val, test indices
     """

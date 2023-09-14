@@ -58,11 +58,12 @@ class AutoregrDataset(Dataset):
         """__init__.
 
         Args:
-            df:
-            data_dir:
-            graph_featurizer
+            df (pd.DataFrame): df
+            data_dir (Path): data_dir
+            graph_featurizer:
             file_map (dict): file_map
             num_workers:
+            root_embedder (str): root_embedder
             use_ray (bool): use_ray
             kwargs:
         """

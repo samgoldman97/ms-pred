@@ -107,7 +107,7 @@ def process_form_file(form_dict_file, upper_limit, num_bins):
 
 
 class BinnedDataset(Dataset):
-    """SmiDataset."""
+    """BinnedDataset."""
 
     def __init__(
         self,

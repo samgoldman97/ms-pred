@@ -1,6 +1,6 @@
-"""frag_hyperopt.py
+"""Hyperopt 
 
-Hyperopt parameters for frag tree generation model
+Hyperopt parameters for frag DAG generation model
 
 """
 import os

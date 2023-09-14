@@ -47,7 +47,6 @@ class IntenDataset(Dataset):
     def __init__(
         self,
         df: pd.DataFrame,
-        data_dir: Path,
         graph_featurizer,
         form_map: dict,
         num_workers=0,
@@ -56,16 +55,20 @@ class IntenDataset(Dataset):
         binned_targs: bool = False,
         **kwargs,
     ):
-        """__init__.
+        """__init__ _summary_
 
         Args:
-            df:
-            data_dir:
-            graph_featurizer
-            file_map (dict): file_map
-            num_workers:
-            use_ray (bool): use_ray
-            kwargs:
+            df (pd.DataFrame): _description_
+            data_dir (Path): _description_
+            graph_featurizer (_type_): _description_
+            form_map (dict): _description_
+            num_workers (int, optional): _description_. Defaults to 0.
+            use_ray (bool, optional): _description_. Defaults to False.
+            root_embedder (str, optional): _description_. Defaults to "gnn".
+            binned_targs (bool, optional): _description_. Defaults to False.
+
+        Raises:
+            ValueError: _description_
         """
 
         self.df = df
@@ -317,16 +320,19 @@ class ScarfDataset(Dataset):
         use_ray: bool = False,
         **kwargs,
     ):
-        """__init__.
+        """__init__ _summary_
 
         Args:
-            df:
-            data_dir:
-            graph_featurizer
-            file_map (dict): file_map
-            num_workers:
-            use_ray (bool): use_ray
-            kwargs:
+            df (pd.DataFrame): _description_
+            data_dir (Path): _description_
+            graph_featurizer (_type_): _description_
+            file_map (dict): _description_
+            num_workers (int, optional): _description_. Defaults to 0.
+            root_embedder (str, optional): _description_. Defaults to "gnn".
+            use_ray (bool, optional): _description_. Defaults to False.
+
+        Raises:
+            ValueError: _description_
         """
         self.df = df
         self.num_workers = num_workers

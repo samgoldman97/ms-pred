@@ -1,6 +1,6 @@
-"""gnn_hyperopt.py
+""" Massformer hyperopt
 
-Hyperopt parameters for FFN model
+Hyperopt parameters for Massformer model
 
 """
 import os

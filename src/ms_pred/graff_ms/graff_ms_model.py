@@ -1,4 +1,4 @@
-""" gnn_model. """
+""" GRAFF MS model. """
 import torch
 import pytorch_lightning as pl
 import numpy as np
@@ -45,27 +45,35 @@ class GraffGNN(pl.LightningModule):
         num_fixed_forms: int = 10000,
         **kwargs,
     ):
-        """__init__.
+        """__init__ _summary_
+
         Args:
-            hidden_size (int): Hidden size
-            layers (int): Num layers
-            dropout (float): Amount of dropout
-            learning_rate (float): Learning rate
-            lr_decay_rate (float): LR decay rate
-            output_dim (int): Output dim of bins
-            upper_limit (int): Max bin size
-            weight_decay
-            loss_fn (str): Name of loss function
-            mpnn_type (str):
-            set_layers (int):
-            atom_feats (list)
-            bond_feats (list)
-            pool_op (str):
-            pe_embed_k (int)
-            num_atom_feats (int):
-            num_bond_feats (int):
-            num_fixed_forms
+            hidden_size (int): _description_
+            layers (int, optional): _description_. Defaults to 2.
+            dropout (float, optional): _description_. Defaults to 0.0.
+            learning_rate (float, optional): _description_. Defaults to 7e-4.
+            lr_decay_rate (float, optional): _description_. Defaults to 1.0.
+            output_dim (int, optional): _description_. Defaults to 1000.
+            upper_limit (int, optional): _description_. Defaults to 1500.
+            weight_decay (float, optional): _description_. Defaults to 0.
+            loss_fn (str, optional): _description_. Defaults to "mse".
+            mpnn_type (str, optional): _description_. Defaults to "GGNN".
+            set_layers (int, optional): _description_. Defaults to 2.
+            atom_feats (list, optional): _description_. Defaults to ( "a_onehot", "a_degree", "a_hybrid", "a_formal", "a_radical", "a_ring", "a_mass", "a_chiral", ).
+            bond_feats (list, optional): _description_. Defaults to ("b_degree",).
+            pool_op (str, optional): _description_. Defaults to "avg".
+            pe_embed_k (int, optional): _description_. Defaults to 0.
+            num_atom_feats (int, optional): _description_. Defaults to 86.
+            num_bond_feats (int, optional): _description_. Defaults to 5.
+            embed_adduct (bool, optional): _description_. Defaults to False.
+            warmup (int, optional): _description_. Defaults to 1000.
+            num_fixed_forms (int, optional): _description_. Defaults to 10000.
+
+        Raises:
+            NotImplementedError: _description_
+            NotImplementedError: _description_
         """
+
         super().__init__()
         self.save_hyperparameters()
         self.hidden_size = hidden_size
@@ -253,37 +261,6 @@ class GraffGNN(pl.LightningModule):
             dim_size=self.inten_buckets.shape[-1],
             dim=-1,
         )
-        # Alternative output construction
-        #    const_neg = -9999999
-        #    output = self.output_layer(hidden)
-        #    attn_weights = self.attn_layer(hidden)
-
-        #    # Mask attention and output
-        #    attn_weights = attn_weights + ~is_valid * const_neg
-        #    output = output + ~is_valid * const_neg
-
-        #    form_attns = ts.scatter_softmax(attn_weights, index=inverse_indices, dim=-1)
-        #    output = form_attns * output
-
-        #    # Scatter and prefill all highly negative numbers except for where
-        #    # we have formula considerations
-        #    base_out = torch.ones(batch_size, self.inten_buckets.shape[-1],
-        #                          device=device) * const_neg
-        #    aranged_ind = torch.arange(batch_size,
-        #                               device=device)[:, None].repeat(1,
-        #                                                              inverse_indices.shape[-1])
-        #    base_out[aranged_ind, inverse_indices] = 0
-
-        #    # B x Outs x Unique inds
-        #    output = ts.scatter_add(
-        #        output,
-        #        index=inverse_indices,
-        #        out = base_out,
-        #        dim=-1,
-        #    )
-
-        #    output = torch.sigmoid(output)
-
         assert self.num_outputs == 1
         output = output.reshape(batch_size, 1, -1)
         return output

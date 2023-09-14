@@ -1,6 +1,6 @@
 """train.py
 
-Train gnn to predict binned specs
+Train Massformer to predict binned specs
 
 """
 import logging

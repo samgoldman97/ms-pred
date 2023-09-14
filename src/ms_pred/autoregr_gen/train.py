@@ -1,6 +1,6 @@
 """train.py
 
-Train gnn to predict binned specs
+Train autoregressive model to predict formulae as a SCARF baseline
 
 """
 import logging

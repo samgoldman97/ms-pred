@@ -63,33 +63,42 @@ class ScarfNet(pl.LightningModule):
         embed_adduct: bool = False,
         **kwargs,
     ):
-        """__init__.
+        """__init__ _summary_
 
         Args:
-            formula_dim (int): formula_dim
-            hidden_size (int): hidden_size
-            layers (int): layers
-            dropout (float): dropout
-            learning_rate (float): learning_rate
-            lr_decay_rate (float): lr_decay_rate
-            weight_decay (float): weight_decay
-            loss_fn (str): loss_fn
-            mpnn_type (str): mpnn_type
-            set_layers (int): set_layers
-            atom_feats (list): atom_feats
-            bond_feats (list): bond_feats
-            pool_op (str): pool_op
-            pe_embed_k (int): pe_embed_k
-            num_atom_feats (int): num_atom_feats
-            num_bond_feats (int): num_bond_feats
-            use_reverse (bool): Use reverse
-            no_forward (bool): If true and use_reverse, don't use forward preds
-                Helpful for computing ablations.. Can be abstracted to have
-                "use_reverse" be a flag ("both", "reverse", "forward")
-            embedder (str): the embedder to use: bianry, fourier, rbf, one-hot
-            use_tbc: use to be confirmed token in options and diffs
-            kwargs:
+            formula_dim (int): _description_
+            hidden_size (int): _description_
+            gnn_layers (int, optional): _description_. Defaults to 2.
+            mlp_layers (int, optional): _description_. Defaults to 2.
+            set_layers (int, optional): _description_. Defaults to 2.
+            dropout (float, optional): _description_. Defaults to 0.0.
+            learning_rate (float, optional): _description_. Defaults to 7e-4.
+            lr_decay_rate (float, optional): _description_. Defaults to 1.0.
+            weight_decay (float, optional): _description_. Defaults to 0.
+            mpnn_type (str, optional): _description_. Defaults to "GGNN".
+            atom_feats (list, optional): _description_. Defaults to ( "a_onehot", "a_degree", "a_hybrid", "a_formal", "a_radical", "a_ring", "a_mass", "a_chiral", ).
+            bond_feats (list, optional): _description_. Defaults to ("b_degree",).
+            pool_op (str, optional): _description_. Defaults to "avg".
+            pe_embed_k (int, optional): _description_. Defaults to 0.
+            num_atom_feats (int, optional): _description_. Defaults to 86.
+            num_bond_feats (int, optional): _description_. Defaults to 5.
+            loss_fn (str, optional): _description_. Defaults to "mse".
+            warmup (int, optional): _description_. Defaults to 1000.
+            use_reverse (bool, optional): _description_. Defaults to False.
+            no_forward (bool, optional): _description_. Defaults to False.
+            embedder (str, optional): _description_. Defaults to "abs-sines".
+            use_tbc (bool, optional): _description_. Defaults to True.
+            root_embedder (str, optional): _description_. Defaults to "gnn".
+            info_join (str, optional): _description_. Defaults to "concat".
+            embed_adduct (bool, optional): _description_. Defaults to False.
+
+        Raises:
+            NotImplementedError: _description_
+            NotImplementedError: _description_
+            NotImplementedError: _description_
+            NotImplementedError: _description_
         """
+
         super().__init__()
         self.save_hyperparameters()
 

@@ -354,11 +354,6 @@ def form_from_inchi(inchi: str) -> str:
         str
     """
     return uncharged_formula(inchi, mol_type="inchi")
-    mol = Chem.MolFromInchi(inchi)
-    if mol is None:
-        return ""
-    else:
-        return CalcMolFormula(mol)
 
 
 def inchikey_from_smiles(smi: str) -> str:
@@ -430,36 +425,6 @@ def smiles_from_inchi(inchi: str) -> str:
         return Chem.MolToSmiles(mol)
 
 
-def contains_metals(formula: str) -> bool:
-    """returns true if formula contains metals"""
-    METAL_RE = "(Fe|Co|Zn|Rh|Pt|Li)"
-    return len(re.findall(METAL_RE, formula)) > 0
-
-
-class SmilesStandardizer(object):
-    """Standardize smiles"""
-
-    def __init__(self, *args, **kwargs):
-        self.fragment_standardizer = rdMolStandardize.LargestFragmentChooser()
-        self.charge_standardizer = rdMolStandardize.Uncharger()
-
-    def standardize_smiles(self, smi):
-        """Standardize smiles string"""
-        mol = Chem.MolFromSmiles(smi)
-        out_smi = self.standardize_mol(mol)
-        return out_smi
-
-    def standardize_mol(self, mol) -> str:
-        """Standardize smiles string"""
-        mol = self.fragment_standardizer.choose(mol)
-        mol = self.charge_standardizer.uncharge(mol)
-
-        # Round trip to and from inchi to tautomer correct
-        # Also standardize tautomer in the middle
-        output_smi = Chem.MolToSmiles(mol, isomericSmiles=False)
-        return output_smi
-
-
 def mass_from_inchi(inchi: str) -> float:
     mol = Chem.MolFromInchi(inchi)
     if mol is None:
@@ -484,53 +449,6 @@ def mass_from_smi(smi: str) -> float:
         return ExactMolWt(mol)
 
 
-def min_formal_from_smi(smi: str):
-    mol = Chem.MolFromSmiles(smi)
-    if mol is None:
-        return 0
-    else:
-        formal = np.array([j.GetFormalCharge() for j in mol.GetAtoms()])
-        return formal.min()
-
-
-def max_formal_from_smi(smi: str):
-    mol = Chem.MolFromSmiles(smi)
-    if mol is None:
-        return 0
-    else:
-        formal = np.array([j.GetFormalCharge() for j in mol.GetAtoms()])
-        return formal.max()
-
-
-def atoms_from_smi(smi: str) -> int:
-    """atoms_from_smi.
-
-    Args:
-        smi (str): smi
-
-    Return:
-        int
-    """
-    mol = Chem.MolFromSmiles(smi)
-    if mol is None:
-        return 0
-    else:
-        return mol.GetNumAtoms()
-
-
-def num_to_binary(num, num_bits=BINARY_BITS):
-    """num_to_binary.
-
-    Args:
-        num:
-        num_bits:
-    """
-    format_obj = "{:0" + str(num_bits) + "b}"
-    out = format_obj.format(num)
-    out = np.array(list(out)).astype(int)
-    return out
-
-
 def has_valid_els(chem_formula: str) -> bool:
     """has_valid_els"""
     for (chem_symbol, num) in re.findall(CHEM_FORMULA_SIZE, chem_formula):
@@ -539,13 +457,14 @@ def has_valid_els(chem_formula: str) -> bool:
     return True
 
 
-def npclassifer_query(smiles):
-    """npclassifier_query.
+def npclassifier_query(smiles):
+    """npclassifier_query _summary_
 
     Args:
-        input: Tuple of name, molecule
-    Return:
-        Dict of name to molecule
+        smiles (_type_): _description_
+
+    Returns:
+        _type_: _description_
     """
     import requests
 

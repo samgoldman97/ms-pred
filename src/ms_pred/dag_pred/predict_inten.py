@@ -40,7 +40,6 @@ def get_args():
     )
     parser.add_argument(
         "--magma-dag-folder",
-        default="data/spec_datasets/gnps2015_debug/magma_outputs/magma_tree",
         help="Folder to have outputs",
     )
     parser.add_argument("--dataset-name", default="gnps2015_debug")

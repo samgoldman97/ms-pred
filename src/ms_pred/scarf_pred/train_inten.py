@@ -1,6 +1,6 @@
 """train_inten.py
 
-Train model to predict emit intensities for each mol formla
+Train model to predict emit intensities for each mol formula
 
 """
 import logging
