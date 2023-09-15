@@ -1128,40 +1128,23 @@ class ScarfIntenNet(pl.LightningModule):
         diffs: torch.FloatTensor,
         num_forms: torch.LongTensor,
         adducts: torch.LongTensor,
-    ):
-        """forward_switch.
-
-        Args:
-            graphs (dgl.graph): graphs
-            formulae (torch.FloatTensor): formulae
-            diffs (torch.FloatTensor): diffs
-            num_forms (torch.LongTensor): num_forms
-        """
-        return self.forward_switch(
-            graphs, formulae, diffs, num_forms, adducts, self.binned_targs
-        )
-
-    def forward_switch(
-        self,
-        graphs: dgl.graph,
-        formulae: torch.FloatTensor,
-        diffs: torch.FloatTensor,
-        num_forms: torch.LongTensor,
-        adducts: torch.LongTensor,
         binned_targs: bool = False,
     ):
-        """forward_switch.
+        """forward.
 
         Args:
             graphs (dgl.graph): graphs
             formulae (torch.FloatTensor): formulae
             diffs (torch.FloatTensor): diffs
             num_forms (torch.LongTensor): num_forms
+            adducts: (torch.LongTensor): adducts
+            binned_targs (bool): Binned targs 
         """
         if binned_targs:
             return self.forward_binned(graphs, formulae, diffs, num_forms, adducts)
         else:
             return self.forward_unbinned(graphs, formulae, diffs, num_forms, adducts)
+
 
     def forward_unbinned(
         self,
@@ -1224,7 +1207,7 @@ class ScarfIntenNet(pl.LightningModule):
 
     def predict(self, graphs, full_formula, diffs, num_forms, adducts, binned_out=True):
         """predict."""
-        out = self.forward_switch(
+        out = self.forward(
             graphs=graphs,
             formulae=full_formula,
             diffs=diffs,
@@ -1262,6 +1245,7 @@ class ScarfIntenNet(pl.LightningModule):
             diffs=batch["diffs"],
             num_forms=batch["num_forms"],
             adducts=batch["adducts"],
+            binned_targs=self.binned_targs,
         )
         loss_dict = self.loss_fn(outputs, batch["intens"], batch["num_forms"])
         self.log(f"{name}_loss", loss_dict.get("loss"), on_epoch=True, logger=True)
