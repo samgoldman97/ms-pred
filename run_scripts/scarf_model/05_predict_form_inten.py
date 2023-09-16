@@ -7,8 +7,8 @@ devices = ",".join(["3"])
 node_num = 300
 
 test_entries = [
-    {"dataset": "canopus_train_public", "split": "split_1", }
-    {"dataset": "nist20", "split": "split_1", }
+    {"dataset": "canopus_train_public", "split": "split_1", },
+    {"dataset": "nist20", "split": "split_1", },
     {"dataset": "nist20", "split": "scaffold_1", }
 ]
 
@@ -20,8 +20,6 @@ for test_entry in test_entries:
     base_formula_folder = Path(f"results/scarf_{dataset}")
     save_dir = model.parent.parent
     split = save_dir.name
-    if split not in valid_splits:
-        continue
 
     save_dir = save_dir / "preds"
 

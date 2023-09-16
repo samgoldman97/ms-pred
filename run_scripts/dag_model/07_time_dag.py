@@ -7,7 +7,7 @@ import subprocess
 
 python_file = "src/ms_pred/dag_pred/predict_smis.py"
 test_entries = [{"dataset": "nist20",
-                 "labels": "data/spec_datasets/sample_labels.tsv" 
+                 "labels": "data/spec_datasets/sample_labels.tsv",
                  "train_split": "split_1"
                  }]
 devices = ",".join(["3"])

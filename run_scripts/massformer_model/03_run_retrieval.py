@@ -3,7 +3,7 @@ import subprocess
 import json
 
 
-pred_file = "src/ms_pred/massformer/predict.py"
+pred_file = "src/ms_pred/massformer_pred/predict.py"
 retrieve_file = "src/ms_pred/retrieval/retrieval_binned.py"
 subform_name = "no_subform"
 devices = ",".join(["0"])
@@ -35,8 +35,11 @@ for test_entry in test_entries:
         print(f"Could not find model {model}; skipping\n: {json.dumps(test_entry, indent=1)}")
         continue
 
+    labels = f"retrieval/cands_df_{split}_{maxk}.tsv"
+
     save_dir = model.parent.parent / f"retrieval_{dataset}_{split}_{maxk}"
     save_dir.mkdir(exist_ok=True)
+
 
     cmd = f"""python {pred_file} \\
     --batch-size 32  \\

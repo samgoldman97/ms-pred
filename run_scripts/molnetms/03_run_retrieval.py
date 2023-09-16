@@ -34,6 +34,8 @@ for test_entry in test_entries:
         print(f"Could not find model {model}; skipping\n: {json.dumps(test_entry, indent=1)}")
         continue
 
+    labels = f"retrieval/cands_df_{split}_{maxk}.tsv"
+
     save_dir = model.parent.parent / f"retrieval_{dataset}_{split}_{maxk}"
     save_dir.mkdir(exist_ok=True)
 

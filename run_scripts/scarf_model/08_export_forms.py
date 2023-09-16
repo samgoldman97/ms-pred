@@ -21,7 +21,7 @@ for test_entry in test_entries:
 
     save_dir = inten_model.parent.parent / f"preds_export_{dataset}"
     args = yaml.safe_load(open(inten_model.parent.parent / "args.yaml", "r"))
-    form_folder = Path(args["magma_dag_folder"])
+    form_folder = Path(args["formula_folder"])
     gen_model = form_folder.parent / "version_0/best.ckpt"
 
     split = save_dir.parent.name

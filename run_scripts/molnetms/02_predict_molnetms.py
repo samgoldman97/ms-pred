@@ -4,7 +4,7 @@ import argparse
 
 
 num_workers = 32
-python_file = "src/ms_pred/molnetms_pred/predict.py"
+python_file = "src/ms_pred/molnetms/predict.py"
 test_entries = [
     {"dataset": "nist20", "split": "split_1"},
     {"dataset": "nist20", "split": "scaffold_1"},

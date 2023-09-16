@@ -2,7 +2,7 @@ import yaml
 from pathlib import Path
 import subprocess
 
-pred_file = "src/ms_pred/dag_pred/predict_smis.py"
+pred_file = "src/ms_pred/scarf_pred/predict_smis.py"
 retrieve_file = "src/ms_pred/retrieval/retrieval_binned.py"
 subform_name = "no_subform"
 devices = ",".join(["2"])
@@ -32,7 +32,7 @@ for test_entry in test_entries:
     train_split =  test_entry['train_split']
     split = test_entry['test_split']
     maxk = test_entry['max_k']
-    inten_dir = Path(f"results/dag_inten_{dataset}")
+    inten_dir = Path(f"results/scarf_inten_{dataset}")
     inten_model =  inten_dir / train_split  / "version_0/best.ckpt"
     if not inten_model.exists(): 
         print(f"Could not find model {model}; skipping\n: {json.dumps(test_entry, indent=1)}")
@@ -44,6 +44,7 @@ for test_entry in test_entries:
     save_dir.mkdir(exist_ok=True)
 
     args = yaml.safe_load(open(inten_model.parent.parent / "args.yaml", "r"))
+
     form_folder = Path(args["formula_folder"])
     gen_model = form_folder.parent / "version_0/best.ckpt"
 
