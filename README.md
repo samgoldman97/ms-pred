@@ -141,12 +141,11 @@ SCARF models trained in two parts: a prefix tree generator and an intensity pred
 1. *Train scarf model*: `run_scripts/scarf_model/01_run_scarf_gen_train.sh`
 2. *Sweep number of prefixes to generate*: `run_scripts/scarf_model/02_sweep_scarf_gen_thresh.py`  
 3. *Use model 1 to predict model 2 training set*: `run_scripts/scarf_model/03_scarf_gen_predict.sh`   
-4. *Add intensity targets to predictions*: `run_scripts/scarf_model/04_process_scarf_train.py`
-5. *Train intensity model*: `run_scripts/scarf_model/05_train_scarf_inten.sh`
-6. *Make and evaluate intensity predictions*: `run_scripts/scarf_model/06_predict_form_inten.py`
-7. *Run retrieval*: `run_scripts/scarf_model/07_run_retrieval.py`  
-8. *Time scarf*: `run_scripts/scarf_model/08_time_scarf.py`  
-9. *Export scarf forms* `run_scripts/scarf_model/09_export_forms.py`
+4. *Train intensity model*: `run_scripts/scarf_model/04_train_scarf_inten.sh`
+5. *Make and evaluate intensity predictions*: `run_scripts/scarf_model/05_predict_form_inten.py`
+6. *Run retrieval*: `run_scripts/scarf_model/06_run_retrieval.py`  
+7. *Time scarf*: `run_scripts/scarf_model/07_time_scarf.py`  
+8. *Export scarf forms* `run_scripts/scarf_model/08_export_forms.py`
 
 
 Instead of running in batched pipeline model, individual gen training, inten
