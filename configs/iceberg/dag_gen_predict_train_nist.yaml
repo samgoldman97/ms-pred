@@ -2,7 +2,7 @@ launcher_args: {experiment_name: dag_nist20,
   script_name: "src/ms_pred/dag_pred/predict_gen.py",
   slurm_script: launcher_scripts/generic_slurm.sh, 
   launch_method: local,
-  visible_devices: [1]
+  visible_devices: [0]
 }
 universal_args:
   _slurm_args:
@@ -20,9 +20,9 @@ universal_args:
 
 iterative_args:
 
-  #-  split-name: [split_1.tsv]
-  #   checkpoint-pth: [results/dag_nist20/split_1/version_0/best.ckpt]
-  #   save-dir: [split_1/preds_train_100]
+  -  split-name: [split_1.tsv]
+     checkpoint-pth: [results/dag_nist20/split_1/version_0/best.ckpt]
+     save-dir: [split_1/preds_train_100]
 
   -  split-name: [scaffold_1.tsv]
      checkpoint-pth: [results/dag_nist20/scaffold_1/version_0/best.ckpt]

@@ -40,9 +40,9 @@ universal_args:
   embed-adduct: [true]
 
 iterative_args:
-  #-  split-name: [split_1.tsv]
-  #   save-dir: [split_1]
-  #   formula-folder: [results/scarf_nist20/split_1/preds_train_300_inten/]
+  -  split-name: [split_1.tsv]
+     save-dir: [split_1]
+     formula-folder: [results/scarf_nist20/split_1/preds_train_300_inten/]
   -  split-name: [scaffold_1.tsv]
      save-dir: [scaffold_1]
      formula-folder: [results/scarf_nist20/scaffold_1/preds_train_300_inten/]

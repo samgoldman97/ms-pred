@@ -1,1 +1,4 @@
 python launcher_scripts/run_from_config.py configs/scarf/scarf_train_nist.yaml
+python launcher_scripts/run_from_config.py configs/scarf/scarf_train_canopus.yaml
+python launcher_scripts/run_from_config.py configs/scarf/scarf_train_canopus_ablate.yaml
+python launcher_scripts/run_from_config.py configs/scarf/scarf_train_nist_ablate.yaml

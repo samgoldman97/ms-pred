@@ -1,1 +1,2 @@
 python launcher_scripts/run_from_config.py configs/iceberg/dag_train_canopus_train_public.yaml
+python launcher_scripts/run_from_config.py configs/iceberg/dag_train_nist20.yaml

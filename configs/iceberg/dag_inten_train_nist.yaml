@@ -44,9 +44,9 @@ universal_args:
   add-hs: [true]
 
 iterative_args:
-  #-  split-name: [split_1.tsv]
-  #   save-dir: [split_1]
-  #   magma-dag-folder: [results/dag_nist20/split_1/preds_train_100_inten/]
+  -  split-name: [split_1.tsv]
+     save-dir: [split_1]
+     magma-dag-folder: [results/dag_nist20/split_1/preds_train_100_inten/]
 
   -  split-name: [scaffold_1.tsv]
      save-dir: [scaffold_1]

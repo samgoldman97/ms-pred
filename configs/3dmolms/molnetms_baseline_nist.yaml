@@ -2,7 +2,7 @@ launcher_args: {experiment_name: molnetms_baseline_nist20,
   script_name: "src/ms_pred/molnetms/train.py",
   slurm_script: launcher_scripts/generic_slurm.sh, 
   launch_method: local,
-  visible_devices: [2],
+  visible_devices: [3],
 }
 universal_args:
   _slurm_args:
@@ -36,7 +36,7 @@ universal_args:
   embed-adduct: [true]
 
 iterative_args:
-  #-  split-name: [split_1.tsv]
-  #   save-dir: [split_1]
+  -  split-name: [split_1.tsv]
+     save-dir: [split_1]
   -  split-name: [scaffold_1.tsv]
      save-dir: [scaffold_1]

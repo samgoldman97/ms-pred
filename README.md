@@ -169,12 +169,11 @@ ICEBRG models, like SCARF, are trained in two parts: a learned fragment generato
 1. *Train dag model*: `run_scripts/dag_model/01_run_dag_gen_train.sh`   
 2. *Sweep over the number of fragments to generate*: `run_scripts/dag_model/02_sweep_gen_thresh.py`     
 3. *Use model 1 to predict model 2 training set*: `run_scripts/dag_model/03_run_dag_gen_predict.sh`   
-4. *Add intensity targets to predictions*: `run_scripts/dag_model/04_process_dag_train.py`   
-5. *Train intensity model*: `run_scripts/dag_model/05_train_dag_inten.sh`   
-6. *Make and evaluate intensity predictions*: `run_scripts/dag_model/06_predict_dag_inten.py`  
-7. *Run retrieval*: `run_scripts/dag_model/07_run_retrieval.py`  
-8. *Time iceberg*: `run_scripts/dag_model/08_time_dag.py`  
-9. *Export dag predictions* `run_scripts/dag_model/09_export_preds.py`  
+4. *Train intensity model*: `run_scripts/dag_model/04_train_dag_inten.sh`   
+5. *Make and evaluate intensity predictions*: `run_scripts/dag_model/05_predict_dag_inten.py`  
+6. *Run retrieval*: `run_scripts/dag_model/06_run_retrieval.py`  
+7. *Time iceberg*: `run_scripts/dag_model/07_time_dag.py`  
+8. *Export dag predictions* `run_scripts/dag_model/08_export_preds.py`  
 
 
 Instead of running in batched pipeline model, individual gen training, inten

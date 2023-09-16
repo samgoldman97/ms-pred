@@ -2,7 +2,7 @@ launcher_args: {experiment_name: autoregr_nist20,
   script_name: "src/ms_pred/autoregr_gen/train.py",
   slurm_script: launcher_scripts/generic_slurm.sh, 
   launch_method: local,
-  visible_devices: [2]
+  visible_devices: [0]
 }
 universal_args:
   _slurm_args:
