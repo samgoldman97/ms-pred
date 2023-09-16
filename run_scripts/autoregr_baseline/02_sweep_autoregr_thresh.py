@@ -3,7 +3,7 @@ import pandas as pd
 from pathlib import Path
 import subprocess
 
-datasets = ["nit20", "canopus_train_public"]
+datasets = ["nist20", "canopus_train_public"]
 devices = ",".join(["2"])
 split_override = None
 subform_name = "magma_subform_50"

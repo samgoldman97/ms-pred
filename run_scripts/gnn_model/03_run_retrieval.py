@@ -10,15 +10,15 @@ devices = ",".join(["2"])
 dist = "cos"
 
 test_entries = [
-    {"dataset": "nist20",
-     "train_split": "split_1",
-     "test_split": "split_1",
-     "max_k": 50},
+    #{"dataset": "nist20",
+    # "train_split": "split_1",
+    # "test_split": "split_1",
+    # "max_k": 50},
 
-    {"dataset": "canopus_train_public",
-     "train_split": "split_1",
-     "test_split": "split_1",
-     "max_k": 50},
+    #{"dataset": "canopus_train_public",
+    # "train_split": "split_1",
+    # "test_split": "split_1",
+    # "max_k": 50},
 
     {"dataset": "nist20",
      "train_split": "split_1",
@@ -34,7 +34,7 @@ for test_entry in test_entries:
     maxk = test_entry['max_k']
 
     res_folder = Path(f"results/gnn_baseline_{dataset}/")
-    model =  res_folder / split  / "version_0/best.ckpt"
+    model =  res_folder / train_split  / "version_0/best.ckpt"
     if not model.exists(): 
         print(f"Could not find model {model}; skipping\n: {json.dumps(test_entry, indent=1)}")
         continue

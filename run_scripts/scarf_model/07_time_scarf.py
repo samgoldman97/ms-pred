@@ -21,7 +21,7 @@ for test_entry in test_entries:
 
     res_folder = Path(f"results/scarf_inten_{dataset}/")
     base_formula_folder = Path(f"results/scarf_{dataset}")
-    model  = res_folder / split
+    model  = res_folder / split / f"version_0/best.ckpt"
     num_mols = len(pd.read_csv(labels, sep="\t"))
 
     save_dir = model.parent.parent
@@ -37,7 +37,6 @@ for test_entry in test_entries:
     # Note: Must use preds_train_01
     cmd = f"""python {python_file} \\
     --batch-size 1 \\
-    --dataset-name {dataset} \\
     --split-name {split}.tsv \\
     --gen-checkpoint {gen_model} \\
     --inten-checkpoint {model} \\
@@ -47,7 +46,7 @@ for test_entry in test_entries:
     --save-dir {save_dir} \\
     --num-workers 0 \\
     --subset-datasets none \\
-    --dataset-labels {dataset_labels} \\
+    --dataset-labels  {labels} \\
     --binned-out
     #--gpu \\
     """

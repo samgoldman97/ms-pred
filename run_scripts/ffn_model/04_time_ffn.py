@@ -7,7 +7,7 @@ import subprocess
 python_file = "src/ms_pred/ffn_pred/predict.py"
 
 test_entries = [{"dataset": "nist20",
-                 "labels": "data/spec_datasets/sample_labels.tsv" 
+                 "labels": "data/spec_datasets/sample_labels.tsv" ,
                  "train_split": "split_1"
                  }]
 devices = ",".join(["3"])
@@ -33,7 +33,7 @@ for test_entry in test_entries:
     --checkpoint {model} \\
     --save-dir {save_dir} \\
     --num-workers 0 \\
-    --dataset-labels {dataset_labels}
+    --dataset-labels ../{Path(labels).name}
     """
     device_str = f"CUDA_VISIBLE_DEVICES={devices}"
     cmd = f"{device_str} {cmd}"

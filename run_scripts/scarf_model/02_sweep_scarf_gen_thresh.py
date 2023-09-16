@@ -4,32 +4,43 @@ from pathlib import Path
 import subprocess
 
 res_entries = [
-    {"folder": "results/scarf_nist20_ablate/", "dataset": "nist20"},
-    {"folder": "results/scarf_canopus_train_public_ablate/", "dataset": "canopus_train_public"},
-    {"folder": "results/scarf_nist20/", "dataset": "nist20"},
-    {"folder": "results/scarf_canopus_train_public/", "dataset": "canopus_train_public"},
+    {"folder": "results/scarf_nist20_ablate/", 
+     "dataset": "nist20", 
+     'test_split': "split_1"},
+
+    {"folder": "results/scarf_canopus_train_public_ablate/", 
+     "dataset": "canopus_train_public",
+     "test_split": "split_1",},
+
+    {"folder": "results/scarf_nist20/scaffold_1/", 
+     "dataset": "nist20",
+     "test_split": "scaffold_1"},
+
+    {"folder": "results/scarf_nist20/split_1/", 
+     "dataset": "nist20",
+     "test_split": "split_1"},
+
+    {"folder": "results/scarf_canopus_train_public/split_1/", 
+     "dataset": "canopus_train_public",
+     "test_split": "split_1"},
+
 ]
 
 python_file = "src/ms_pred/scarf_pred/predict_gen.py"
 devices = ",".join(["2"])
 max_nodes = [10, 20, 30, 40, 50, 100, 200, 300, 500, 1000]
 subform_name = "magma_subform_50"
-split_override = None
-valid_splits = ["split_1", "scaffold_1"]
 
 
 for res_entry in res_entries:
     res_folder = Path(res_entry['folder'])
     dataset = res_entry['dataset']
     models = sorted(list(res_folder.rglob("version_0/*.ckpt")))
+    split = res_entry['test_split']
+
 
     for model in models:
         save_dir_base = model.parent.parent
-        split = save_dir_base.name if split_override is None else split_override
-
-        if split not in valid_splits:
-            continue
-
         save_dir = save_dir_base / "inten_thresh_sweep"
         save_dir.mkdir(exist_ok=True)
 
