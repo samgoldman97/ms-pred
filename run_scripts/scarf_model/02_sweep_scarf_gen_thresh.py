@@ -19,7 +19,7 @@ valid_splits = ["split_1", "scaffold_1"]
 
 
 for res_entry in res_entries:
-    res_folder = Path(res_entry['folder']])
+    res_folder = Path(res_entry['folder'])
     dataset = res_entry['dataset']
     models = sorted(list(res_folder.rglob("version_0/*.ckpt")))
 

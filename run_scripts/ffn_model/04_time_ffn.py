@@ -4,18 +4,22 @@ import time
 from pathlib import Path
 import subprocess
 
-dataset = "canopus_train_public"
-dataset = "nist20"
-dataset_labels = "timer_labels.tsv"
-labels = Path(f"data/spec_datasets/") / dataset_labels
-num_mols = len(pd.read_csv(labels, sep="\t"))
-
-
-res_folder = Path(f"results/ffn_baseline_{dataset}/")
 python_file = "src/ms_pred/ffn_pred/predict.py"
+
+test_entries = [{"dataset": "nist20",
+                 "labels": "data/spec_datasets/sample_labels.tsv" 
+                 "train_split": "split_1"
+                 }]
 devices = ",".join(["3"])
 
-for model in res_folder.rglob("version_0/*.ckpt"):
+for test_entry in test_entries:
+    dataset = test_entry['dataset']
+    labels = test_entry['labels']
+    train_split = test_entry['train_split']
+    res_folder = Path(f"results/ffn_baseline_{dataset}/")
+    model = res_folder / train_split / f"version_0/best.ckpt"
+    num_mols = len(pd.read_csv(labels, sep="\t"))
+
     save_dir = model.parent.parent
     time_res = save_dir / "time_out.json"
     split = save_dir.name

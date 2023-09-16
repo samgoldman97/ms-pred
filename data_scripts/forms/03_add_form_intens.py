@@ -112,7 +112,6 @@ def main():
     # Run
     wrapper_fn = lambda arg_dict: relabel_tree(**arg_dict)
     # Debug
-    [wrapper_fn(i) for i in arg_dicts]
     if num_workers == 0:
         [wrapper_fn(i) for i in arg_dicts]
     else:

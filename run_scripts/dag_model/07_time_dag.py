@@ -6,18 +6,22 @@ from pathlib import Path
 import subprocess
 
 python_file = "src/ms_pred/dag_pred/predict_smis.py"
-dataset = "nist20"  # canopus_train_public
+test_entries = [{"dataset": "nist20",
+                 "labels": "data/spec_datasets/sample_labels.tsv" 
+                 "train_split": "split_1"
+                 }]
 devices = ",".join(["3"])
 node_num = 100
-res_folder = Path(f"results/dag_inten_{dataset}/")
-ckpts = res_folder.rglob("version_0/*.ckpt")
-ckpts = sorted(ckpts)
 
-dataset_labels = "sample_labels.tsv"
-labels = Path(f"data/spec_datasets/") / dataset_labels
-num_mols = len(pd.read_csv(labels, sep="\t"))
+for test_entry in test_entries:
+    dataset = test_entry['dataset']
+    labels = test_entry['labels']
+    train_split = test_entry['train_split']
+    res_folder = Path(f"results/dag_inten_{dataset}/")
 
-for model in ckpts:
+    model = res_folder / train_split / f"version_0/best.ckpt"
+    num_mols = len(pd.read_csv(labels, sep="\t"))
+
     save_dir = model.parent.parent
     split = save_dir.name
     time_res = save_dir / "time_out.json"

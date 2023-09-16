@@ -1,33 +1,43 @@
 from pathlib import Path
 import subprocess
+import json
 
 
-dataset = "canopus_train_public"
-dataset = "nist20"
-res_folder = Path(f"results/massformer_baseline_{dataset}/")
-pred_file = "src/ms_pred/massformer_pred/predict.py"
+pred_file = "src/ms_pred/massformer/predict.py"
 retrieve_file = "src/ms_pred/retrieval/retrieval_binned.py"
-devices = ",".join(["2"])
 subform_name = "no_subform"
-valid_splits = ["split_1"]
-split_override = None
-maxk = 50
+devices = ",".join(["0"])
+dist = "cos"
+num_workers = 32
+
+test_entries = [
+    {"dataset": "nist20",
+     "train_split": "split_1",
+     "test_split": "split_1",
+     "max_k": 50},
+
+    {"dataset": "canopus_train_public",
+     "train_split": "split_1",
+     "test_split": "split_1",
+     "max_k": 50},
+]
 
 
-for model in res_folder.rglob("version_0/*.ckpt"):
-    split = model.parent.parent.name
-    if split not in valid_splits:
+for test_entry in test_entries:
+    dataset = test_entry['dataset']
+    train_split =  test_entry['train_split']
+    split = test_entry['test_split']
+    maxk = test_entry['max_k']
+
+    res_folder = Path(f"results/massformer_baseline_{dataset}/")
+    model =  res_folder / split  / "version_0/best.ckpt"
+    if not model.exists(): 
+        print(f"Could not find model {model}; skipping\n: {json.dumps(test_entry, indent=1)}")
         continue
-
-    if split_override is not None:
-        split = split_override
 
     save_dir = model.parent.parent / f"retrieval_{dataset}_{split}_{maxk}"
     save_dir.mkdir(exist_ok=True)
 
-    labels = f"retrieval/cands_df_{split}_{maxk}.tsv"
-    save_dir = save_dir
-    save_dir.mkdir(exist_ok=True)
     cmd = f"""python {pred_file} \\
     --batch-size 32  \\
     --dataset-name {dataset} \\

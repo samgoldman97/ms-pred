@@ -1,30 +1,42 @@
 from pathlib import Path
 import subprocess
-
-dataset = "canopus_train_public"
-dataset = "nist20"
-
-# res_folder = Path(f"results/ffn_baseline_epoch_ablation_canopus_train_public")
-res_folder = Path(f"results/ffn_baseline_{dataset}/")
+import json
 
 pred_file = "src/ms_pred/ffn_pred/predict.py"
 retrieve_file = "src/ms_pred/retrieval/retrieval_binned.py"
-devices = ",".join(["3"])
 subform_name = "no_subform"
+devices = ",".join(["3"])
 dist = "cos"
-split_override = "split_1"
-split_override = None
-split_override = "split_1_500"
-maxk = 50
-valid_splits = ["split_1"]
+
+test_entries = [
+    {"dataset": "nist20",
+     "train_split": "split_1",
+     "test_split": "split_1",
+     "max_k": 50},
+
+    {"dataset": "canopus_train_public",
+     "train_split": "split_1",
+     "test_split": "split_1",
+     "max_k": 50},
+
+    {"dataset": "nist20",
+     "train_split": "split_1",
+     "test_split": "split_1_500",
+     "max_k": None},
+]
 
 
-for model in res_folder.rglob("version_0/*.ckpt"):
-    split = model.parent.parent.name
-    if split not in valid_splits:
+for test_entry in test_entries:
+    dataset = test_entry['dataset']
+    train_split =  test_entry['train_split']
+    split = test_entry['test_split']
+    maxk = test_entry['max_k']
+
+    res_folder = Path(f"results/ffn_baseline_{dataset}/")
+    model =  res_folder / split  / "version_0/best.ckpt"
+    if not model.exists(): 
+        print(f"Could not find model {model}; skipping\n: {json.dumps(test_entry, indent=1)}")
         continue
-    if split_override is not None:
-        split = split_override
 
     save_dir = model.parent.parent / f"retrieval_{dataset}_{split}_{maxk}"
     save_dir.mkdir(exist_ok=True)

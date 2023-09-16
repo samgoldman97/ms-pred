@@ -6,16 +6,19 @@ pred_file = "src/ms_pred/dag_pred/predict_smis.py"
 devices = ",".join(["3"])
 subform_name = "no_subform"
 max_nodes = 100
-dataset = "nist20"
-dataset = "canopus_train_public"
 dist = "cos"
-binned_out = True
-binned_out = False
-binned_out_flag = "--binned-out" if binned_out else ""
+test_entries = [
+    {"dataset": "nist20", "split": "split_1", "binned_out": False},
+    {"dataset": "canopus_train_public", "split": "split_1", "binned_out": False},
+]
 
-inten_dir = Path(f"results/dag_inten_{dataset}")  # _{max_nodes}")
+for test_entry in test_entries:
+    binned_out = test_entry['binned_out']
+    dataset = test_entry['dataset']
+    split = test_entry['split']
+    inten_model = Path(f"results/dag_inten_{dataset}/{split}/version_0/best.ckpt")
+    binned_out_flag = "--binned-out" if binned_out else ""
 
-for inten_model in inten_dir.rglob("version_0/*.ckpt"):
     save_dir = inten_model.parent.parent / f"preds_export_{dataset}"
     args = yaml.safe_load(open(inten_model.parent.parent / "args.yaml", "r"))
     form_folder = Path(args["magma_dag_folder"])

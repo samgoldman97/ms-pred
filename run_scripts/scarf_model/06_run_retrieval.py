@@ -2,32 +2,43 @@ import yaml
 from pathlib import Path
 import subprocess
 
-num_workers = 64
-pred_file = "src/ms_pred/scarf_pred/predict_smis.py"
+pred_file = "src/ms_pred/dag_pred/predict_smis.py"
 retrieve_file = "src/ms_pred/retrieval/retrieval_binned.py"
-devices = ",".join(["3"])
 subform_name = "no_subform"
-max_nodes = 100
+devices = ",".join(["2"])
 max_nodes = 300
-
-dataset = "canopus_train_public"
-dataset = "nist20"
 dist = "cos"
 
-inten_dir = Path(f"results/scarf_inten_{dataset}_100")  # _{max_nodes}")
-inten_dir = Path(f"results/scarf_inten_{dataset}")  # _{max_nodes}")
+test_entries = [
+    {"dataset": "nist20",
+     "train_split": "split_1",
+     "test_split": "split_1",
+     "max_k": 50},
 
-valid_splits = ["split_1"]
-split_override = "split_1_500"
-maxk = None
+    {"dataset": "canopus_train_public",
+     "train_split": "split_1",
+     "test_split": "split_1",
+     "max_k": 50},
 
-for inten_model in inten_dir.rglob("version_0/*.ckpt"):
-    split = inten_model.parent.parent.name
-    if split not in valid_splits:
+    #{"dataset": "nist20",
+    # "train_split": "split_1",
+    # "test_split": "split_1_500",
+    # "max_k": None},
+]
+
+
+for test_entry in test_entries:
+    dataset = test_entry['dataset']
+    train_split =  test_entry['train_split']
+    split = test_entry['test_split']
+    maxk = test_entry['max_k']
+    inten_dir = Path(f"results/dag_inten_{dataset}")
+    inten_model =  inten_dir / train_split  / "version_0/best.ckpt"
+    if not inten_model.exists(): 
+        print(f"Could not find model {model}; skipping\n: {json.dumps(test_entry, indent=1)}")
         continue
 
-    if split_override is not None:
-        split = split_override
+    labels = f"retrieval/cands_df_{split}_{maxk}.tsv"
 
     save_dir = inten_model.parent.parent / f"retrieval_{dataset}_{split}_{maxk}"
     save_dir.mkdir(exist_ok=True)

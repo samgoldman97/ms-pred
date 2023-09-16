@@ -3,32 +3,27 @@ import subprocess
 import argparse
 
 python_file = "src/ms_pred/dag_pred/predict_inten.py"
-
-parser = argparse.ArgumentParser()
-parser.add_argument("--dataset", type=str, default="nist20")
-args = parser.parse_args()
-
-dataset = args.dataset
-
-# dataset = "canopus_train_public"  # canopus_train_public
-# dataset = "nist20"  # canopus_train_public
-
-
-devices = ",".join(["3"])
 node_num = 100
-res_folder = Path(f"results/dag_inten_{dataset}/")
-base_formula_folder = Path(f"results/dag_{dataset}")
-ckpts = res_folder.rglob("version_0/*.ckpt")
-ckpts = sorted(ckpts)
-valid_splits = ["scaffold_1"]
-valid_splits = ["scaffold_1", "split_1"]
+num_workers = 32
+test_entries = [
+    {"dataset": "nist20", "split": "split_1"},
+    {"dataset": "nist20", "split": "scaffold_1"},
+    {"dataset": "canopus_train_public", "split": "split_1"},
+]
+devices = ",".join(["0"])
 
-for model in ckpts:
+for test_entry in test_entries:
+    split = test_entry['split']
+    dataset = test_entry['dataset']
+    base_formula_folder = Path(f"results/dag_{dataset}")
+    res_folder = Path(f"results/dag_inten_{dataset}/")
+    model = res_folder / split / "version_0/best.ckpt"
+
+    if not model.exists(): 
+        continue
+
     save_dir = model.parent.parent
     split = save_dir.name
-
-    if split not in valid_splits:
-        continue
 
     save_dir = save_dir / "preds"
 

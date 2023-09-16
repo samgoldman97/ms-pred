@@ -2,29 +2,26 @@ from pathlib import Path
 import subprocess
 import argparse
 
-
-parser = argparse.ArgumentParser()
-parser.add_argument("--dataset-name", type=str, default="nist20")
-args = parser.parse_args()
-dataset_name = args.dataset_name
-
-# dataset_name = "canopus_train_public"
-# dataset_name = "nist20"
-
-res_folder = Path(f"results/massformer_baseline_{dataset_name}")
+num_workers = 32
 python_file = "src/ms_pred/massformer_pred/predict.py"
-devices = ",".join(["3"])
-valid_splits = ["split_1"]
-valid_splits = ["scaffold_1", "split_1"]
+test_entries = [
+    {"dataset": "nist20", "split": "split_1"},
+    {"dataset": "nist20", "split": "scaffold_1"},
+    {"dataset": "canopus_train_public", "split": "split_1"},
+]
 
-for model in res_folder.rglob("version_0/*.ckpt"):
+devices = ",".join(["1"])
+
+for test_entry in test_entries:
+    split = test_entry['split']
+    dataset_name = test_entry['dataset']
+
+    res_folder = Path(f"results/massformer_baseline_{dataset_name}")
+    model = res_folder / f"{split}/version_0/best.ckpt"
+
     save_dir = model.parent.parent
-    split = save_dir.name
-
-    if split not in valid_splits:
-        continue
-
     save_dir = save_dir / "preds"
+
     save_dir.mkdir(exist_ok=True)
     cmd = f"""python {python_file} \\
     --batch-size 32 \\

@@ -4,32 +4,48 @@ import subprocess
 
 pred_file = "src/ms_pred/dag_pred/predict_smis.py"
 retrieve_file = "src/ms_pred/retrieval/retrieval_binned.py"
-devices = ",".join(["3"])
 subform_name = "no_subform"
+devices = ",".join(["2"])
 max_nodes = 100
-dataset = "nist20"
-dataset = "canopus_train_public"
 dist = "cos"
-split_override = None
-maxk = None
 
-inten_dir = Path(f"results/dag_inten_{dataset}")  # _{max_nodes}")
-valid_splits = ["split_1"]
+test_entries = [
+    {"dataset": "nist20",
+     "train_split": "split_1",
+     "test_split": "split_1",
+     "max_k": 50},
 
-for inten_model in inten_dir.rglob("version_0/*.ckpt"):
-    args = yaml.safe_load(open(inten_model.parent.parent / "args.yaml", "r"))
-    form_folder = Path(args["magma_dag_folder"])
-    gen_model = form_folder.parent / "version_0/best.ckpt"
+    {"dataset": "canopus_train_public",
+     "train_split": "split_1",
+     "test_split": "split_1",
+     "max_k": 50},
 
-    split = inten_model.parent.parent.name
+    #{"dataset": "nist20",
+    # "train_split": "split_1",
+    # "test_split": "split_1_500",
+    # "max_k": None},
+]
 
-    if split not in valid_splits:
+
+for test_entry in test_entries:
+    dataset = test_entry['dataset']
+    train_split =  test_entry['train_split']
+    split = test_entry['test_split']
+    maxk = test_entry['max_k']
+    inten_dir = Path(f"results/dag_inten_{dataset}")
+    inten_model =  inten_dir / train_split  / "version_0/best.ckpt"
+    if not inten_model.exists(): 
+        print(f"Could not find model {model}; skipping\n: {json.dumps(test_entry, indent=1)}")
         continue
+
+    labels = f"retrieval/cands_df_{split}_{maxk}.tsv"
 
     save_dir = inten_model.parent.parent / f"retrieval_{dataset}_{split}_{maxk}"
     save_dir.mkdir(exist_ok=True)
-    if split_override is not None:
-        split = split_override
+
+    args = yaml.safe_load(open(inten_model.parent.parent / "args.yaml", "r"))
+    form_folder = Path(args["magma_dag_folder"])
+    gen_model = form_folder.parent / "version_0/best.ckpt"
 
     labels = f"retrieval/cands_df_{split}_{maxk}.tsv"
     save_dir = save_dir

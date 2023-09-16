@@ -9,20 +9,12 @@ from tqdm import tqdm
 import yaml
 import ms_pred.common as common
 
-
-dataset = "nist20"
-dataset = "canopus_train_public"
-res_folder = Path(f"results/freq_baseline_{dataset}/")
-res_folder.mkdir(exist_ok=True)
-split_names = ["split_1"]
-subform_name = "magma_subform_50"
-subform_dir = Path(f"data/spec_datasets/{dataset}/subformulae/{subform_name}")
-labels_file = f"data/spec_datasets/{dataset}/labels.tsv"
-max_nodes = [10, 20, 30, 40, 50, 100, 200, 300, 500, 1000]
-# max_nodes = [100]
-
-
 def extract_diff_freqs(subform_file):
+    """extract_diff_freqs.
+
+    Args:
+        subform_file:
+    """
     subforms = json.load(open(subform_file, "r"))
     output_tbl = subforms["output_tbl"]
     main_form = subforms["cand_form"]
@@ -39,7 +31,7 @@ def extract_diff_freqs(subform_file):
             freqs[i] += 1
         for i in new_forms:
             freqs[i] += 1
-    #
+
     return freqs
 
 
@@ -101,10 +93,24 @@ def predict_top_k(input_name, smiles, formula, max_nodes, outdir, frags):
         json.dump(json_out, fp, indent=2)
 
 
-labels_df = pd.read_csv(labels_file, sep="\t")
-spec_to_smiles = dict(labels_df[["spec", "smiles"]].values)
-spec_to_forms = dict(labels_df[["spec", "formula"]].values)
-for split in split_names:
+test_entries = [
+    {"dataset": "nist20", "split": "split_1"},
+    {"dataset": "canopus_train_public", "split": "split_1"},
+]
+subform_name = "magma_subform_50"
+max_nodes = [10, 20, 30, 40, 50, 100, 200, 300, 500, 1000]
+
+
+for test_entry in test_entries:
+    dataset = test_entry['dataset']
+    split = test_entry['split']
+    subform_dir = Path(f"data/spec_datasets/{dataset}/subformulae/{subform_name}")
+    labels_file = f"data/spec_datasets/{dataset}/labels.tsv"
+    res_folder = Path(f"results/freq_baseline_{dataset}/")
+    res_folder.mkdir(exist_ok=True)
+    labels_df = pd.read_csv(labels_file, sep="\t")
+    spec_to_smiles = dict(labels_df[["spec", "smiles"]].values)
+    spec_to_forms = dict(labels_df[["spec", "formula"]].values)
     split_dir = res_folder / split
     split_dir.mkdir(exist_ok=True)
     split_file = f"data/spec_datasets/{dataset}/splits/{split}.tsv"
@@ -152,8 +158,6 @@ for split in split_names:
             )
             for i in test_names
         ]
-
-        # [predict_fn(predict_dict) for predict_dict in tqdm(predict_dicts)]
         common.chunked_parallel(predict_dicts, predict_fn)
         pred_dir_folders.append(export_dir)
 

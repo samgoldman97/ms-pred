@@ -6,19 +6,24 @@ from pathlib import Path
 import subprocess
 
 python_file = "src/ms_pred/scarf_pred/predict_smis.py"
-dataset = "nist20"  # canopus_train_public
 devices = ",".join(["3"])
 node_num = 300
-res_folder = Path(f"results/scarf_inten_{dataset}/")
-base_formula_folder = Path(f"results/scarf_{dataset}")
-ckpts = res_folder.rglob("version_0/*.ckpt")
-ckpts = sorted(ckpts)
 
-dataset_labels = "timer_labels.tsv"
-labels = Path(f"data/spec_datasets/") / dataset_labels
-num_mols = len(pd.read_csv(labels, sep="\t"))
+test_entries = [
+    {"dataset" : "nist20", "labels": "data/spec_datasets/sample_labels.tsv",
+    "split": "split_1"}
+]
 
-for model in ckpts:
+for test_entry in test_entries:
+    dataset = test_entry['dataset']
+    labels = test_entry['labels']
+    split = test_entry['split']
+
+    res_folder = Path(f"results/scarf_inten_{dataset}/")
+    base_formula_folder = Path(f"results/scarf_{dataset}")
+    model  = res_folder / split
+    num_mols = len(pd.read_csv(labels, sep="\t"))
+
     save_dir = model.parent.parent
     split = save_dir.name
     time_res = save_dir / "time_out.json"

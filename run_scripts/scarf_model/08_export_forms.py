@@ -6,25 +6,26 @@ pred_file = "src/ms_pred/scarf_pred/predict_smis.py"
 devices = ",".join(["3"])
 subform_name = "no_subform"
 max_nodes = 300
-dataset = "canopus_train_public"
 dist = "cos"
-binned_out = False
+test_entries = [
+    {"dataset": "nist20", "split": "split_1", "binned_out": False},
+    {"dataset": "canopus_train_public", "split": "split_1", "binned_out": False},
+]
 
-binned_out_flag = "--binned-out" if binned_out else ""
+for test_entry in test_entries:
+    binned_out = test_entry['binned_out']
+    dataset = test_entry['dataset']
+    split = test_entry['split']
+    inten_model = Path(f"results/scarf_inten_{dataset}/{split}/version_0/best.ckpt")
+    binned_out_flag = "--binned-out" if binned_out else ""
 
-inten_dir = Path(f"results/scarf_inten_{dataset}")  # _{max_nodes}")
-
-for inten_model in inten_dir.rglob("version_0/*.ckpt"):
-    print(inten_model)
     save_dir = inten_model.parent.parent / f"preds_export_{dataset}"
     args = yaml.safe_load(open(inten_model.parent.parent / "args.yaml", "r"))
-    form_folder = Path(args["formula_folder"])
+    form_folder = Path(args["magma_dag_folder"])
     gen_model = form_folder.parent / "version_0/best.ckpt"
 
     split = save_dir.parent.name
     save_dir.mkdir(exist_ok=True)
-
-    # split = "split_nist"
 
     labels = f"labels.tsv"
     save_dir = save_dir

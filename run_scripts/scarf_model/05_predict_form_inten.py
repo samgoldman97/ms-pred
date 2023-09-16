@@ -3,28 +3,21 @@ import subprocess
 import argparse
 
 python_file = "src/ms_pred/scarf_pred/predict_inten.py"
-
-
-parser = argparse.ArgumentParser()
-parser.add_argument("--dataset", default="nist20")
-args = parser.parse_args()
-dataset = args.dataset
-
-
-dataset = "canopus_train_public"  # canopus_train_public
-# dataset = "nist20"  # canopus_train_public
 devices = ",".join(["3"])
 node_num = 300
-res_folder = Path(f"results/scarf_inten_{dataset}/")
-base_formula_folder = Path(f"results/scarf_{dataset}")
-ckpts = res_folder.rglob("version_0/*.ckpt")
-ckpts = sorted(ckpts)
 
-valid_splits = ["scaffold_1"]
-valid_splits = ["scaffold_1", "split_1"]
-valid_splits = ["split_1"]
+test_entries = [
+    {"dataset": "canopus_train_public", "split": "split_1", }
+    {"dataset": "nist20", "split": "split_1", }
+    {"dataset": "nist20", "split": "scaffold_1", }
+]
 
-for model in ckpts:
+for test_entry in test_entries:
+    dataset = test_entry['dataset']
+    split = test_entry['split']
+    res_folder = Path(f"results/scarf_inten_{dataset}/")
+    model =  res_folder / split / f"version_0/best.ckpt"
+    base_formula_folder = Path(f"results/scarf_{dataset}")
     save_dir = model.parent.parent
     split = save_dir.name
     if split not in valid_splits:
