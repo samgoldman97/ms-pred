@@ -187,21 +187,27 @@ if __name__ == "__main__":
 
     rdBase.DisableLog("rdApp.error")
     RDLogger.DisableLog("rdApp.*")
-    max_k = 50
-    max_k = None
     workers = 32
     debug = False
-    dataset = "canopus_train_public"
-    dataset = "nist20"
-    input_map = f"data/retrieval/pubchem/pubchem_formula_map_{dataset}.p"
-    input_dataset_folder = Path(f"data/spec_datasets/{dataset}/")
 
-    split_files = ["split_1.tsv", "split_2.tsv", "split_3.tsv", None]
-    split_files = ["scaffold_1.tsv"]
-    split_files = ["split_1.tsv"]
-    split_files = ["split_1_500.tsv"]
-    # split_files = ["split_nist.tsv"]
-    for split_file in split_files:
+    compute_entries = [
+        #{"dataset": "nist20", "max_k": 50, "split": "split_1.tsv"},
+        #{"dataset": "nist20", "max_k": 50, "split": "split_1_500.tsv"},
+        #{"dataset": "nist20", "max_k": None, "split": "split_1_500.tsv"},
+        #{"dataset": "nist20", "max_k": 50, "split": "split_1_1000.tsv"},
+        #{"dataset": "nist20", "max_k": None, "split": "split_1_1000.tsv"},
+        #{"dataset": "canopus_train_public", "max_k": 50, "split": "split_1.tsv"},
+
+        {"dataset": "nist20", "max_k": 50, "split": "split_1_1000.tsv"},
+    ]
+
+    for test_entry in compute_entries:
+        dataset = test_entry['dataset']
+        max_k= test_entry['max_k']
+        split_file = test_entry['split']
+
+        input_map = f"data/retrieval/pubchem/pubchem_formula_map_{dataset}.p"
+        input_dataset_folder = Path(f"data/spec_datasets/{dataset}/")
         print(f"Starting split {split_file}")
         main(
             max_k=max_k,

@@ -20,10 +20,17 @@ test_entries = [
     # "test_split": "split_1",
     # "max_k": 50},
 
+    #{"dataset": "nist20",
+    # "train_split": "split_1",
+    # "test_split": "split_1_1000",
+    # "max_k": None},
+
     {"dataset": "nist20",
      "train_split": "split_1",
-     "test_split": "split_1_500",
-     "max_k": None},
+     "test_split": "split_1_1000",
+     "max_k": 50},
+
+
 ]
 
 

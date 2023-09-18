@@ -20,10 +20,29 @@ test_entries = [
     # "test_split": "split_1",
     # "max_k": 50},
 
+    #{"dataset": "nist20",
+    # "train_split": "split_1",
+    # "test_split": "split_1_1000",
+    # "max_k": None},
+
+    #{"dataset": "nist20",
+    # "res_dir": None,
+    # "train_split": "split_1",
+    # "test_split": "split_1_1000",
+    # "max_k": 50},
+
     {"dataset": "nist20",
+     "res_dir": "results/scarf_inten_nist20_newseed",
      "train_split": "split_1",
-     "test_split": "split_1_500",
+     "test_split": "split_1_1000",
+     "max_k": 50},
+
+    {"dataset": "nist20",
+     "res_dir": "results/scarf_inten_nist20_newseed",
+     "train_split": "split_1",
+     "test_split": "split_1_1000",
      "max_k": None},
+
 ]
 
 
@@ -32,7 +51,11 @@ for test_entry in test_entries:
     train_split =  test_entry['train_split']
     split = test_entry['test_split']
     maxk = test_entry['max_k']
-    inten_dir = Path(f"results/scarf_inten_{dataset}")
+    inten_dir = test_entry.get("res_dir", None)
+
+    if inten_dir is None:
+        inten_dir = Path(f"results/scarf_inten_{dataset}")
+
     inten_model =  inten_dir / train_split  / "version_0/best.ckpt"
     if not inten_model.exists(): 
         print(f"Could not find model {model}; skipping\n: {json.dumps(test_entry, indent=1)}")
