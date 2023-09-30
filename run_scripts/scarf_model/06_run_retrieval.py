@@ -10,39 +10,26 @@ max_nodes = 300
 dist = "cos"
 
 test_entries = [
-    #{"dataset": "nist20",
-    # "train_split": "split_1",
-    # "test_split": "split_1",
-    # "max_k": 50},
-
-    #{"dataset": "canopus_train_public",
-    # "train_split": "split_1",
-    # "test_split": "split_1",
-    # "max_k": 50},
-
-    #{"dataset": "nist20",
-    # "train_split": "split_1",
-    # "test_split": "split_1_1000",
-    # "max_k": None},
-
-    #{"dataset": "nist20",
-    # "res_dir": None,
-    # "train_split": "split_1",
-    # "test_split": "split_1_1000",
-    # "max_k": 50},
-
     {"dataset": "nist20",
-     "res_dir": "results/scarf_inten_nist20_newseed",
      "train_split": "split_1",
-     "test_split": "split_1_1000",
+     "test_split": "split_1",
+     "max_k": 50},
+
+    {"dataset": "canopus_train_public",
+     "train_split": "split_1",
+     "test_split": "split_1",
      "max_k": 50},
 
     {"dataset": "nist20",
-     "res_dir": "results/scarf_inten_nist20_newseed",
      "train_split": "split_1",
      "test_split": "split_1_1000",
      "max_k": None},
 
+    {"dataset": "nist20",
+     "res_dir": None,
+     "train_split": "split_1",
+     "test_split": "split_1_1000",
+     "max_k": 50},
 ]
 
 
@@ -54,7 +41,9 @@ for test_entry in test_entries:
     inten_dir = test_entry.get("res_dir", None)
 
     if inten_dir is None:
-        inten_dir = Path(f"results/scarf_inten_{dataset}")
+        inten_dir = f"results/scarf_inten_{dataset}"
+
+    inten_dir = Path(inten_dir)
 
     inten_model =  inten_dir / train_split  / "version_0/best.ckpt"
     if not inten_model.exists(): 

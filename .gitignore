@@ -25,6 +25,7 @@ quickstart/scarf/models/
 quickstart/iceberg/out
 quickstart/iceberg/models/
 *.c
+configs/debug/
 
 data_scripts/magma/gnps2015*
 *.png
