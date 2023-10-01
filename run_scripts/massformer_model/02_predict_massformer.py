@@ -5,19 +5,24 @@ import argparse
 num_workers = 32
 python_file = "src/ms_pred/massformer_pred/predict.py"
 test_entries = [
-    {"dataset": "nist20", "split": "split_1"},
-    {"dataset": "nist20", "split": "scaffold_1"},
-    {"dataset": "canopus_train_public", "split": "split_1"},
+    {"dataset": "nist20", "split": "scaffold_1", "folder": "scaffold_1"},
+    {"dataset": "nist20", "split": "split_1", "folder": "split_1_rnd1"},
+    {"dataset": "canopus_train_public", "split": "split_1", "folder": "split_1_rnd1"},
+    {"dataset": "nist20", "split": "split_1", "folder": "split_1_rnd2"},
+    {"dataset": "canopus_train_public", "split": "split_1", "folder": "split_1_rnd2"},
+    {"dataset": "nist20", "split": "split_1", "folder": "split_1_rnd3"},
+    {"dataset": "canopus_train_public", "split": "split_1", "folder": "split_1_rnd3"},
 ]
 
-devices = ",".join(["1"])
+devices = ",".join(["2"])
 
 for test_entry in test_entries:
     split = test_entry['split']
+    folder = test_entry['folder']
     dataset_name = test_entry['dataset']
 
     res_folder = Path(f"results/massformer_baseline_{dataset_name}")
-    model = res_folder / f"{split}/version_0/best.ckpt"
+    model = res_folder / f"{folder}/version_0/best.ckpt"
 
     save_dir = model.parent.parent
     save_dir = save_dir / "preds"

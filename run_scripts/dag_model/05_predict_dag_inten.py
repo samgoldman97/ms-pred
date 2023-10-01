@@ -6,18 +6,24 @@ python_file = "src/ms_pred/dag_pred/predict_inten.py"
 node_num = 100
 num_workers = 32
 test_entries = [
-    {"dataset": "nist20", "split": "split_1"},
-    {"dataset": "nist20", "split": "scaffold_1"},
-    {"dataset": "canopus_train_public", "split": "split_1"},
+    {"dataset": "nist20", "split": "scaffold_1", "folder": "scaffold_1"},
+    {"dataset": "nist20", "split": "split_1", "folder": "split_1_rnd1"},
+    {"dataset": "canopus_train_public", "split": "split_1", "split_1_rnd1"},
+    {"dataset": "nist20", "split": "split_1", "folder": "split_1_rnd2"},
+    {"dataset": "canopus_train_public", "split": "split_1", "split_1_rnd2"},
+    {"dataset": "nist20", "split": "split_1", "folder": "split_1_rnd3"},
+    {"dataset": "canopus_train_public", "split": "split_1", "split_1_rnd3"},
 ]
-devices = ",".join(["0"])
+devices = ",".join(["1"])
 
 for test_entry in test_entries:
     split = test_entry['split']
     dataset = test_entry['dataset']
+    folder = test_entry['folder']
+
     base_formula_folder = Path(f"results/dag_{dataset}")
     res_folder = Path(f"results/dag_inten_{dataset}/")
-    model = res_folder / split / "version_0/best.ckpt"
+    model = res_folder / folder / "version_0/best.ckpt"
 
     if not model.exists(): 
         continue

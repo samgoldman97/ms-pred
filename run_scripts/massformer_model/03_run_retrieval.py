@@ -6,18 +6,38 @@ import json
 pred_file = "src/ms_pred/massformer_pred/predict.py"
 retrieve_file = "src/ms_pred/retrieval/retrieval_binned.py"
 subform_name = "no_subform"
-devices = ",".join(["0"])
+devices = ",".join(["2"])
 dist = "cos"
 num_workers = 32
 
 test_entries = [
     {"dataset": "nist20",
-     "train_split": "split_1",
+     "train_split": "split_1_rnd1",
      "test_split": "split_1",
      "max_k": 50},
 
     {"dataset": "canopus_train_public",
-     "train_split": "split_1",
+     "train_split": "split_1_rnd1",
+     "test_split": "split_1",
+     "max_k": 50},
+
+    {"dataset": "nist20",
+     "train_split": "split_1_rnd2",
+     "test_split": "split_1",
+     "max_k": 50},
+
+    {"dataset": "canopus_train_public",
+     "train_split": "split_1_rnd2",
+     "test_split": "split_1",
+     "max_k": 50},
+
+    {"dataset": "nist20",
+     "train_split": "split_1_rnd3",
+     "test_split": "split_1",
+     "max_k": 50},
+
+    {"dataset": "canopus_train_public",
+     "train_split": "split_1_rnd3",
      "test_split": "split_1",
      "max_k": 50},
 ]

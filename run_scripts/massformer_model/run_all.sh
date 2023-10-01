@@ -1,0 +1,3 @@
+. run_scripts/massformer_model/01_run_massformer_train.sh
+python run_scripts/massformer_model/02_predict_massformer.py
+python run_scripts/massformer_model/03_run_retrieval.py

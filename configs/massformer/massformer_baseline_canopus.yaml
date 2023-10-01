@@ -2,7 +2,7 @@ launcher_args: {experiment_name: massformer_baseline_canopus_train_public,
   script_name: "src/ms_pred/massformer_pred/train.py",
   slurm_script: launcher_scripts/generic_slurm.sh, 
   launch_method: local,
-  visible_devices: [1],
+  visible_devices: [2],
 }
 universal_args:
   _slurm_args:
@@ -48,4 +48,11 @@ universal_args:
 
 iterative_args:
   -  split-name: [split_1.tsv]
-     save-dir: [split_1]
+     save-dir: [split_1_rnd1]
+     seed: [1]
+  -  split-name: [split_1.tsv]
+     save-dir: [split_1_rnd2]
+     seed: [2]
+  -  split-name: [split_1.tsv]
+     save-dir: [split_1_rnd3]
+     seed: [3]

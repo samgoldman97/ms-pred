@@ -3,20 +3,23 @@ from pathlib import Path
 import subprocess
 
 pred_file = "src/ms_pred/dag_pred/predict_smis.py"
-devices = ",".join(["3"])
+devices = ",".join(["1"])
 subform_name = "no_subform"
 max_nodes = 100
 dist = "cos"
 test_entries = [
-    {"dataset": "nist20", "split": "split_1", "binned_out": False},
-    {"dataset": "canopus_train_public", "split": "split_1", "binned_out": False},
+    {"dataset": "nist20", "split": "split_1", "binned_out": False, 
+     "folder": "split_1_rnd1"},
+    {"dataset": "canopus_train_public", "split": "split_1", "binned_out": False,
+     "folder": "split_1_rnd1"},
 ]
 
 for test_entry in test_entries:
     binned_out = test_entry['binned_out']
     dataset = test_entry['dataset']
     split = test_entry['split']
-    inten_model = Path(f"results/dag_inten_{dataset}/{split}/version_0/best.ckpt")
+    folder = test_entry['folder']
+    inten_model = Path(f"results/dag_inten_{dataset}/{folder}/version_0/best.ckpt")
     binned_out_flag = "--binned-out" if binned_out else ""
 
     save_dir = inten_model.parent.parent / f"preds_export_{dataset}"

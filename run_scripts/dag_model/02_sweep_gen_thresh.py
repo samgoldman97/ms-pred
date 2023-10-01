@@ -6,26 +6,59 @@ import subprocess
 
 workers = 32
 devices = ",".join([])
-datasets = ["nist20", "canoopus_train_public"]
-valid_splits = ["scaffold_1", "split_1"]
 python_file = "src/ms_pred/dag_pred/predict_gen.py"
 max_nodes = [10, 20, 30, 40, 50, 100, 200, 300, 500, 1000]
 subform_name = "magma_subform_50"
-split_override = None
 debug = False
+
+res_entries = [
+    {"folder": "results/dag_nist20_ablate/", 
+     "dataset": "nist20", 
+     'test_split': "split_1"},
+
+    {"folder": "results/dag_canopus_train_public_ablate/", 
+     "dataset": "canopus_train_public",
+     "test_split": "split_1",},
+
+    {"folder": "results/dag_nist20/scaffold_1/", 
+     "dataset": "nist20",
+     "test_split": "scaffold_1"},
+
+    {"folder": "results/dag_nist20/split_1_rnd1/", 
+     "dataset": "nist20",
+     "test_split": "split_1"},
+
+    {"folder": "results/dag_nist20/split_1_rnd2/", 
+     "dataset": "nist20",
+     "test_split": "split_1"},
+
+    {"folder": "results/dag_nist20/split_1_rnd3/", 
+     "dataset": "nist20",
+     "test_split": "split_1"},
+
+    {"folder": "results/dag_canopus_train_public/split_1_rnd1/", 
+     "dataset": "canopus_train_public",
+     "test_split": "split_1"},
+
+    {"folder": "results/dag_canopus_train_public/split_1_rnd2/", 
+     "dataset": "canopus_train_public",
+     "test_split": "split_1"},
+
+    {"folder": "results/dag_canopus_train_public/split_1_rnd3/", 
+     "dataset": "canopus_train_public",
+     "test_split": "split_1"},
+]
 
 if debug:
     max_nodes = max_nodes[:3]
 
-for dataset in datasets:
-    res_folder = Path(f"results/dag_{dataset}/")
+for res_entry in res_entries:
+    res_folder = Path(res_entry['folder'])
+    dataset = res_entry['dataset']
     models = sorted(list(res_folder.rglob("version_0/*.ckpt")))
+    split = res_entry['test_split']
     for model in models:
         save_dir_base = model.parent.parent
-        split = save_dir_base.name if split_override is None else split_override
-
-        if split not in valid_splits:
-            continue
 
         save_dir = save_dir_base / "inten_thresh_sweep"
         save_dir.mkdir(exist_ok=True)

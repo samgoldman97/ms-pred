@@ -11,21 +11,20 @@ node_num = 300
 
 test_entries = [
     {"dataset" : "nist20", "labels": "data/spec_datasets/sample_labels.tsv",
-    "split": "split_1"}
+    "train_split": "split_1_rnd1"}
 ]
 
 for test_entry in test_entries:
     dataset = test_entry['dataset']
     labels = test_entry['labels']
-    split = test_entry['split']
+    train_split = test_entry['train_split']
 
     res_folder = Path(f"results/scarf_inten_{dataset}/")
     base_formula_folder = Path(f"results/scarf_{dataset}")
-    model  = res_folder / split / f"version_0/best.ckpt"
+    model  = res_folder / train_split / f"version_0/best.ckpt"
     num_mols = len(pd.read_csv(labels, sep="\t"))
 
     save_dir = model.parent.parent
-    split = save_dir.name
     time_res = save_dir / "time_out.json"
     save_dir = save_dir / "preds_time"
     save_dir.mkdir(exist_ok=True)
@@ -37,7 +36,6 @@ for test_entry in test_entries:
     # Note: Must use preds_train_01
     cmd = f"""python {python_file} \\
     --batch-size 1 \\
-    --split-name {split}.tsv \\
     --gen-checkpoint {gen_model} \\
     --inten-checkpoint {model} \\
     --max-nodes {node_num} \\

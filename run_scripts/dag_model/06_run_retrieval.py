@@ -5,25 +5,40 @@ import subprocess
 pred_file = "src/ms_pred/dag_pred/predict_smis.py"
 retrieve_file = "src/ms_pred/retrieval/retrieval_binned.py"
 subform_name = "no_subform"
-devices = ",".join(["2"])
+devices = ",".join(["1"])
 max_nodes = 100
 dist = "cos"
 
 test_entries = [
     {"dataset": "nist20",
-     "train_split": "split_1",
+     "train_split": "split_1_rnd1",
      "test_split": "split_1",
      "max_k": 50},
 
     {"dataset": "canopus_train_public",
-     "train_split": "split_1",
+     "train_split": "split_1_rnd1",
      "test_split": "split_1",
      "max_k": 50},
 
-    #{"dataset": "nist20",
-    # "train_split": "split_1",
-    # "test_split": "split_1_500",
-    # "max_k": None},
+    {"dataset": "nist20",
+     "train_split": "split_1_rnd2",
+     "test_split": "split_1",
+     "max_k": 50},
+
+    {"dataset": "canopus_train_public",
+     "train_split": "split_1_rnd2",
+     "test_split": "split_1",
+     "max_k": 50},
+
+    {"dataset": "nist20",
+     "train_split": "split_1_rnd3",
+     "test_split": "split_1",
+     "max_k": 50},
+
+    {"dataset": "canopus_train_public",
+     "train_split": "split_1_rnd3",
+     "test_split": "split_1",
+     "max_k": 50},
 ]
 
 
