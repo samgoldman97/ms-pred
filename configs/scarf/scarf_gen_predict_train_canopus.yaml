@@ -16,12 +16,18 @@ universal_args:
 
   num-workers: [0]
   threshold: [0.0]
-  max-nodes: [100]
+  max-nodes: [300]
 
 iterative_args:
 
   -  split-name: [split_1.tsv]
-     checkpoint: [results/scarf_canopus_train_public/split_1/version_0/best.ckpt]
-     save-dir: [split_1/preds_train_300]
-     threshold: [0.000]
-     max-nodes: [300]
+     checkpoint: [results/scarf_canopus_train_public/split_1_rnd1/version_0/best.ckpt]
+     save-dir: [split_1_rnd1/preds_train_300]
+
+  -  split-name: [split_1.tsv]
+     checkpoint: [results/scarf_canopus_train_public/split_1_rnd2/version_0/best.ckpt]
+     save-dir: [split_1_rnd2/preds_train_300]
+
+  -  split-name: [split_1.tsv]
+     checkpoint: [results/scarf_canopus_train_public/split_1_rnd3/version_0/best.ckpt]
+     save-dir: [split_1_rnd3/preds_train_300]

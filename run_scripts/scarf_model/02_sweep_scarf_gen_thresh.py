@@ -16,18 +16,33 @@ res_entries = [
      "dataset": "nist20",
      "test_split": "scaffold_1"},
 
-    {"folder": "results/scarf_nist20/split_1/", 
+    {"folder": "results/scarf_nist20/split_1_rnd1/", 
      "dataset": "nist20",
      "test_split": "split_1"},
 
-    {"folder": "results/scarf_canopus_train_public/split_1/", 
+    {"folder": "results/scarf_nist20/split_1_rnd2/", 
+     "dataset": "nist20",
+     "test_split": "split_1"},
+
+    {"folder": "results/scarf_nist20/split_1_rnd3/", 
+     "dataset": "nist20",
+     "test_split": "split_1"},
+
+    {"folder": "results/scarf_canopus_train_public/split_1_rnd1/", 
      "dataset": "canopus_train_public",
      "test_split": "split_1"},
 
+    {"folder": "results/scarf_canopus_train_public/split_1_rnd2/", 
+     "dataset": "canopus_train_public",
+     "test_split": "split_1"},
+
+    {"folder": "results/scarf_canopus_train_public/split_1_rnd3/", 
+     "dataset": "canopus_train_public",
+     "test_split": "split_1"},
 ]
 
 python_file = "src/ms_pred/scarf_pred/predict_gen.py"
-devices = ",".join(["2"])
+devices = ",".join(["0"])
 max_nodes = [10, 20, 30, 40, 50, 100, 200, 300, 500, 1000]
 subform_name = "magma_subform_50"
 

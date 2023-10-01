@@ -1,0 +1,2 @@
+. run_scripts/autoregr_baseline/01_run_autoregr_train.sh
+python run_scripts/autoregr_baseline/02_sweep_autoregr_thresh.py

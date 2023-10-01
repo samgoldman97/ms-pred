@@ -4,15 +4,30 @@ import argparse
 
 
 python_file = "src/ms_pred/ffn_pred/predict.py"
-devices = ",".join(["3"])
-datasets = ["nist20", "canopus_train_public"]
-valid_splits = ["scaffold_1", "split_1"]
+devices = ",".join(["1"])
 
-for dataset in datasets:
-    res_folder = Path(f"results/ffn_baseline_{dataset}/")
+run_models = [
+    {"dataset": "nist20", "folder": "scaffold_1", "split": "scaffold_1"},
+    {"dataset": "nist20", "folder": "splt_1_rnd1", "split": "split_1"},
+    {"dataset": "nist20", "folder": "splt_1_rnd2", "split": "split_1"},
+    {"dataset": "nist20", "folder": "splt_1_rnd3", "split": "split_1"},
+
+    {"dataset": "canopus_train_public", "folder": "splt_1_rnd1", "split": "split_1"},
+    {"dataset": "canopus_train_public", "folder": "splt_1_rnd2", "split": "split_1"},
+    {"dataset": "canopus_train_public", "folder": "splt_1_rnd3", "split": "split_1"},
+]
+
+
+
+for run_model in run_models:
+    dataset = run_model['dataset']
+    folder = run_model['folder']
+    split = run_model['split']
+
+    res_folder = Path(f"results/ffn_baseline_{dataset}/{folder}")
     for model in res_folder.rglob("version_0/*.ckpt"):
         save_dir = model.parent.parent
-        split = save_dir.name
+
         save_dir = save_dir / "preds"
         save_dir.mkdir(exist_ok=True)
         cmd = f"""python {python_file} \\

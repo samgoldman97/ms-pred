@@ -41,5 +41,16 @@ universal_args:
 
 iterative_args:
   -  split-name: [split_1.tsv]
-     save-dir: [split_1]
-     formula-folder: [results/scarf_canopus_train_public/split_1/preds_train_300_inten/]
+     save-dir: [split_1_rnd1]
+     formula-folder: [results/scarf_canopus_train_public/split_1_rnd1/preds_train_300_inten/]
+     seed: [1]
+
+  -  split-name: [split_1.tsv]
+     save-dir: [split_1_rnd2]
+     formula-folder: [results/scarf_canopus_train_public/split_1_rnd2/preds_train_300_inten/]
+     seed: [2]
+
+  -  split-name: [split_1.tsv]
+     save-dir: [split_1_rnd3]
+     formula-folder: [results/scarf_canopus_train_public/split_1_rnd3/preds_train_300_inten/]
+     seed: [3]

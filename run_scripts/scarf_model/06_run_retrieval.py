@@ -5,32 +5,83 @@ import subprocess
 pred_file = "src/ms_pred/scarf_pred/predict_smis.py"
 retrieve_file = "src/ms_pred/retrieval/retrieval_binned.py"
 subform_name = "no_subform"
-devices = ",".join(["2"])
+devices = ",".join(["0"])
 max_nodes = 300
 dist = "cos"
 
 test_entries = [
+
+    # Rnd1
+
     {"dataset": "nist20",
-     "train_split": "split_1",
+     "train_split": "split_1_rnd1",
      "test_split": "split_1",
      "max_k": 50},
 
     {"dataset": "canopus_train_public",
-     "train_split": "split_1",
+     "train_split": "split_1_rnd1",
      "test_split": "split_1",
      "max_k": 50},
 
     {"dataset": "nist20",
-     "train_split": "split_1",
-     "test_split": "split_1_1000",
+     "train_split": "split_1_rnd1",
+     "test_split": "split_1_500",
      "max_k": None},
 
     {"dataset": "nist20",
      "res_dir": None,
-     "train_split": "split_1",
-     "test_split": "split_1_1000",
+     "train_split": "split_1_rnd1",
+     "test_split": "split_1_500",
      "max_k": 50},
+
+    # Rnd2
+
+    {"dataset": "nist20",
+     "train_split": "split_1_rnd2",
+     "test_split": "split_1",
+     "max_k": 50},
+
+    {"dataset": "canopus_train_public",
+     "train_split": "split_1_rnd2",
+     "test_split": "split_1",
+     "max_k": 50},
+
+    {"dataset": "nist20",
+     "train_split": "split_1_rnd2",
+     "test_split": "split_1_500",
+     "max_k": None},
+
+    {"dataset": "nist20",
+     "res_dir": None,
+     "train_split": "split_1_rnd2",
+     "test_split": "split_1_500",
+     "max_k": 50},
+
+    # Rnd3
+
+    {"dataset": "nist20",
+     "train_split": "split_1_rnd3",
+     "test_split": "split_1",
+     "max_k": 50},
+
+    {"dataset": "canopus_train_public",
+     "train_split": "split_1_rnd3",
+     "test_split": "split_1",
+     "max_k": 50},
+
+    {"dataset": "nist20",
+     "train_split": "split_1_rnd3",
+     "test_split": "split_1_500",
+     "max_k": None},
+
+    {"dataset": "nist20",
+     "res_dir": None,
+     "train_split": "split_1_rnd3",
+     "test_split": "split_1_500",
+     "max_k": 50},
+
 ]
+
 
 
 for test_entry in test_entries:

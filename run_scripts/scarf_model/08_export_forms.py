@@ -8,15 +8,17 @@ subform_name = "no_subform"
 max_nodes = 300
 dist = "cos"
 test_entries = [
-    {"dataset": "nist20", "split": "split_1", "binned_out": False},
-    {"dataset": "canopus_train_public", "split": "split_1", "binned_out": False},
+    {"dataset": "nist20", "split": "split_1", "folder": "split_1_rnd1", "binned_out": False},
+    {"dataset": "canopus_train_public", "split": "split_1", 
+     "folder": "split_1_rnd1", "binned_out": False},
 ]
 
 for test_entry in test_entries:
     binned_out = test_entry['binned_out']
     dataset = test_entry['dataset']
     split = test_entry['split']
-    inten_model = Path(f"results/scarf_inten_{dataset}/{split}/version_0/best.ckpt")
+    folder = test_entry['folder']
+    inten_model = Path(f"results/scarf_inten_{dataset}/{folder}/version_0/best.ckpt")
     binned_out_flag = "--binned-out" if binned_out else ""
 
     save_dir = inten_model.parent.parent / f"preds_export_{dataset}"
@@ -24,7 +26,6 @@ for test_entry in test_entries:
     form_folder = Path(args["formula_folder"])
     gen_model = form_folder.parent / "version_0/best.ckpt"
 
-    split = save_dir.parent.name
     save_dir.mkdir(exist_ok=True)
 
     labels = f"labels.tsv"

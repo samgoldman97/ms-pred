@@ -1,7 +1,7 @@
 launcher_args: {experiment_name: scarf_canopus_train_public_ablate,
   script_name: "src/ms_pred/scarf_pred/train_gen.py",
   slurm_script: launcher_scripts/generic_slurm.sh, 
-  launch_method: local_parallel,
+  launch_method: local,
   visible_devices: [0]
 }
 universal_args:
@@ -52,8 +52,3 @@ iterative_args:
      save-dir: [forward]
      use-reverse: [false]
      no-forward: [false]
-
-     #-  split-name: [split_1.tsv]
-     #   save-dir: [both]
-     #   use-reverse: [false]
-     #   no-forward: [false]

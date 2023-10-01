@@ -3,28 +3,36 @@ import subprocess
 import argparse
 
 python_file = "src/ms_pred/scarf_pred/predict_inten.py"
-devices = ",".join(["3"])
+devices = ",".join(["0"])
 node_num = 300
 
 test_entries = [
-    {"dataset": "canopus_train_public", "split": "split_1", },
-    {"dataset": "nist20", "split": "split_1", },
-    {"dataset": "nist20", "split": "scaffold_1", }
+    {"dataset": "canopus_train_public", "split": "split_1", "folder": "split_1_rnd1"},
+    {"dataset": "nist20", "split": "split_1", "folder": "split_1_rnd1"},
+
+
+    {"dataset": "canopus_train_public", "split": "split_1", "folder": "split_1_rnd2"},
+    {"dataset": "nist20", "split": "split_1", "folder": "split_1_rnd2"},
+
+    {"dataset": "canopus_train_public", "split": "split_1", "folder": "split_1_rnd3"},
+    {"dataset": "nist20", "split": "split_1", "folder": "split_1_rnd3"},
+
+    {"dataset": "nist20", "split": "scaffold_1", "folder": "scaffold_1" }
 ]
 
 for test_entry in test_entries:
     dataset = test_entry['dataset']
     split = test_entry['split']
+    folder = test_entry['folder']
     res_folder = Path(f"results/scarf_inten_{dataset}/")
-    model =  res_folder / split / f"version_0/best.ckpt"
+    model =  res_folder / folder / f"version_0/best.ckpt"
     base_formula_folder = Path(f"results/scarf_{dataset}")
     save_dir = model.parent.parent
-    split = save_dir.name
 
     save_dir = save_dir / "preds"
 
     # Note: Must use preds_train_01
-    formula_folder = base_formula_folder / split / f"preds_train_{node_num}/form_preds"
+    formula_folder = base_formula_folder / folder / f"preds_train_{node_num}/form_preds"
     cmd = f"""python {python_file} \\
     --batch-size 32 \\
     --dataset-name {dataset} \\
