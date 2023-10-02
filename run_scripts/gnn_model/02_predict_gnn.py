@@ -13,7 +13,7 @@ test_entries = [
     {"dataset": "nist20", "split": "scaffold_1", "folder": "scaffold_1"},
 ]
 
-devices = ",".join(["2"])
+devices = ",".join(["3"])
 
 for test_entry in test_entries:
     split = test_entry['split']

@@ -6,7 +6,7 @@ import json
 pred_file = "src/ms_pred/gnn_pred/predict.py"
 retrieve_file = "src/ms_pred/retrieval/retrieval_binned.py"
 subform_name = "no_subform"
-devices = ",".join(["2"])
+devices = ",".join(["3"])
 dist = "cos"
 
 test_entries = [
