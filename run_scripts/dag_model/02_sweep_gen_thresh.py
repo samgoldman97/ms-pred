@@ -12,14 +12,6 @@ subform_name = "magma_subform_50"
 debug = False
 
 res_entries = [
-    {"folder": "results/dag_nist20_ablate/", 
-     "dataset": "nist20", 
-     'test_split': "split_1"},
-
-    {"folder": "results/dag_canopus_train_public_ablate/", 
-     "dataset": "canopus_train_public",
-     "test_split": "split_1",},
-
     {"folder": "results/dag_nist20/scaffold_1/", 
      "dataset": "nist20",
      "test_split": "scaffold_1"},

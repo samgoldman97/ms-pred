@@ -48,14 +48,14 @@ iterative_args:
   -  split-name: [split_1.tsv]
      save-dir: [split_1_rnd1]
      seed: [1]
-     magma-dag-folder: [results/dag_canopus_train_public/split_1/preds_train_100_inten/]
+     magma-dag-folder: [results/dag_canopus_train_public/split_1_rnd1/preds_train_100_inten/]
 
   -  split-name: [split_1.tsv]
      save-dir: [split_1_rnd2]
      seed: [2]
-     magma-dag-folder: [results/dag_canopus_train_public/split_1/preds_train_100_inten/]
+     magma-dag-folder: [results/dag_canopus_train_public/split_1_rnd2/preds_train_100_inten/]
 
   -  split-name: [split_1.tsv]
      save-dir: [split_1_rnd3]
      seed: [3]
-     magma-dag-folder: [results/dag_canopus_train_public/split_1/preds_train_100_inten/]
+     magma-dag-folder: [results/dag_canopus_train_public/split_1_rnd3/preds_train_100_inten/]

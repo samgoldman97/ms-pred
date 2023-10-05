@@ -8,11 +8,11 @@ num_workers = 32
 test_entries = [
     {"dataset": "nist20", "split": "scaffold_1", "folder": "scaffold_1"},
     {"dataset": "nist20", "split": "split_1", "folder": "split_1_rnd1"},
-    {"dataset": "canopus_train_public", "split": "split_1", "split_1_rnd1"},
+    {"dataset": "canopus_train_public", "split": "split_1", "folder": "split_1_rnd1"},
     {"dataset": "nist20", "split": "split_1", "folder": "split_1_rnd2"},
-    {"dataset": "canopus_train_public", "split": "split_1", "split_1_rnd2"},
+    {"dataset": "canopus_train_public", "split": "split_1", "folder": "split_1_rnd2"},
     {"dataset": "nist20", "split": "split_1", "folder": "split_1_rnd3"},
-    {"dataset": "canopus_train_public", "split": "split_1", "split_1_rnd3"},
+    {"dataset": "canopus_train_public", "split": "split_1", "folder": "split_1_rnd3"},
 ]
 devices = ",".join(["1"])
 
@@ -29,13 +29,12 @@ for test_entry in test_entries:
         continue
 
     save_dir = model.parent.parent
-    split = save_dir.name
 
     save_dir = save_dir / "preds"
 
     # Note: Must use preds_train_01
     magma_dag_folder = (
-        base_formula_folder / split / f"preds_train_{node_num}/tree_preds"
+        base_formula_folder / folder / f"preds_train_{node_num}/tree_preds"
     )
     print(magma_dag_folder)
     cmd = f"""python {python_file} \\

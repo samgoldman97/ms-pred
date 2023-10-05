@@ -22,15 +22,15 @@ iterative_args:
 
   -  split-name: [split_1.tsv]
      checkpoint-pth: [results/dag_nist20/split_1_rnd1/version_0/best.ckpt]
-     save-dir: [split_1_rnd/preds_train_100]
+     save-dir: [split_1_rnd1/preds_train_100]
 
   -  split-name: [split_1.tsv]
      checkpoint-pth: [results/dag_nist20/split_1_rnd2/version_0/best.ckpt]
-     save-dir: [split_1_rnd/preds_train_100]
+     save-dir: [split_1_rnd2/preds_train_100]
 
   -  split-name: [split_1.tsv]
      checkpoint-pth: [results/dag_nist20/split_1_rnd3/version_0/best.ckpt]
-     save-dir: [split_1_rnd/preds_train_100]
+     save-dir: [split_1_rnd3/preds_train_100]
 
   -  split-name: [scaffold_1.tsv]
      checkpoint-pth: [results/dag_nist20/scaffold_1/version_0/best.ckpt]

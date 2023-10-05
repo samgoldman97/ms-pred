@@ -8,13 +8,13 @@ devices = ",".join(["1"])
 
 run_models = [
     {"dataset": "nist20", "folder": "scaffold_1", "split": "scaffold_1"},
-    {"dataset": "nist20", "folder": "splt_1_rnd1", "split": "split_1"},
-    {"dataset": "nist20", "folder": "splt_1_rnd2", "split": "split_1"},
-    {"dataset": "nist20", "folder": "splt_1_rnd3", "split": "split_1"},
+    {"dataset": "nist20", "folder": "split_1_rnd1", "split": "split_1"},
+    {"dataset": "nist20", "folder": "split_1_rnd2", "split": "split_1"},
+    {"dataset": "nist20", "folder": "split_1_rnd3", "split": "split_1"},
 
-    {"dataset": "canopus_train_public", "folder": "splt_1_rnd1", "split": "split_1"},
-    {"dataset": "canopus_train_public", "folder": "splt_1_rnd2", "split": "split_1"},
-    {"dataset": "canopus_train_public", "folder": "splt_1_rnd3", "split": "split_1"},
+    {"dataset": "canopus_train_public", "folder": "split_1_rnd1", "split": "split_1"},
+    {"dataset": "canopus_train_public", "folder": "split_1_rnd2", "split": "split_1"},
+    {"dataset": "canopus_train_public", "folder": "split_1_rnd3", "split": "split_1"},
 ]
 
 

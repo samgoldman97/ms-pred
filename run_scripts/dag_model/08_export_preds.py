@@ -27,7 +27,6 @@ for test_entry in test_entries:
     form_folder = Path(args["magma_dag_folder"])
     gen_model = form_folder.parent / "version_0/best.ckpt"
 
-    split = save_dir.parent.name
     save_dir.mkdir(exist_ok=True)
 
     labels = f"labels.tsv"
