@@ -1,6 +1,7 @@
 import yaml
 from pathlib import Path
 import subprocess
+import json
 
 pred_file = "src/ms_pred/dag_pred/predict_smis.py"
 retrieve_file = "src/ms_pred/retrieval/retrieval_binned.py"
@@ -50,7 +51,7 @@ for test_entry in test_entries:
     inten_dir = Path(f"results/dag_inten_{dataset}")
     inten_model =  inten_dir / train_split  / "version_0/best.ckpt"
     if not inten_model.exists(): 
-        print(f"Could not find model {model}; skipping\n: {json.dumps(test_entry, indent=1)}")
+        print(f"Could not find model {inten_model}; skipping\n: {json.dumps(test_entry, indent=1)}")
         continue
 
     labels = f"retrieval/cands_df_{split}_{maxk}.tsv"

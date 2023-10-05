@@ -97,7 +97,6 @@ def predict():
     best_checkpoint = kwargs["checkpoint_pth"]
 
     # Load from checkpoint
-    torch.set_num_threads(1)
     model = gen_model.FragGNN.load_from_checkpoint(best_checkpoint, map_location="cpu")
 
     logging.info(f"Loaded model with from {best_checkpoint}")
@@ -111,6 +110,7 @@ def predict():
         model.to(device)
 
         def single_predict_mol(entry):
+            torch.set_num_threads(8)
 
             smi = entry["smiles"]
             name = entry["spec"]

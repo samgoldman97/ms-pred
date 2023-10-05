@@ -42,6 +42,7 @@ mamba activate ms-gen
 pip install -r requirements.txt
 python3 setup.py develop
 ```
+Note: if you are using GPU, please uncomment the CUDA-based packages for DGL and comment the CPU package in ``envorinment.yaml``.
 
 
 ## Quickstart <a name="quickstart"></a>
@@ -67,7 +68,8 @@ Please note there is a small error in the adduct masses for `[M-H2O+H]+`. Becaus
 ## Data <a name="data"></a>
 
 A data subset from the GNPS database can first be downloaded and older sirius
-outputs and magma runs removed.
+outputs and magma runs removed. It will create ``data/spec_datasets/canopus_train_public``, 
+where CANOPUS is an earlier name of the GNPS dataset, as explained in our ICEBERG paper.
 
 ```
 . data_scripts/download_gnps.sh
@@ -78,6 +80,8 @@ Structural data splits can be established with `data_scripts/make_splits.py`, an
 ```
 . data_scripts/all_create_splits.sh
 ```
+Please note that ``nist20`` is a commercial dataset. If you do not have access to ``nist20``, please comment the corresponding 
+lines in ``data_scripts/all_create_splits.sh`` or you will see file not found errors - not an issue!
 
 ### SCARF Processing
 
@@ -90,7 +94,7 @@ script does this for both `canopus_train_public` and `nist20` if it has been
 acquired and parsed (commercial dataset).
 
 ```
-. data_scripts/assign_subform.sh
+. data_scripts/all_assign_subform.sh
 ```
 
 
@@ -118,7 +122,8 @@ each molecule in pubchem to a mol / InChi.
 ```
 source data_scripts/pubchem/01_download_smiles.sh
 python data_scripts/pubchem/02_make_formula_subsets.py
-python data_scripts/pubchem/03_make_retrieval_lists.py
+python data_scripts/pubchem/03_dataset_subset.py --dataset-labels data/spec_datasets/nist20/labels.tsv # for nist20 dataset
+python data_scripts/pubchem/04_make_retrieval_lists.py
 ```
 
 To quickly download tables for canopus:  
@@ -127,7 +132,7 @@ To quickly download tables for canopus:
 
 cd data/spec_datasets/canopus_train_public/
 wget https://www.dropbox.com/s/7zr6euhuhz3ohi9/retrieval_tbls.tar
-tar -xvf canopus_train_public.tar
+tar -xvf retrieval_tbls.tar
 
 ```
 
