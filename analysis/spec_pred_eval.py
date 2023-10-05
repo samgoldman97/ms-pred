@@ -212,14 +212,14 @@ def main(args):
 
     df = pd.DataFrame(output_entries)
     df_grouped = pd.concat(
-        [df.groupby("mass_bin").mean(), df.groupby("mass_bin").size()], 1
+        [df.groupby("mass_bin").mean(numeric_only=True), df.groupby("mass_bin").size()], axis=1
     )
     df_grouped = df_grouped.rename({0: "num_examples"}, axis=1)
 
-    all_mean = df.mean()
+    all_mean = df.mean(numeric_only=True)
     all_mean["num_examples"] = len(df)
     all_mean.name = "avg"
-    df_grouped = df_grouped.append(all_mean)
+    df_grouped = pd.concat([df_grouped, all_mean.to_frame().T], axis=0)
     df_grouped.to_csv(outfile_grouped, sep="\t")
 
     with open(outfile, "w") as fp:
