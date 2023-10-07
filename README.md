@@ -67,21 +67,16 @@ Please note models have been updated since the original release to correct for a
 
 ## Data <a name="data"></a>
 
-A data subset from the GNPS database can first be downloaded and older sirius
-outputs and magma runs removed. It will create ``data/spec_datasets/canopus_train_public``, 
-where CANOPUS is an earlier name of the GNPS dataset, as explained in our ICEBERG paper.
+A data subset from the GNPS database including processed dag annotations (magma\_outputs/), subformulae (subformulae/), retrieval databases (retrieval/), splits (splits/), and spectra files (spec\_files/) can be downloaded into ``data/spec_datasets/canopus_train_public``. Note CANOPUS is an earlier name of the GNPS dataset, as explained in our ICEBERG paper.
 
 ```
 . data_scripts/download_gnps.sh
 ```
 
-Structural data splits can be established with `data_scripts/make_splits.py`, and the following command will create all splits in bulk:
+For those interested in understanding the full dataset processing pipeline, we refer you to `data_scripts/`. This contains functinoalities for generating assignment DAGs (i.e., iceberg training), assigning subformulae to spectra (i.e., scarf training + evaluation), and pubchem dataset creation (i.e., for retrieval experiments). We explain some of these details below.
 
-```
-. data_scripts/all_create_splits.sh
-```
-Please note that ``nist20`` is a commercial dataset. If you do not have access to ``nist20``, please comment the corresponding 
-lines in ``data_scripts/all_create_splits.sh`` or you will see file not found errors - not an issue!
+``nist20`` is a commercial dataset. Many of the scripts and pipelines include commands to run / train models on NIST20 as well; we suggest commenting these out where applicable.
+
 
 ### SCARF Processing
 
@@ -107,7 +102,9 @@ which we do with the MAGMa algorithm.
 This can be done with the following script, specifying an appropriate dataset:
 
 ```
+
 . data_scripts/dag/run_magma.sh
+
 ```
 
 
@@ -120,22 +117,18 @@ pairs. Subsets are selected for evaluation.  Making formula subsets takes longer
 each molecule in pubchem to a mol / InChi. 
 
 ```
+
 source data_scripts/pubchem/01_download_smiles.sh
 python data_scripts/pubchem/02_make_formula_subsets.py
 python data_scripts/pubchem/03_dataset_subset.py --dataset-labels data/spec_datasets/nist20/labels.tsv # for nist20 dataset
 python data_scripts/pubchem/04_make_retrieval_lists.py
-```
-
-To quickly download tables for canopus:  
 
 ```
 
-cd data/spec_datasets/canopus_train_public/
-wget https://www.dropbox.com/s/7zr6euhuhz3ohi9/retrieval_tbls.tar
-tar -xvf retrieval_tbls.tar
+Processed tables are already included inside `canopus_train_public`.
 
-```
 
+ 
 ## Experiments <a name="experiments"></a>
 
 
@@ -160,8 +153,11 @@ training, and predict calls can be  made using the following scripts respectivel
 2.  `python src/ms_pred/scarf_pred/train_inten.py`
 3.  `python src/ms_pred/scarf_pred/predict_smis.py`
 
+An additional notebook showcasing how to individually load models and make predictions can be found at `notebooks/scarf_demo.ipynb`. 
+
 We provide scripts showing how we conducted hyperparameter optimization as
 well:
+
 1. *Hyperopt scarf model*: `run_scripts/scarf_model/hyperopt_01_scarf.sh`  
 2. *Hyperopt scarf inten model*: `run_scripts/scarf_model/02_sweep_scarf_gen_thresh.py`  
 
@@ -187,7 +183,7 @@ training, and predict calls can be  made using the following scripts respectivel
 2.  `python src/ms_pred/dag_pred/train_inten.py`
 3.  `python src/ms_pred/dag_pred/predict_smis.py`
 
-An additional notebook showcasing how to individually load models and make predictions can be found at `notebooks/iceberg_fig_qualitative.ipynb`.
+An additional notebook showcasing how to individually load models and make predictions can be found at `notebooks/iceberg_demo.ipynb`.
 
 The models were hyperoptimized using the following scripts:  
 1. `run_scripts/dag_model/hyperopt_01_dag.sh`   
@@ -215,14 +211,12 @@ Experiment pipeline utilized:
 2. *Sweep model*: `run_scripts/autoregr_baseline/02_sweep_autoregr_thresh.py`  
 
 
-Model hyperparameter optimization:   
-1. `run_scripts/autoregr_baseline/hyperopt_01_autoregr.sh`   
-
-
+Hyperparameter optimization: `run_scripts/autoregr_baseline/hyperopt_01_autoregr.sh`   
 
 ### GNN Spec 
 
 Experiment pipeline:   
+
 1. *Train models*: `run_scripts/gnn_model/01_run_gnn_train.sh`
 2. *Predict and eval*: `run_scripts/gnn_model/02_predict_gnn.py`
 3. *Retreival experiments*: `run_scripts/gnn_model/03_run_retrieval.py`
@@ -237,7 +231,7 @@ Experiment pipeline:
 1. *Train models*: `run_scripts/massformer_model/01_run_massformer_train.sh`  
 2. *Predict and eval*: `run_scripts/massformer_model/02_predict_massformer.py`  
 3. *Retreival experiments*: `run_scripts/massformer_model/03_run_retrieval.py`  
-4. *Time massformer*: `run_scripts/massformer_model/04_time_gnn.py`   
+4. *Time massformer*: `run_scripts/massformer_model/04_time_massformer.py`   
 
 Hyperopt Massformer: `run_scripts/massformer_model/hyperopt_01_massformer.sh`  
 
@@ -250,7 +244,7 @@ Experiment pipeline:
 1. *Train models*: `run_scripts/molnetms/01_run_ffn_train.sh`
 2. *Predict and eval*: `run_scripts/molnetms/02_predict_ffn.py`
 3. *Retreival experiments*: `run_scripts/molnetms/03_run_retrieval.py`
-4. *Time 3d mol ms*: `run_scripts/molnetms/04_time_gnn.py`
+4. *Time 3d mol ms*: `run_scripts/molnetms/04_time_molnetms.py`
 
 Hyperopt 3DMolMS:  `run_scripts/molnetms/hyperopt_01_molnetms.sh`
 
@@ -263,7 +257,7 @@ Experiment pipeline:
 1. *Train models*: `run_scripts/graff_ms/01_run_ffn_train.sh`
 2. *Predict and eval*: `run_scripts/graff_ms/02_predict_ffn.py`
 3. *Retreival experiments*: `run_scripts/graff_ms/03_run_retrieval.py`
-4. *Time graff MS*: `run_scripts/graff_ms/04_time_gnn.py`
+4. *Time graff MS*: `run_scripts/graff_ms/04_time_graff_ms.py`
 
 Hyperopt graff ms:  `run_scripts/graff_ms/hyperopt_01_graff_ms.sh`
 
@@ -273,15 +267,21 @@ Hyperopt graff ms:  `run_scripts/graff_ms/hyperopt_01_graff_ms.sh`
 CFM-ID is a well-established fragmentation-based mass spectra prediction model. We include brief instructions for utilizing this tool below
 
 Build docker: 
+
 ```
+
 docker pull wishartlab/cfmid:latest
+
 ```
 
 Make prediction:
+
 ```
+
 . run_scripts/cfm_id/run_cfm_id.py
 . run_scripts/cfm_id/process_cfm.py
 . run_scripts/cfm_id/process_cfm_pred.py
+
 ```
 
 
@@ -291,8 +291,10 @@ As an addiitonal baseline to compare to the generative portion of our scarf
 (thread), we include frequency baselines for generating form subsets:
 
 ```
+
 . run_scripts/freq_baseline/predict_freq.py
 . run_scripts/freq_baseline/predict_rand.py
+
 ```
 
 
