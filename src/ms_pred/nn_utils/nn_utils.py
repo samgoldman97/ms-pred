@@ -1,13 +1,4 @@
 """ nn_utils.py
-
-Hold basic GNN Types:
-1. GGNN
-2. PNA
-
-These classes should accept graphs and return featurizations at each node
-
-The calling class should be responsible for pooling however is best
-
 """
 import copy
 import math
@@ -326,23 +317,21 @@ class MLPBlocks(nn.Module):
 
         self.use_residuals = use_residuals
         self.use_batchnorm = use_batchnorm
-        if self.use_batchnorm: 
+        if self.use_batchnorm:
             self.bn_input = nn.BatchNorm1d(hidden_size)
             bn = nn.BatchNorm1d(hidden_size)
             self.bn_mids = get_clones(bn, num_layers - 1)
 
-
     def safe_apply_bn(self, x, bn):
-        """ transpose and untranspose after linear for 3 dim items to us
-        batchnorm """
+        """transpose and untranspose after linear for 3 dim items to us
+        batchnorm"""
         temp_shape = x.shape
         if len(x.shape) == 2:
             return bn(x)
         elif len(x.shape) == 3:
-            return bn(x.transpose(-1,-2)).transpose(-1,-2)
+            return bn(x.transpose(-1, -2)).transpose(-1, -2)
         else:
             raise NotImplementedError()
-
 
     def forward(self, x):
         output = x

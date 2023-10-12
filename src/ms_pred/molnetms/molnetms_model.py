@@ -1,4 +1,4 @@
-""" gnn_model. """
+""" Molnet model. """
 from typing import Tuple
 import pytorch_lightning as pl
 
@@ -12,8 +12,11 @@ import ms_pred.nn_utils as nn_utils
 import ms_pred.common as common
 import ms_pred.molnetms.molnetms_data as molnetms_data
 
-class FCResBlock(nn.Module): 
-    def __init__(self, input_size: int, hidden_size: int, dropout: float=0.) -> torch.Tensor: 
+
+class FCResBlock(nn.Module):
+    def __init__(
+        self, input_size: int, hidden_size: int, dropout: float = 0.0
+    ) -> torch.Tensor:
         super(FCResBlock, self).__init__()
 
         self.hidden_size = hidden_size
@@ -32,27 +35,29 @@ class FCResBlock(nn.Module):
         self.bn3 = nn.LayerNorm(hidden_size)
 
         self.dp = nn.Dropout(dropout)
-            
+
         self._reset_parameters()
 
-    def _reset_parameters(self): 
-        for m in self.modules(): 
+    def _reset_parameters(self):
+        for m in self.modules():
             if isinstance(m, (nn.Conv1d, nn.Conv2d, nn.Linear)):
-                nn.init.kaiming_normal_(m.weight, a=0.2, mode='fan_in', nonlinearity='leaky_relu')
-            
-            elif isinstance(m, (nn.BatchNorm1d, nn.BatchNorm2d, nn.GroupNorm)): 
+                nn.init.kaiming_normal_(
+                    m.weight, a=0.2, mode="fan_in", nonlinearity="leaky_relu"
+                )
+
+            elif isinstance(m, (nn.BatchNorm1d, nn.BatchNorm2d, nn.GroupNorm)):
                 nn.init.constant_(m.weight, 1)
                 nn.init.constant_(m.bias, 0)
 
     def forward(self, x):
         identity = x
-        
+
         x = self.bn1(self.linear1(x))
         x = F.leaky_relu(x, negative_slope=0.2)
         x = self.bn2(self.linear2(x))
         x = F.leaky_relu(x, negative_slope=0.2)
         x = self.bn3(self.linear3(x))
-        
+
         x = x + F.interpolate(identity.unsqueeze(1), size=x.size()[1]).squeeze()
 
         x = F.leaky_relu(x, negative_slope=0.2)
@@ -60,12 +65,18 @@ class FCResBlock(nn.Module):
         return x
 
     def __repr__(self):
-        return self.__class__.__name__ + ' (' + str(self.input_size) + ' -> ' + str(self.hidden_size) + ')'
+        return (
+            self.__class__.__name__
+            + " ("
+            + str(self.input_size)
+            + " -> "
+            + str(self.hidden_size)
+            + ")"
+        )
 
 
-
-class MSDecoder(nn.Module): 
-    def __init__(self, input_size, hidden_size, layers, out_dim, dropout): 
+class MSDecoder(nn.Module):
+    def __init__(self, input_size, hidden_size, layers, out_dim, dropout):
         """_summary_
 
         Args:
@@ -79,22 +90,28 @@ class MSDecoder(nn.Module):
 
         last_size = input_size
         self.blocks = nn.ModuleList([])
-        for i in range(layers): 
-            if i == 0: 
-                self.blocks.append(FCResBlock(hidden_size=hidden_size, 
-                                              input_size=input_size, 
-                                              dropout=dropout))
+        for i in range(layers):
+            if i == 0:
+                self.blocks.append(
+                    FCResBlock(
+                        hidden_size=hidden_size, input_size=input_size, dropout=dropout
+                    )
+                )
             else:
-                self.blocks.append(FCResBlock(hidden_size=hidden_size, 
-                                              input_size=hidden_size, 
-                                              dropout=dropout))
-            last_size = hidden_size 
+                self.blocks.append(
+                    FCResBlock(
+                        hidden_size=hidden_size, input_size=hidden_size, dropout=dropout
+                    )
+                )
+            last_size = hidden_size
 
         self.fc = nn.Linear(last_size, out_dim)
         self._reset_parameters()
 
-    def _reset_parameters(self): 
-        nn.init.kaiming_normal_(self.fc.weight, a=0.2, mode='fan_in', nonlinearity='leaky_relu')
+    def _reset_parameters(self):
+        nn.init.kaiming_normal_(
+            self.fc.weight, a=0.2, mode="fan_in", nonlinearity="leaky_relu"
+        )
 
     def forward(self, x):
         for block in self.blocks:
@@ -102,9 +119,8 @@ class MSDecoder(nn.Module):
         return self.fc(x)
 
 
-
 class MolConv(nn.Module):
-    """ MolConv. 
+    """MolConv.
 
     Taken from the 3DMolMS repository
 
@@ -119,21 +135,25 @@ class MolConv(nn.Module):
         self.out_dim = out_dim
         self.remove_xyz = remove_xyz
 
-        self.dist_ff = nn.Sequential(nn.Conv2d(1, 1, kernel_size=1, bias=False),
-                                     nn.BatchNorm2d(1),
-                                     nn.Sigmoid())
-        self.gm2m_ff = nn.Sequential(nn.Conv2d(k, 1, kernel_size=1, bias=False),
-                                     nn.BatchNorm2d(1),
-                                     nn.Sigmoid())
+        self.dist_ff = nn.Sequential(
+            nn.Conv2d(1, 1, kernel_size=1, bias=False), nn.BatchNorm2d(1), nn.Sigmoid()
+        )
+        self.gm2m_ff = nn.Sequential(
+            nn.Conv2d(k, 1, kernel_size=1, bias=False), nn.BatchNorm2d(1), nn.Sigmoid()
+        )
 
         if remove_xyz:
-            self.update_ff = nn.Sequential(nn.Conv2d(in_dim-3, out_dim, kernel_size=1, bias=False),
-                                           nn.BatchNorm2d(out_dim),
-                                           nn.LeakyReLU(negative_slope=0.02))
+            self.update_ff = nn.Sequential(
+                nn.Conv2d(in_dim - 3, out_dim, kernel_size=1, bias=False),
+                nn.BatchNorm2d(out_dim),
+                nn.LeakyReLU(negative_slope=0.02),
+            )
         else:
-            self.update_ff = nn.Sequential(nn.Conv2d(in_dim, out_dim, kernel_size=1, bias=False),
-                                           nn.BatchNorm2d(out_dim),
-                                           nn.LeakyReLU(negative_slope=0.02))
+            self.update_ff = nn.Sequential(
+                nn.Conv2d(in_dim, out_dim, kernel_size=1, bias=False),
+                nn.BatchNorm2d(out_dim),
+                nn.LeakyReLU(negative_slope=0.02),
+            )
 
         self._reset_parameters()
 
@@ -141,22 +161,22 @@ class MolConv(nn.Module):
         for m in self.modules():
             if isinstance(m, (nn.Conv1d, nn.Conv2d, nn.Linear)):
                 nn.init.kaiming_normal_(
-                    m.weight, a=0.2, mode='fan_in', nonlinearity='leaky_relu')
+                    m.weight, a=0.2, mode="fan_in", nonlinearity="leaky_relu"
+                )
 
             elif isinstance(m, (nn.BatchNorm1d, nn.BatchNorm2d, nn.GroupNorm)):
                 nn.init.constant_(m.weight, 1)
                 nn.init.constant_(m.bias, 0)
 
-    def forward(self, x: torch.Tensor,
-                idx_base: torch.Tensor) -> torch.Tensor:
+    def forward(self, x: torch.Tensor, idx_base: torch.Tensor) -> torch.Tensor:
 
         # dist: torch.Size([batch_size, 1, point_num, k])
         # gm2: torch.Size([batch_size, k, point_num, k])
         # feat_n: torch.Size([batch_size, in_dim, point_num, k])
         # feat_c: torch.Size([batch_size, in_dim, point_num, k])
         dist, gm2, feat_c, feat_n = self._generate_feat(
-            x, idx_base, k=self.k, remove_xyz=self.remove_xyz)
-
+            x, idx_base, k=self.k, remove_xyz=self.remove_xyz
+        )
 
         w1 = self.dist_ff(dist)
         w2 = self.gm2m_ff(gm2)
@@ -166,25 +186,23 @@ class MolConv(nn.Module):
         feat = feat.mean(dim=-1, keepdim=False)
         return feat
 
-    def _generate_feat(self, x: torch.Tensor,
-                       idx_base: torch.Tensor,
-                       k: int,
-                       remove_xyz: bool) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
+    def _generate_feat(
+        self, x: torch.Tensor, idx_base: torch.Tensor, k: int, remove_xyz: bool
+    ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
         batch_size, num_dims, num_points = x.size()
         # local graph (knn)
-        inner = -2*torch.matmul(x.transpose(2, 1), x)
+        inner = -2 * torch.matmul(x.transpose(2, 1), x)
         xx = torch.sum(x**2, dim=1, keepdim=True)
         pairwise_distance = -xx - inner - xx.transpose(2, 1)
-        dist, idx = pairwise_distance.topk(
-            k=k, dim=2)  # (batch_size, num_points, k)
-        dist = - dist
+        dist, idx = pairwise_distance.topk(k=k, dim=2)  # (batch_size, num_points, k)
+        dist = -dist
 
         idx = idx + idx_base
         idx = idx.view(-1)
 
         # (batch_size, num_points, num_dims) -> (batch_size*num_points, num_dims)
         x = x.transpose(2, 1).contiguous()
-        graph_feat = x.view(batch_size*num_points, -1)[idx, :]
+        graph_feat = x.view(batch_size * num_points, -1)[idx, :]
         graph_feat = graph_feat.view(batch_size, num_points, k, num_dims)
 
         # gram matrix
@@ -198,18 +216,31 @@ class MolConv(nn.Module):
         x = x.view(batch_size, num_points, 1, num_dims).repeat(1, 1, k, 1)
 
         if remove_xyz:
-            return dist.unsqueeze(3).permute(0, 3, 1, 2).contiguous(), \
-                sub_gm_matrix.permute(0, 3, 1, 2).contiguous(), \
-                x[:, :, :, 3:].permute(0, 3, 1, 2).contiguous(), \
-                graph_feat[:, :, :, 3:].permute(0, 3, 1, 2).contiguous()
+            return (
+                dist.unsqueeze(3).permute(0, 3, 1, 2).contiguous(),
+                sub_gm_matrix.permute(0, 3, 1, 2).contiguous(),
+                x[:, :, :, 3:].permute(0, 3, 1, 2).contiguous(),
+                graph_feat[:, :, :, 3:].permute(0, 3, 1, 2).contiguous(),
+            )
         else:
-            return dist.unsqueeze(3).permute(0, 3, 1, 2).contiguous(), \
-                sub_gm_matrix.permute(0, 3, 1, 2).contiguous(), \
-                x.permute(0, 3, 1, 2).contiguous(), \
-                graph_feat.permute(0, 3, 1, 2).contiguous()
+            return (
+                dist.unsqueeze(3).permute(0, 3, 1, 2).contiguous(),
+                sub_gm_matrix.permute(0, 3, 1, 2).contiguous(),
+                x.permute(0, 3, 1, 2).contiguous(),
+                graph_feat.permute(0, 3, 1, 2).contiguous(),
+            )
 
     def __repr__(self):
-        return self.__class__.__name__ + ' k = ' + str(self.k) + ' (' + str(self.in_dim) + ' -> ' + str(self.out_dim) + ')'
+        return (
+            self.__class__.__name__
+            + " k = "
+            + str(self.k)
+            + " ("
+            + str(self.in_dim)
+            + " -> "
+            + str(self.out_dim)
+            + ")"
+        )
 
 
 class Encoder(nn.Module):
@@ -219,7 +250,7 @@ class Encoder(nn.Module):
             in_dim (int): input dimension
             layers (list): list of hidden layer dimensions
             hidden_size (int): embedding dimension
-            k (int): number of nearest neighbors        
+            k (int): number of nearest neighbors
         """
         super(Encoder, self).__init__()
         self.hidden_size = hidden_size
@@ -228,32 +259,36 @@ class Encoder(nn.Module):
         )
         for i in range(layers - 1):
             self.hidden_layers.append(
-                MolConv(in_dim=hidden_size, out_dim=hidden_size, k=k, remove_xyz=False))
+                MolConv(in_dim=hidden_size, out_dim=hidden_size, k=k, remove_xyz=False)
+            )
 
+        self.conv = nn.Sequential(
+            nn.Conv1d(hidden_size * layers, hidden_size, kernel_size=1, bias=False),
+            nn.BatchNorm1d(hidden_size),
+            nn.LeakyReLU(negative_slope=0.2),
+        )
 
-        self.conv = nn.Sequential(nn.Conv1d(hidden_size * layers, hidden_size, kernel_size=1, bias=False),
-                                  nn.BatchNorm1d(hidden_size),
-                                  nn.LeakyReLU(negative_slope=0.2))
-
-        self.merge = nn.Sequential(nn.Linear(hidden_size*2, hidden_size),
-                                   nn.BatchNorm1d(hidden_size),
-                                   nn.LeakyReLU(negative_slope=0.2))
+        self.merge = nn.Sequential(
+            nn.Linear(hidden_size * 2, hidden_size),
+            nn.BatchNorm1d(hidden_size),
+            nn.LeakyReLU(negative_slope=0.2),
+        )
         self._reset_parameters()
 
     def _reset_parameters(self):
         for m in self.merge:
             if isinstance(m, (nn.Conv1d, nn.Conv2d, nn.Linear)):
                 nn.init.kaiming_normal_(
-                    m.weight, a=0.2, mode='fan_in', nonlinearity='leaky_relu')
+                    m.weight, a=0.2, mode="fan_in", nonlinearity="leaky_relu"
+                )
 
             elif isinstance(m, (nn.BatchNorm1d, nn.BatchNorm2d, nn.GroupNorm)):
                 nn.init.constant_(m.weight, 1)
                 nn.init.constant_(m.bias, 0)
 
-    def forward(self, x: torch.Tensor,
-                idx_base: torch.Tensor) -> torch.Tensor:
+    def forward(self, x: torch.Tensor, idx_base: torch.Tensor) -> torch.Tensor:
         """
-        x:      set of points, torch.Size([32, 21, 300]) 
+        x:      set of points, torch.Size([32, 21, 300])
         """
         xs, tmp_x = [], x
         for i, hidden_layer in enumerate(self.hidden_layers):
@@ -333,10 +368,8 @@ class MolNetMS(pl.LightningModule):
             self.adduct_embedder.requires_grad = False
             adduct_shift = adduct_types
 
-
         # Get bin masses
-        self.bin_masses = torch.from_numpy(
-            np.linspace(0, upper_limit, output_dim))
+        self.bin_masses = torch.from_numpy(np.linspace(0, upper_limit, output_dim))
         self.bin_masses = nn.Parameter(self.bin_masses)
         self.bin_masses.requires_grad = False
 
@@ -358,14 +391,19 @@ class MolNetMS(pl.LightningModule):
 
         # Gates, reverse, forward
         reverse_mult = 3 if self.use_reverse else 1
-        self.encoder = Encoder(in_dim=self.atom_feats, layers=self.layers,
-                               hidden_size=self.hidden_size, k=self.neighbors)
-        self.decoder = MSDecoder(input_size = self.hidden_size + adduct_shift, 
-                                 hidden_size = self.hidden_size, 
-                                 layers = self.top_layers,
-                                 out_dim=self.output_dim * self.num_outputs * reverse_mult,
-                                 dropout=self.dropout,
-                                 )
+        self.encoder = Encoder(
+            in_dim=self.atom_feats,
+            layers=self.layers,
+            hidden_size=self.hidden_size,
+            k=self.neighbors,
+        )
+        self.decoder = MSDecoder(
+            input_size=self.hidden_size + adduct_shift,
+            hidden_size=self.hidden_size,
+            layers=self.top_layers,
+            out_dim=self.output_dim * self.num_outputs * reverse_mult,
+            dropout=self.dropout,
+        )
 
     def cos_loss(self, pred, targ):
         """loss_fn."""
@@ -397,25 +435,26 @@ class MolNetMS(pl.LightningModule):
         device = graphs.device
 
         # Encode
-        idx_base = torch.arange(0, batch_size, device=device).view(-1, 1, 1) * num_points
+        idx_base = (
+            torch.arange(0, batch_size, device=device).view(-1, 1, 1) * num_points
+        )
 
         # Batch x num points x hidden => batch x hidden x num poionts
-        graphs = graphs.transpose(1,2)
+        graphs = graphs.transpose(1, 2)
 
         output = self.encoder(graphs, idx_base)
 
-        #output = self.gnn(graphs)
-        #output = self.pool(graphs, output)
+        # output = self.gnn(graphs)
+        # output = self.pool(graphs, output)
         batch_size = output.shape[0]
 
         # Convert full weight into bin index
         # Find first index at which it's true
-        full_mass_bin = (full_weight[:, None] <
-                         self.bin_masses).int().argmax(-1)
+        full_mass_bin = (full_weight[:, None] < self.bin_masses).int().argmax(-1)
 
         if self.embed_adduct:
             embed_adducts = self.adduct_embedder[adducts.long()]
-            #embed_adducts_expand =embed_adducts[:, None, :].repeat_interleave(node_dim, 1)
+            # embed_adducts_expand =embed_adducts[:, None, :].repeat_interleave(node_dim, 1)
             output_updated = torch.cat([output, embed_adducts], -1)
             output = output_updated
 
@@ -432,16 +471,14 @@ class MolNetMS(pl.LightningModule):
             ind_adjusts = full_mass_bin[:, None] - full_arange[None, :]
             ind_adjusts = ind_adjusts[:, None].expand(rev_preds.shape)
             ind_adjusts = ind_adjusts % self.output_dim
-            rev_preds_temp = torch.gather(
-                rev_preds, dim=-1, index=ind_adjusts.long())
-            output = rev_preds_temp * \
-                (1 - gates_temp) + gates_temp * forward_preds
+            rev_preds_temp = torch.gather(rev_preds, dim=-1, index=ind_adjusts.long())
+            output = rev_preds_temp * (1 - gates_temp) + gates_temp * forward_preds
 
         # Activate each dim with its respective output activation
         # Helpful for hurdle or probabilistic models
         new_outputs = []
         for output_ind, act in enumerate(self.output_activations):
-            new_outputs.append(act(output[:, output_ind: output_ind + 1, :]))
+            new_outputs.append(act(output[:, output_ind : output_ind + 1, :]))
         new_out = torch.cat(new_outputs, 1)
 
         # Mask everything
@@ -449,10 +486,8 @@ class MolNetMS(pl.LightningModule):
         return output_mask
 
     def _common_step(self, batch, name="train"):
-        graphs, masks = batch['graphs'], batch['graph_masks']
-        pred_spec = self.forward(
-            graphs, batch['full_weight'], batch["adducts"]
-        )
+        graphs, masks = batch["graphs"], batch["graph_masks"]
+        pred_spec = self.forward(graphs, batch["full_weight"], batch["adducts"])
         loss_dict = self.loss_fn(pred_spec, batch["spectra"])
         self.log(f"{name}_loss", loss_dict.get("loss"))
         for k, v in loss_dict.items():

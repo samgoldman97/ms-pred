@@ -6,18 +6,18 @@ launcher_args: {experiment_name: scarf_inten_nist20,
 }
 universal_args:
   _slurm_args:
-  - {_num_gpu: 1, cpus-per-task: 7, job-name: forward_train, mem-per-cpu: 8G, #nodelist: 'node[1236]',
+  - {_num_gpu: 1, cpus-per-task: 7, job-name: forward_train, mem-per-cpu: 8G,
     time: '1-18:00:00'}
   debug: [false]
   gpu: [true]
 
-  seed: [1]
-  num-workers: [10] #[20]
+  seed: [42]
+  num-workers: [10]
   batch-size: [32]
   max-epochs: [200]
 
   dataset-name: [nist20]
-  split-name: [split_1.tsv] #[split_1.tsv, split_2.tsv, split_3.tsv]
+  split-name: [split_1.tsv]
 
   learning-rate: [0.000308]
   lr-decay-rate: [0.962]
@@ -26,10 +26,10 @@ universal_args:
   mpnn-type: [GGNN]
   pe-embed-k: [7]
   pool-op: [attn]
-  hidden-size: [512] #128
+  hidden-size: [512]
   weight-decay: [0]
   set-layers: [0]
-  form-set-layers: [2] #[1]
+  form-set-layers: [2]
   mlp-layers: [2]
   gnn-layers: [3]
   embedder: [abs-sines]
@@ -40,13 +40,21 @@ universal_args:
   embed-adduct: [true]
 
 iterative_args:
-  #-  split-name: [split_1.tsv]
-  #   save-dir: [split_1]
-  #   formula-folder: [results/scarf_nist20/split_1/preds_train_300_inten/]
+  -  split-name: [split_1.tsv]
+     save-dir: [split_1_rnd1]
+     formula-folder: [results/scarf_nist20/split_1_rnd1/preds_train_300_inten/]
+     seed: [1]
+
+  -  split-name: [split_1.tsv]
+     save-dir: [split_1_rnd2]
+     formula-folder: [results/scarf_nist20/split_1_rnd2/preds_train_300_inten/]
+     seed: [2]
+
+  -  split-name: [split_1.tsv]
+     save-dir: [split_1_rnd3]
+     formula-folder: [results/scarf_nist20/split_1_rnd3/preds_train_300_inten/]
+     seed: [3]
+
   -  split-name: [scaffold_1.tsv]
      save-dir: [scaffold_1]
      formula-folder: [results/scarf_nist20/scaffold_1/preds_train_300_inten/]
-
-  #-  split-name: [hyperopt.tsv]
-  #   save-dir: [hyperopt]
-  #   formula-folder: [results/scarf_nist_hyperopt_adduct_mol/hyperopt/preds_train_300_inten/]

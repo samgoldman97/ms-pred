@@ -96,6 +96,7 @@ def predict():
     best_checkpoint = kwargs["checkpoint_pth"]
     model = gnn_model.ForwardGNN.load_from_checkpoint(best_checkpoint)
     logging.info(f"Loaded model with from {best_checkpoint}")
+    torch.set_num_threads(1)
 
     graph_featurizer = nn_utils.MolDGLGraph(
         atom_feats=model.atom_feats,

@@ -6,7 +6,6 @@ import json
 import time
 
 
-#dataset = "nist20"
 labels = f"data/spec_datasets/timer_labels.tsv"
 res_folder = Path(f"results/cfm_id_timer/")
 time_res = res_folder / "time_out.json"

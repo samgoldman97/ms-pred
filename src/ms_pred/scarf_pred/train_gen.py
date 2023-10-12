@@ -1,6 +1,6 @@
 """train.py
 
-Train gnn to predict binned specs
+Train scarf model to predict binned specs
 
 """
 import logging

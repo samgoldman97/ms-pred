@@ -47,75 +47,64 @@ def extract_cfm_file(spectra_file, out_dir, max_node):
         json.dump(json_out, fp, indent=2)
 
 
-# Parse args
-parser = argparse.ArgumentParser()
-parser.add_argument("--dataset", type=str, default="nist20")
-args = parser.parse_args()
-
-dataset = args.dataset
-
-
-# Overwrite
-# dataset = "canopus_train_public"
-# dataset = "nist20"  # canopus_train_public
-
-
-res_folder = Path(f"results/cfm_id_{dataset}/")
-cfm_output_specs = res_folder / "cfm_out"
-all_files = list(cfm_output_specs.glob("*.log"))
-split_file = f"data/spec_datasets/{dataset}/splits/split_1.tsv"
-
+datasets = ["canopus_train_public", "nist20"]
+max_nodes = [10, 20, 30, 40, 50, 100, 200]
 max_node = 100
 subform_name = "magma_subform_50"
 split_override = None
+splits = ["split_1", "scaffold_1"]
 
-splits = ["split_1", "split_2", "split_3"]
-splits = ["scaffold_1"]
-splits = ["split_1"]#], "scaffold_1"]
+for dataset in datasets:
+        res_folder = Path(f"results/cfm_id_{dataset}/")
+        cfm_output_specs = res_folder / "cfm_out"
+        all_files = list(cfm_output_specs.glob("*.log"))
 
+        # Create full spec
+        pred_dir_folders = []
+        for split in splits:
+            split_file = f"data/spec_datasets/{dataset}/splits/{split}.tsv"
+            if not Path(split_file).exists():
+                print(f"Skipping {split} for {dataset} due to file not found")
+                continue
 
-# Create full spec
-pred_dir_folders = []
-for split in splits:
-    save_dir = res_folder / f"{split}"
-    save_dir.mkdir(exist_ok=True)
+            split_df = pd.read_csv(split_file, sep="\t")
+            save_dir = res_folder / f"{split}"
+            save_dir.mkdir(exist_ok=True)
 
-    pred_dir = save_dir / "preds/"
-    pred_dir.mkdir(exist_ok=True)
+            pred_dir = save_dir / "preds/"
+            pred_dir.mkdir(exist_ok=True)
 
-    export_dir = pred_dir / "form_preds"
-    export_dir.mkdir(exist_ok=True)
-    split_file = f"data/spec_datasets/{dataset}/splits/{split}.tsv"
-    split = pd.read_csv(split_file, sep="\t")
-    test_specs = set(split[split["Fold_0"] == "test"]["spec"].values)
+            export_dir = pred_dir / "form_preds"
+            export_dir.mkdir(exist_ok=True)
+            test_specs = set(split_df[split_df["Fold_0"] == "test"]["spec"].values)
 
-    to_export = [i for i in all_files if i.stem in test_specs]
-    export_fn = lambda x: extract_cfm_file(x, export_dir, max_node=max_node)
-    # common.chunked_parallel(to_export, export_fn)
-    pred_dir_folders.append(export_dir)
+            to_export = [i for i in all_files if i.stem in test_specs]
+            export_fn = lambda x: extract_cfm_file(x, export_dir, max_node=max_node)
+            common.chunked_parallel(to_export, export_fn)
+            pred_dir_folders.append(export_dir)
 
-    # Convert all preds to binned
+            # Convert all preds to binned
 
-    # Convert to binned files
-    out_binned = pred_dir / "binned_preds.p"
-    cmd = f"""python data_scripts/forms/02_form_to_binned.py \\
-    --max-peaks 1000 \\
-    --num-bins 15000 \\
-    --upper-limit 1500 \\
-    --form-folder {export_dir} \\
-    --num-workers 16 \\
-    --out {out_binned} """
-    cmd = f"{cmd}"
-    print(cmd + "\n")
-    # subprocess.run(cmd, shell=True)
+            # Convert to binned files
+            out_binned = pred_dir / "binned_preds.p"
+            cmd = f"""python data_scripts/forms/02_form_to_binned.py \\
+            --max-peaks 1000 \\
+            --num-bins 15000 \\
+            --upper-limit 1500 \\
+            --form-folder {export_dir} \\
+            --num-workers 16 \\
+            --out {out_binned} """
+            cmd = f"{cmd}"
+            print(cmd + "\n")
+            subprocess.run(cmd, shell=True)
 
-    # Eval binned preds
-    eval_cmd = f"""python analysis/spec_pred_eval.py \\
-    --binned-pred-file {out_binned} \\
-    --max-peaks 100 \\
-    --min-inten 0 \\
-    --formula-dir-name no_subform \\
-    --dataset {dataset}  \\
-    """
-    print(eval_cmd)
-    subprocess.run(eval_cmd, shell=True)
+            # Eval binned preds
+            eval_cmd = f"""python analysis/spec_pred_eval.py \\
+            --binned-pred-file {out_binned} \\
+            --max-peaks 100 \\
+            --min-inten 0 \\
+            --formula-dir-name no_subform \\
+            --dataset {dataset}  \\
+            """
+            print(eval_cmd)
+            subprocess.run(eval_cmd, shell=True)

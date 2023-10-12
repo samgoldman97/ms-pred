@@ -105,6 +105,7 @@ def predict():
     pred_dataset = graff_ms_data.MolDataset(
         df, num_workers=num_workers, graph_featurizer=graph_featurizer
     )
+    torch.set_num_threads(1)
 
     # Define dataloaders
     collate_fn = pred_dataset.get_collate_fn()

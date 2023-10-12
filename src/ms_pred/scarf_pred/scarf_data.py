@@ -14,15 +14,17 @@ from torch.utils.data.dataset import Dataset
 import dgl
 
 import ms_pred.common as common
-import ms_pred.massformer_pred._massformer_graph_featurizer as mformer 
-from  torch_geometric.data.data import Data as pyg_data
+import ms_pred.massformer_pred._massformer_graph_featurizer as mformer
+from torch_geometric.data.data import Data as pyg_data
 
 
 def process_form_file(
     form_dict_file,
 ):
     """process_form_file."""
-    form_dict = json.load(open(form_dict_file, "r"))
+    with open(str(form_dict_file), "r") as fp:
+        form_dict = json.load(fp)
+
     root_form = form_dict["cand_form"]
     out_tbl = form_dict["output_tbl"]
 
@@ -45,7 +47,6 @@ class IntenDataset(Dataset):
     def __init__(
         self,
         df: pd.DataFrame,
-        data_dir: Path,
         graph_featurizer,
         form_map: dict,
         num_workers=0,
@@ -54,16 +55,20 @@ class IntenDataset(Dataset):
         binned_targs: bool = False,
         **kwargs,
     ):
-        """__init__.
+        """__init__ _summary_
 
         Args:
-            df:
-            data_dir:
-            graph_featurizer
-            file_map (dict): file_map
-            num_workers:
-            use_ray (bool): use_ray
-            kwargs:
+            df (pd.DataFrame): _description_
+            data_dir (Path): _description_
+            graph_featurizer (_type_): _description_
+            form_map (dict): _description_
+            num_workers (int, optional): _description_. Defaults to 0.
+            use_ray (bool, optional): _description_. Defaults to False.
+            root_embedder (str, optional): _description_. Defaults to "gnn".
+            binned_targs (bool, optional): _description_. Defaults to False.
+
+        Raises:
+            ValueError: _description_
         """
 
         self.df = df
@@ -102,7 +107,7 @@ class IntenDataset(Dataset):
         else:
             raise ValueError()
 
-        if self.num_workers == 0:
+        if self.num_workers == 0 or True:
             self.mols = [Chem.MolFromSmiles(i) for i in self.smiles]
             self.mol_graphs = [self.root_encode_fn(i) for i in self.mols]
         else:
@@ -315,16 +320,19 @@ class ScarfDataset(Dataset):
         use_ray: bool = False,
         **kwargs,
     ):
-        """__init__.
+        """__init__ _summary_
 
         Args:
-            df:
-            data_dir:
-            graph_featurizer
-            file_map (dict): file_map
-            num_workers:
-            use_ray (bool): use_ray
-            kwargs:
+            df (pd.DataFrame): _description_
+            data_dir (Path): _description_
+            graph_featurizer (_type_): _description_
+            file_map (dict): _description_
+            num_workers (int, optional): _description_. Defaults to 0.
+            root_embedder (str, optional): _description_. Defaults to "gnn".
+            use_ray (bool, optional): _description_. Defaults to False.
+
+        Raises:
+            ValueError: _description_
         """
         self.df = df
         self.num_workers = num_workers
@@ -361,7 +369,7 @@ class ScarfDataset(Dataset):
         else:
             raise ValueError()
 
-        if self.num_workers == 0:
+        if self.num_workers == 0 or True:
             self.mols = [Chem.MolFromSmiles(i) for i in self.smiles]
             self.mol_graphs = [self.root_encode_fn(i) for i in self.mols]
         else:
@@ -395,7 +403,7 @@ class ScarfDataset(Dataset):
         process_fn = partial(
             process_form_file,
         )
-        if self.num_workers > 0:
+        if self.num_workers > 0: 
             self.spec_forms = common.chunked_parallel(
                 self.form_files,
                 process_fn,
@@ -668,11 +676,12 @@ class MolDataset(Dataset):
         else:
             raise ValueError()
 
-        if self.num_workers == 0:
+        if self.num_workers == 0 or True:
             self.mols = [Chem.MolFromSmiles(i) for i in self.smiles]
             self.base_formulae = [common.form_from_smi(i) for i in self.smiles]
             self.mol_graphs = [self.root_encode_fn(i) for i in self.mols]
         else:
+
             self.mols = common.chunked_parallel(
                 self.smiles,
                 lambda x: Chem.MolFromSmiles(x),

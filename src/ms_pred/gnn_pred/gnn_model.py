@@ -44,27 +44,35 @@ class ForwardGNN(pl.LightningModule):
         warmup: int = 1000,
         **kwargs,
     ):
-        """__init__.
+        """__init__ _summary_
+
         Args:
-            hidden_size (int): Hidden size
-            layers (int): Num layers
-            dropout (float): Amount of dropout
-            learning_rate (float): Learning rate
-            lr_decay_rate (float): LR decay rate
-            output_dim (int): Output dim of bins
-            upper_limit (int): Max bin size
-            weight_decay
-            use_reverse (bool): If true, use the reverse scheme
-            loss_fn (str): Name of loss function
-            mpnn_type (str):
-            set_layers (int):
-            atom_feats (list)
-            bond_feats (list)
-            pool_op (str):
-            pe_embed_k (int)
-            num_atom_feats (int):
-            num_bond_feats (int):
+            hidden_size (int): _description_
+            layers (int, optional): _description_. Defaults to 2.
+            dropout (float, optional): _description_. Defaults to 0.0.
+            learning_rate (float, optional): _description_. Defaults to 7e-4.
+            lr_decay_rate (float, optional): _description_. Defaults to 1.0.
+            output_dim (int, optional): _description_. Defaults to 1000.
+            upper_limit (int, optional): _description_. Defaults to 1500.
+            weight_decay (float, optional): _description_. Defaults to 0.
+            use_reverse (bool, optional): _description_. Defaults to True.
+            loss_fn (str, optional): _description_. Defaults to "mse".
+            mpnn_type (str, optional): _description_. Defaults to "GGNN".
+            set_layers (int, optional): _description_. Defaults to 2.
+            atom_feats (list, optional): _description_. Defaults to ( "a_onehot", "a_degree", "a_hybrid", "a_formal", "a_radical", "a_ring", "a_mass", "a_chiral", ).
+            bond_feats (list, optional): _description_. Defaults to ("b_degree",).
+            pool_op (str, optional): _description_. Defaults to "avg".
+            pe_embed_k (int, optional): _description_. Defaults to 0.
+            num_atom_feats (int, optional): _description_. Defaults to 86.
+            num_bond_feats (int, optional): _description_. Defaults to 5.
+            embed_adduct (bool, optional): _description_. Defaults to False.
+            warmup (int, optional): _description_. Defaults to 1000.
+
+        Raises:
+            NotImplementedError: _description_
+            NotImplementedError: _description_
         """
+
         super().__init__()
         self.save_hyperparameters()
         self.hidden_size = hidden_size

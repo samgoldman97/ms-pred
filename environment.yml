@@ -20,8 +20,9 @@ dependencies:
 - seaborn=0.11.*
 - ray-tune
 - pytorch-scatter
+
 # CPU:
-- dgl
+- dgl=0.8.*
 # GPU:
 #- cudatoolkit=11.1
 #- dgl-cuda11.1 

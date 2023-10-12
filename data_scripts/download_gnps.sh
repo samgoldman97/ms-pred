@@ -1,10 +1,14 @@
-cd data/spec_datasets/
-wget https://www.dropbox.com/s/8jn6sz0o3srmtev/canopus_train_public.tar
-tar -xvf canopus_train_public.tar
-rm canopus_train_public.tar
-cd canopus_train_public
-rm -rf sirius_outputs
-rm -rf retrieval_hdf
-rm -rf magma_outputs
-rm -rf splits
-cd ../../
+#LINK=https://www.dropbox.com/scl/fi/13yt9gozdr6yf3jl908u8/canopus_train_public.zip?rlkey=lnfwjxutp90zqo89gfj7m15ot
+LINK=https://zenodo.org/record/8433354/files/canopus_train_public.zip
+
+
+wget "$LINK" -O canopus_train_public.zip
+
+# Unzip the archive
+unzip canopus_train_public.zip
+
+# Delete the original ZIP archive
+rm canopus_train_public.zip
+
+# Move extracted data to the target directory
+mv canopus_train_public data/spec_datasets/

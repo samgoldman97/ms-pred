@@ -115,17 +115,18 @@ def build_python_string(
 
     time_and_hash = f"{time_stamp_seconds}_{args_hash}"
 
-    general_flags = "" 
+    general_flags = ""
+    all_flags = []
     for arg_name, arg_value in arg_dict.items():
         # Handle specific arguments here
         if arg_name == "_slurm_args":
             slurm_args = construct_slurm_args(experiment_name, arg_value)
         elif arg_name == "_model":
-            python_string = f"{python_string} {arg_value}".strip()
+            all_flags.insert(0, arg_value)
+        elif arg_name == "save-dir":
+            pass
         else:
-            new_flag = convert_flag(arg_name, arg_value)
-            general_flags = f"{general_flags} {new_flag}".strip()
-    python_string = f"{python_string} {general_flags}"
+            all_flags.append(convert_flag(arg_name, arg_value))
 
     if "save-dir" in arg_dict.keys():
         out = Path(sub_dir) / arg_dict["save-dir"]
@@ -133,8 +134,11 @@ def build_python_string(
         out = Path(sub_dir) / time_and_hash
 
     outdir = convert_flag("save-dir", out)
-    python_string = f"{python_string} {outdir}".strip()
+    all_flags.append(outdir)
 
+    all_flags = [i for i in all_flags if len(str(i).strip()) > 0]
+    all_flags = f" \\\n".join(all_flags)
+    python_string = f"{python_string} \\\n {all_flags}"
     return (slurm_args, python_string)
 
 
@@ -142,6 +146,7 @@ def construct_slurm_args(experiment_name: str, slurm_args: dict):
     """construct_slurm_args."""
 
     # Slurm args
+    Path("logs").mkdir(exist_ok=True)
     sbatch_args = f"--output=logs/{experiment_name}_%j.log"
     for k, v in slurm_args.items():
         if k == "_num_gpu":
@@ -175,13 +180,13 @@ def convert_flag(flag_key, flag_value):
 
 def get_launcher_log_name(experiment_folder):
     """Return an appropriate launcher log file"""
-    launcher_path = Path(experiment_folder) /  "launcher_log_1.log"
+    launcher_path = Path(experiment_folder) / "launcher_log_1.log"
 
     # Keep incrementing the counter
     ctr = 1
     while launcher_path.exists():
         new_file = f"launcher_log_{ctr}.log"
-        launcher_path = Path(experiment_folder) /  new_file
+        launcher_path = Path(experiment_folder) / new_file
         ctr += 1
     return launcher_path
 
@@ -194,9 +199,6 @@ def main(
     comments: dict = None,
 ):
     """main."""
-    # Create output experiment
-    Path("logs").mkdir(exist_ok=True)
-
     experiment_name = launcher_args["experiment_name"]
     script_name = launcher_args.get("script_name", "run_training.py")
     experiment_folder = f"results/{experiment_name}/"
@@ -265,13 +267,13 @@ def main(
     # Actually launch these
     if launch_method == "slurm":
         for cmd_str in scripts_to_run:
-            print(f"Command String: ", cmd_str)
+            print(f"_Command String_\n{cmd_str}")
             subprocess.call(cmd_str, shell=True)
             if log is not None:
                 log.write(cmd_str + "\n")
     elif launch_method == "local":
         for cmd_str in scripts_to_run:
-            print(f"Command String: ", cmd_str)
+            print(f"_Command String_\n{cmd_str}")
             subprocess.call(cmd_str, shell=True)
             if log is not None:
                 log.write(cmd_str + "\n")
@@ -287,7 +289,9 @@ def main(
             gpu_num = str_num % len(vis_devices)
             gpu = vis_devices[gpu_num]
             cmd_str_new = f"CUDA_VISIBLE_DEVICES={gpu} {cmd_str}"
-            output_name = f"{launcher_path.parent / launcher_path.stem}_python_{gpu}.sh"
+            output_name = (
+                f"{launcher_path.parent / launcher_path.stem}_python_{gpu_num}.sh"
+            )
 
             with open(output_name, "a") as fp:
                 fp.write(f"{cmd_str_new}\n")
@@ -295,9 +299,12 @@ def main(
 
         # Single file to run alll launch scripts
         launch_all = f"{launcher_path.parent / launcher_path.stem}_launch_all.sh"
+        logdir = Path(launch_all).parent / "logs"
+        logdir.mkdir(exist_ok=True, parents=True)
         with open(launch_all, "w") as fp:
-            temp_str = [f"sh {i} > logs/{Path(i).name}.log &" 
-                        for i in list(sh_run_files)]
+            temp_str = [
+                f"sh {i} > {logdir / Path(i).name}.log &" for i in list(sh_run_files)
+            ]
             fp.write("\n".join(temp_str))
         print(f"Runnings script: {launch_all}")
         subprocess.call(f"sh {launch_all}", shell=True)
@@ -309,7 +316,6 @@ def main(
 
 
 if __name__ == "__main__":
-    Path("logs").mkdir(exist_ok=True)
     Path("results").mkdir(exist_ok=True)
     args, config_file = get_args()
     main(config_file=config_file, **args)

@@ -1,4 +1,4 @@
-""" form_to_binned.py
+""" Form to binned
 
 Convert dag folder into a binned spec file
 
@@ -14,32 +14,30 @@ import ms_pred.common as common
 
 
 def get_args():
+    """get_args.
+    """
     parser = argparse.ArgumentParser()
     parser.add_argument("--num-workers", default=0, action="store", type=int)
     parser.add_argument("--form-folder", action="store")
     parser.add_argument(
-        "--min-inten", type=float, default=1e-5,
-        help="Minimum intensity to call a peak in prediction"
+        "--min-inten",
+        type=float,
+        default=1e-5,
+        help="Minimum intensity to call a peak in prediction",
     )
     parser.add_argument(
-        "--max-peaks", type=int, default=100,
-        help="Max num peaks to call"
+        "--max-peaks", type=int, default=100, help="Max num peaks to call"
     )
-    parser.add_argument(
-        "--num-bins", type=int, default=1500,
-        help="Num bins"
-    )
-    parser.add_argument(
-        "--upper-limit", type=int, default=1500,
-        help="upper lim"
-    )
+    parser.add_argument("--num-bins", type=int, default=1500, help="Num bins")
+    parser.add_argument("--upper-limit", type=int, default=1500, help="upper lim")
     parser.add_argument("--out", action="store")
     return parser.parse_args()
 
 
-def bin_forms(forms: dict, max_peaks: int, upper_limit: int, num_bins: int,
-              min_inten: float) -> np.ndarray:
-    """bin_dag.
+def bin_forms(
+    forms: dict, max_peaks: int, upper_limit: int, num_bins: int, min_inten: float
+) -> np.ndarray:
+    """bin_forms.
 
     Args:
         forms (dict): forms
@@ -57,8 +55,8 @@ def bin_forms(forms: dict, max_peaks: int, upper_limit: int, num_bins: int,
     if tbl is None:
         tbl = {"rel_inten": [], "formula_mass_no_adduct": []}
 
-    intens = tbl['rel_inten']
-    mz = tbl['formula_mass_no_adduct']
+    intens = tbl["rel_inten"]
+    mz = tbl["formula_mass_no_adduct"]
 
     # Cap at min
     mz, intens = np.array(mz), np.array(intens)
@@ -73,13 +71,13 @@ def bin_forms(forms: dict, max_peaks: int, upper_limit: int, num_bins: int,
     spec_ar = np.vstack([mz, intens]).transpose(1, 0)
 
     # Bin intensities
-    binned = common.bin_spectra([spec_ar], num_bins, upper_limit,
-                                pool_fn="max")
+    binned = common.bin_spectra([spec_ar], num_bins, upper_limit, pool_fn="max")
     return binned, smiles
 
 
-def bin_form_file(form_file: dict, max_peaks: int, upper_limit: int, num_bins: int,
-                  min_inten: float):
+def bin_form_file(
+    form_file: dict, max_peaks: int, upper_limit: int, num_bins: int, min_inten: float
+):
     """bin_dag_file.
 
     Args:
@@ -98,8 +96,7 @@ def bin_form_file(form_file: dict, max_peaks: int, upper_limit: int, num_bins: i
 
 
 def main():
-    """main.
-    """
+    """main."""
     args = get_args()
     out = args.out
 
@@ -115,24 +112,29 @@ def main():
     spec_names = [i.stem.replace("pred_", "") for i in form_files]
 
     # Test case
-    #dag_file = dag_files[0]
-    #binned, root = bin_dag_file(dag_file, max_peaks=max_peaks,
+    # dag_file = dag_files[0]
+    # binned, root = bin_dag_file(dag_file, max_peaks=max_peaks,
     #                            upper_limit=upper_limit, num_bins=num_bins,
     #                            min_inten=min_inten)
 
-    read_dag_file = partial(bin_form_file, max_peaks=max_peaks,
-                            upper_limit=upper_limit, num_bins=num_bins,
-                            min_inten=min_inten)
+    read_dag_file = partial(
+        bin_form_file,
+        max_peaks=max_peaks,
+        upper_limit=upper_limit,
+        num_bins=num_bins,
+        min_inten=min_inten,
+    )
 
     if num_workers > 0:
-        outs = common.chunked_parallel(form_files,
-                                       read_dag_file,
-                                       max_cpu=num_workers,)
+        outs = common.chunked_parallel(
+            form_files,
+            read_dag_file,
+            max_cpu=num_workers,
+        )
         binned, smis = zip(*outs)
     else:
         outs = [read_dag_file(i) for i in form_files]
         binned, smis = zip(*outs)
-
 
     binned_stack = np.concatenate(binned, 0)
     output = {
@@ -146,5 +148,5 @@ def main():
         pickle.dump(output, fp)
 
 
-if __name__=="__main__": 
+if __name__ == "__main__":
     main()

@@ -1,6 +1,6 @@
 """train.py
 
-Train model to predict tree breakages
+Train model to predict DAG breakages
 
 """
 import logging

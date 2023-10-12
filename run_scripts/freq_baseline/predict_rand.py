@@ -10,17 +10,6 @@ import yaml
 import ms_pred.common as common
 
 
-dataset = "canopus_train_public"
-dataset = "nist20"
-res_folder = Path(f"results/rand_baseline_{dataset}/")
-res_folder.mkdir(exist_ok=True)
-split_names = ["split_1"]
-subform_name = "magma_subform_50"
-subform_dir = Path(f"data/spec_datasets/{dataset}/subformulae/{subform_name}")
-labels_file = f"data/spec_datasets/{dataset}/labels.tsv"
-max_nodes = [10, 20, 30, 40, 50, 100, 200, 300, 500, 1000]
-
-
 def predict_rand(input_name, smiles, formula, max_nodes, outdir):
     """predict_rand.
 
@@ -55,11 +44,27 @@ def predict_rand(input_name, smiles, formula, max_nodes, outdir):
     with open(out_file, "w") as fp:
         json.dump(json_out, fp, indent=2)
 
+test_entries = [
+    {"dataset": "nist20", "split": "split_1"},
+    {"dataset": "canopus_train_public", "split": "split_1"}
+]
 
-labels_df = pd.read_csv(labels_file, sep="\t")
-spec_to_smiles = dict(labels_df[["spec", "smiles"]].values)
-spec_to_forms = dict(labels_df[["spec", "formula"]].values)
-for split in split_names:
+subform_name = "magma_subform_50"
+max_nodes = [10, 20, 30, 40, 50, 100, 200, 300, 500, 1000]
+
+for test_entry in test_entries: 
+    dataset = test_entry['dataset']
+    split = test_entry['split']
+
+    res_folder = Path(f"results/rand_baseline_{dataset}/")
+    res_folder.mkdir(exist_ok=True)
+    subform_dir = Path(f"data/spec_datasets/{dataset}/subformulae/{subform_name}")
+    labels_file = f"data/spec_datasets/{dataset}/labels.tsv"
+
+
+    labels_df = pd.read_csv(labels_file, sep="\t")
+    spec_to_smiles = dict(labels_df[["spec", "smiles"]].values)
+    spec_to_forms = dict(labels_df[["spec", "formula"]].values)
     split_dir = res_folder / split
     split_dir.mkdir(exist_ok=True)
     split_file = f"data/spec_datasets/{dataset}/splits/{split}.tsv"
@@ -95,9 +100,7 @@ for split in split_names:
             )
             for i in test_names
         ]
-
-        # [predict_fn(predict_dict) for predict_dict in tqdm(predict_dicts)]
-        #common.chunked_parallel(predict_dicts, predict_fn)
+        common.chunked_parallel(predict_dicts, predict_fn)
         pred_dir_folders.append(export_dir)
 
     res_files = []
@@ -110,7 +113,7 @@ for split in split_names:
         """
         res_files.append(pred_dir.parent / "pred_eval.yaml")
         print(analysis_cmd + "\n")
-        #subprocess.run(analysis_cmd, shell=True)
+        subprocess.run(analysis_cmd, shell=True)
 
     # Run cleanup now
     new_entries = []
@@ -118,8 +121,13 @@ for split in split_names:
         new_data = yaml.safe_load(open(res_file, "r"))
         thresh = res_file.parent.stem
         new_entry = {"nm_nodes": thresh}
-        new_entry.update({k: v for k, v in new_data.items() 
-                          if "avg" in k or "sem" in k or "std" in k})
+        new_entry.update(
+            {
+                k: v
+                for k, v in new_data.items()
+                if "avg" in k or "sem" in k or "std" in k
+            }
+        )
         new_entries.append(new_entry)
 
     df = pd.DataFrame(new_entries)

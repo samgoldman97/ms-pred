@@ -1,6 +1,6 @@
 """train.py
 
-Train gnn to predict binned specs
+Train Massformer to predict binned specs
 
 """
 import logging
@@ -84,7 +84,9 @@ def train_model():
     upper_limit = 1500
 
     save_dir = kwargs["save_dir"]
-    common.setup_logger(save_dir, log_name="massformer_train.log", debug=kwargs["debug"])
+    common.setup_logger(
+        save_dir, log_name="massformer_train.log", debug=kwargs["debug"]
+    )
     pl.utilities.seed.seed_everything(kwargs.get("seed"))
 
     # Dump args
@@ -172,14 +174,12 @@ def train_model():
         mf_layer_type=kwargs["mf_layer_type"],
         mf_dropout=kwargs["mf_dropout"],
         use_reverse=kwargs["use_reverse"],
-        embed_adduct=kwargs['embed_adduct'],
-
+        embed_adduct=kwargs["embed_adduct"],
         gf_model_name=kwargs["gf_model_name"],
         gf_pretrain_name=kwargs["gf_pretrain_name"],
         gf_fix_num_pt_layers=kwargs["gf_fix_num_pt_layers"],
         gf_reinit_num_pt_layers=kwargs["gf_reinit_num_pt_layers"],
         gf_reinit_layernorm=kwargs["gf_reinit_layernorm"],
-
         learning_rate=kwargs["learning_rate"],
         lr_decay_rate=kwargs["lr_decay_rate"],
         output_dim=num_bins,

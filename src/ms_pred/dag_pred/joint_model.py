@@ -93,11 +93,9 @@ class JointModel(pl.LightningModule):
             max_nodes=max_nodes,
         )
         frag_tree = {"root_inchi": root_inchi, "name": "", "frags": frag_tree}
-        
+
         # Get engine from fragmentation for this inchi
-        engine = fragmentation.FragmentEngine(mol_str=root_inchi,
-                                              mol_str_type="inchi"
-        )
+        engine = fragmentation.FragmentEngine(mol_str=root_inchi, mol_str_type="inchi")
 
         processed_tree = self.inten_tp.process_tree_inten_pred(frag_tree)
 
@@ -148,11 +146,13 @@ class JointModel(pl.LightningModule):
             inten_frag_ids = inten_frag_ids[0]
             out_frags = out_tree["frags"]
 
-            # Get masses too 
+            # Get masses too
             for inten_pred, inten_frag_id in zip(inten_preds, inten_frag_ids):
                 out_frags[inten_frag_id]["intens"] = inten_pred.tolist()
 
-                new_masses = out_frags[inten_frag_id]["base_mass"] + engine.shift_bucket_masses
+                new_masses = (
+                    out_frags[inten_frag_id]["base_mass"] + engine.shift_bucket_masses
+                )
                 mz_with_charge = new_masses + common.ion2mass[adduct]
                 out_frags[inten_frag_id]["mz_no_charge"] = new_masses.tolist()
                 out_frags[inten_frag_id]["mz_charge"] = mz_with_charge.tolist()

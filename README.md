@@ -28,6 +28,8 @@ Contributors: Sam Goldman, John Bradshaw, Janet Li, Jiayi Xin, Connor W. Coley
 3. [Data](#data)  
 4. [Experiments](#experiments)    
 5. [Analysis](#analysis)    
+6. [Augmentation](#augmentation)    
+7. [Citation](#citation)    
 
 
 ## Install & setup <a name="setup"></a>
@@ -40,6 +42,7 @@ mamba activate ms-gen
 pip install -r requirements.txt
 python3 setup.py develop
 ```
+Note: if you are using GPU, please uncomment the CUDA-based packages for DGL and comment the CPU package in ``envorinment.yaml``.
 
 
 ## Quickstart <a name="quickstart"></a>
@@ -57,25 +60,23 @@ To make predictions, we have released and made public a version of SCARF and ICE
 . quickstart/iceberg/run_model.sh
 ```
 
-Model outputs will be contained in `quickstart/{model}/out/`. **We note that this model may be less performant than the model trained on the commercial NIST20 Library. Download links to models trained on NIST20 models are available upon request to any users with a NIST license.**  ICEBERG assigns intensities to various fragment masses. Refer to `notebooks/iceberg_demo.ipynb` for a walkthrough for how to process and interpret the output dictionary.
+Model outputs will be contained in `quickstart/{model}/out/`. **We note that this model may be less performant than the model trained on the commercial NIST20 Library. Download links to models trained on NIST20 models are available upon request to any users with a NIST license.**  ICEBERG assigns intensities to various fragment masses. Refer to `notebooks/scarf_demo.ipynb` and `notebooks/iceberg_demo.ipynb` for a walkthrough on how to process and interpret the output dictionary.
 
-Please note there is a small error in the adduct masses for `[M-H2O+H]+`. Because peak outputs are shifted by their adduct masses _after_ prediction, the final spectrum prediction may still be accurate. This will be corrected in the subsequent version of all models.
+Please note models have been updated since the original release to correct for a small error in the adduct masses for `[M-H2O+H]+` and should be re-downloaded.
 
 
 ## Data <a name="data"></a>
 
-A data subset from the GNPS database can first be downloaded and older sirius
-outputs and magma runs removed.
+A data subset from the GNPS database including processed dag annotations (magma\_outputs/), subformulae (subformulae/), retrieval databases (retrieval/), splits (splits/), and spectra files (spec\_files/) can be downloaded into ``data/spec_datasets/canopus_train_public``. Note CANOPUS is an earlier name of the GNPS dataset, as explained in our ICEBERG paper.
 
 ```
 . data_scripts/download_gnps.sh
 ```
 
-Structural data splits can be established with `data_scripts/make_splits.py`, and the following command will create all splits in bulk:
+For those interested in understanding the full dataset processing pipeline, we refer you to `data_scripts/`. This contains functinoalities for generating assignment DAGs (i.e., iceberg training), assigning subformulae to spectra (i.e., scarf training + evaluation), and pubchem dataset creation (i.e., for retrieval experiments). We explain some of these details below.
 
-```
-. data_scripts/all_create_splits.sh
-```
+``nist20`` is a commercial dataset. Many of the scripts and pipelines include commands to run / train models on NIST20 as well; we suggest commenting these out where applicable.
+
 
 ### SCARF Processing
 
@@ -88,7 +89,7 @@ script does this for both `canopus_train_public` and `nist20` if it has been
 acquired and parsed (commercial dataset).
 
 ```
-. data_scripts/assign_subform.sh
+. data_scripts/all_assign_subform.sh
 ```
 
 
@@ -101,7 +102,9 @@ which we do with the MAGMa algorithm.
 This can be done with the following script, specifying an appropriate dataset:
 
 ```
+
 . data_scripts/dag/run_magma.sh
+
 ```
 
 
@@ -114,19 +117,18 @@ pairs. Subsets are selected for evaluation.  Making formula subsets takes longer
 each molecule in pubchem to a mol / InChi. 
 
 ```
+
 source data_scripts/pubchem/01_download_smiles.sh
 python data_scripts/pubchem/02_make_formula_subsets.py
-python data_scripts/pubchem/03_make_retrieval_lists.py
-```
-
-To quickly download tables for canopus:  
+python data_scripts/pubchem/03_dataset_subset.py --dataset-labels data/spec_datasets/nist20/labels.tsv # for nist20 dataset
+python data_scripts/pubchem/04_make_retrieval_lists.py
 
 ```
-cd data/spec_datasets/canopus_train_public/
-wget https://www.dropbox.com/s/7zr6euhuhz3ohi9/retrieval_tbls.tar
-tar -xvf canopus_train_public.tar
-```
 
+Processed tables are already included inside `canopus_train_public`.
+
+
+ 
 ## Experiments <a name="experiments"></a>
 
 
@@ -134,17 +136,14 @@ tar -xvf canopus_train_public.tar
 
 SCARF models trained in two parts: a prefix tree generator and an intensity predictor. The pipeline for training and evaluating this model can be accessed in `run_scripts/scarf_model/`. The internal pipeline used to conduct experiments can be followed below:
 
-1. *Hyperopt scarf model*: `run_scripts/scarf_model/01_hyperopt_scarf.sh`
-2. *Train scarf model*: `run_scripts/scarf_model/02_run_scarf_gen_train.sh`
-3. *Sweep number of prefixes to generate*: `run_scripts/scarf_model/03_sweep_scarf_gen_thresh.py`  
-4. *Use model 1 to predict model 2 training set*: `run_scripts/scarf_model/04_scarf_gen_predict.sh`   
-5. *Add intensity targets to predictions*: `run_scripts/scarf_model/05_process_scarf_train.py`
-6. *Hyperopt scarf inten model*: `run_scripts/scarf_model/06_hyperopt_scarf_inten.sh`
-7. *Train intensity model*: `run_scripts/scarf_model/07_train_scarf_inten.sh`
-8. *Make and evaluate intensity predictions*: `run_scripts/scarf_model/08_predict_form_inten.py`
-9. *Run retrieval*: `run_scripts/scarf_model/09_run_retrieval.py`  
-10. *Time scarf*: `run_scripts/scarf_model/10_time_scarf.py`  
-11. *Export scarf forms* `run_scripts/scarf_model/11_export_forms.py`
+1. *Train scarf model*: `run_scripts/scarf_model/01_run_scarf_gen_train.sh`
+2. *Sweep number of prefixes to generate*: `run_scripts/scarf_model/02_sweep_scarf_gen_thresh.py`  
+3. *Use model 1 to predict model 2 training set*: `run_scripts/scarf_model/03_scarf_gen_predict.sh`   
+4. *Train intensity model*: `run_scripts/scarf_model/04_train_scarf_inten.sh`
+5. *Make and evaluate intensity predictions*: `run_scripts/scarf_model/05_predict_form_inten.py`
+6. *Run retrieval*: `run_scripts/scarf_model/06_run_retrieval.py`  
+7. *Time scarf*: `run_scripts/scarf_model/07_time_scarf.py`  
+8. *Export scarf forms* `run_scripts/scarf_model/08_export_forms.py`
 
 
 Instead of running in batched pipeline model, individual gen training, inten
@@ -154,22 +153,27 @@ training, and predict calls can be  made using the following scripts respectivel
 2.  `python src/ms_pred/scarf_pred/train_inten.py`
 3.  `python src/ms_pred/scarf_pred/predict_smis.py`
 
+An additional notebook showcasing how to individually load models and make predictions can be found at `notebooks/scarf_demo.ipynb`. 
+
+We provide scripts showing how we conducted hyperparameter optimization as
+well:
+
+1. *Hyperopt scarf model*: `run_scripts/scarf_model/hyperopt_01_scarf.sh`  
+2. *Hyperopt scarf inten model*: `run_scripts/scarf_model/02_sweep_scarf_gen_thresh.py`  
+
 
 ### ICEBERG
 
 ICEBRG models, like SCARF, are trained in two parts: a learned fragment generator and an intensity predictor. The pipeline for training and evaluating this model can be accessed in `run_scripts/dag_model/`. The internal pipeline used to conduct experiments can be followed below:
 
-1. *Hyperopt dag model*: `run_scripts/dag_model/01_hyperopt_dag.sh`   
-2. *Train dag model*: `run_scripts/dag_model/02_run_dag_gen_train.sh`   
-3. *Sweep over the number of fragments to generate*: `run_scripts/dag_model/03_sweep_gen_thresh.py`    
-4. *Use model 1 to predict model 2 training set*: `run_scripts/dag_model/04_run_dag_gen_predict.sh`   
-5. *Add intensity targets to predictions*: `run_scripts/dag_model/05_process_dag_train.py`
-6. *Hyperopt dag inten model*: `run_scripts/dag_model/06_hyperopt_inten.sh`
-7. *Train intensity model*: `run_scripts/dag_model/07_train_dag_inten.sh`
-8. *Make and evaluate intensity predictions*: `run_scripts/dag_model/08_predict_dag_inten.py`
-9. *Run retrieval*: `run_scripts/dag_model/09_run_retrieval.py`  
-10. *Time iceberg*: `run_scripts/dag_model/10_time_dag.py`  
-11. *Export dag predictions* `run_scripts/dag_model/11_export_preds.py`
+1. *Train dag model*: `run_scripts/dag_model/01_run_dag_gen_train.sh`   
+2. *Sweep over the number of fragments to generate*: `run_scripts/dag_model/02_sweep_gen_thresh.py`     
+3. *Use model 1 to predict model 2 training set*: `run_scripts/dag_model/03_run_dag_gen_predict.sh`   
+4. *Train intensity model*: `run_scripts/dag_model/04_train_dag_inten.sh`   
+5. *Make and evaluate intensity predictions*: `run_scripts/dag_model/05_predict_dag_inten.py`  
+6. *Run retrieval*: `run_scripts/dag_model/06_run_retrieval.py`  
+7. *Time iceberg*: `run_scripts/dag_model/07_time_dag.py`  
+8. *Export dag predictions* `run_scripts/dag_model/08_export_preds.py`  
 
 
 Instead of running in batched pipeline model, individual gen training, inten
@@ -179,36 +183,57 @@ training, and predict calls can be  made using the following scripts respectivel
 2.  `python src/ms_pred/dag_pred/train_inten.py`
 3.  `python src/ms_pred/dag_pred/predict_smis.py`
 
-An additional notebook showcasing how to individually load models and make predictions can be found at `notebooks/iceberg_fig_qualitative.ipynb`.
+An additional notebook showcasing how to individually load models and make predictions can be found at `notebooks/iceberg_demo.ipynb`.
+
+The models were hyperoptimized using the following scripts:  
+1. `run_scripts/dag_model/hyperopt_01_dag.sh`   
+2. `run_scripts/dag_model/hyperopt_02_inten.sh`  
+
 
 ### FFN Spec 
 
 Experiment pipeline utilized:  
-1. *Hyperopt model*: `run_scripts/ffn_model/01_hyperopt_ffn.sh`
-2. *Train models*: `run_scripts/ffn_model/02_run_ffn_train.sh`
-3. *Predict and eval*: `run_scripts/ffn_model/03_predict_ffn.py`
-4. *Retreival experiments*: `run_scripts/ffn_model/04_run_retrieval.py`
-5. *Time ffn*: `run_scripts/ffn_model/05_time_ffn.py`
+1. *Train models*: `run_scripts/ffn_model/01_run_ffn_train.sh`
+2. *Predict and eval*: `run_scripts/ffn_model/02_predict_ffn.py`
+3. *Retreival experiments*: `run_scripts/ffn_model/03_run_retrieval.py`
+4. *Time ffn*: `run_scripts/ffn_model/04_time_ffn.py`
 
+Hyperopt FFN: `run_scripts/ffn_model/hyperopt_01_ffn.sh`  
+
+
+### Autoregressive baseline
+
+Baseline used to show the effect of successively generating formula, rather
+than decoding with SCARF. 
+
+Experiment pipeline utilized:   
+1. *Train models*: `run_scripts/autoregr_baseline/01_run_autoregr_train.sh`  
+2. *Sweep model*: `run_scripts/autoregr_baseline/02_sweep_autoregr_thresh.py`  
+
+
+Hyperparameter optimization: `run_scripts/autoregr_baseline/hyperopt_01_autoregr.sh`   
 
 ### GNN Spec 
 
 Experiment pipeline:   
-1. *Hyperopt model*: `run_scripts/gnn_model/01_hyperopt_gnn.sh`
-2. *Train models*: `run_scripts/gnn_model/02_run_gnn_train.sh`
-3. *Predict and eval*: `run_scripts/gnn_model/03_predict_gnn.py`
-4. *Retreival experiments*: `run_scripts/gnn_model/04_run_retrieval.py`
-5. *Time gnn*: `run_scripts/gnn_model/05_time_gnn.py`
+
+1. *Train models*: `run_scripts/gnn_model/01_run_gnn_train.sh`
+2. *Predict and eval*: `run_scripts/gnn_model/02_predict_gnn.py`
+3. *Retreival experiments*: `run_scripts/gnn_model/03_run_retrieval.py`
+4. *Time gnn*: `run_scripts/gnn_model/04_time_gnn.py`
+
+Hyperopt GNN:  `run_scripts/gnn_model/hyperopt_01_gnn.sh`
 
 
 ### Massformer
 
-Experiment pipeline:   
-1. *Hyperopt model*: `run_scripts/massformer_pred/01_hyperopt_massformer.sh`
-2. *Train models*: `run_scripts/massformer_pred/02_run_massformer_train.sh`
-3. *Predict and eval*: `run_scripts/massformer_pred/03_predict_massformer.py`
-4. *Retreival experiments*: `run_scripts/massformer_pred/04_run_retrieval.py`
-5. *Time massformer*: `run_scripts/massformer_pred/05_time_gnn.py`
+Experiment pipeline:     
+1. *Train models*: `run_scripts/massformer_model/01_run_massformer_train.sh`  
+2. *Predict and eval*: `run_scripts/massformer_model/02_predict_massformer.py`  
+3. *Retreival experiments*: `run_scripts/massformer_model/03_run_retrieval.py`  
+4. *Time massformer*: `run_scripts/massformer_model/04_time_massformer.py`   
+
+Hyperopt Massformer: `run_scripts/massformer_model/hyperopt_01_massformer.sh`  
 
 
 ### 3DMolMS
@@ -216,11 +241,12 @@ Experiment pipeline:
 We include a baseline implementation of 3DMolMS in which we utilize the same architecture as these authors. We note we do not include collision energy or machines as covariates for consistency with our other implemented models and data processing pipelines, which may affect performance. 
 
 Experiment pipeline:   
-1. *Hyperopt model*: `run_scripts/molnetms/01_hyperopt_ffn.sh`
-2. *Train models*: `run_scripts/molnetms/02_run_ffn_train.sh`
-3. *Predict and eval*: `run_scripts/molnetms/03_predict_ffn.py`
-4. *Retreival experiments*: `run_scripts/molnetms/04_run_retrieval.py`
-5. *Time ffn*: `run_scripts/molnetms/05_time_gnn.py`
+1. *Train models*: `run_scripts/molnetms/01_run_ffn_train.sh`
+2. *Predict and eval*: `run_scripts/molnetms/02_predict_ffn.py`
+3. *Retreival experiments*: `run_scripts/molnetms/03_run_retrieval.py`
+4. *Time 3d mol ms*: `run_scripts/molnetms/04_time_molnetms.py`
+
+Hyperopt 3DMolMS:  `run_scripts/molnetms/hyperopt_01_molnetms.sh`
 
 
 ### GRAFF-MS 
@@ -228,11 +254,12 @@ Experiment pipeline:
 We include a baseline variation of GRAFF-MS in which we utilize a fixed formula vocabulary. We note we do not include collision energy or machines as covariates for consistency with our other implemented models and data processing pipelines, which may affect performance. In addition, because our data does not contain isotopic or varied adduct formula labels, we replace the marginal peak loss with a cosine similarity loss. Pleases see the [original paper](https://arxiv.org/abs/2301.11419) to better understand the release details.
 
 Experiment pipeline:   
-1. *Hyperopt model*: `run_scripts/graff_ms/01_hyperopt_ffn.sh`
-2. *Train models*: `run_scripts/graff_ms/02_run_ffn_train.sh`
-3. *Predict and eval*: `run_scripts/graff_ms/03_predict_ffn.py`
-4. *Retreival experiments*: `run_scripts/graff_ms/04_run_retrieval.py`
-5. *Time ffn*: `run_scripts/graff_ms/05_time_gnn.py`
+1. *Train models*: `run_scripts/graff_ms/01_run_ffn_train.sh`
+2. *Predict and eval*: `run_scripts/graff_ms/02_predict_ffn.py`
+3. *Retreival experiments*: `run_scripts/graff_ms/03_run_retrieval.py`
+4. *Time graff MS*: `run_scripts/graff_ms/04_time_graff_ms.py`
+
+Hyperopt graff ms:  `run_scripts/graff_ms/hyperopt_01_graff_ms.sh`
 
 
 ### CFM-ID
@@ -240,15 +267,21 @@ Experiment pipeline:
 CFM-ID is a well-established fragmentation-based mass spectra prediction model. We include brief instructions for utilizing this tool below
 
 Build docker: 
+
 ```
+
 docker pull wishartlab/cfmid:latest
+
 ```
 
 Make prediction:
+
 ```
+
 . run_scripts/cfm_id/run_cfm_id.py
 . run_scripts/cfm_id/process_cfm.py
 . run_scripts/cfm_id/process_cfm_pred.py
+
 ```
 
 
@@ -258,8 +291,10 @@ As an addiitonal baseline to compare to the generative portion of our scarf
 (thread), we include frequency baselines for generating form subsets:
 
 ```
+
 . run_scripts/freq_baseline/predict_freq.py
 . run_scripts/freq_baseline/predict_rand.py
+
 ```
 
 
@@ -271,8 +306,12 @@ predictios `analysis/form_pred_eval.py` and spectra predictions
 
 Additional analyses used for figure generation were conducted in `notebooks/`.
 
+## Augmentation <a name="augmentation"></a>
 
-## Citation
+A common use case for forward spectrum prediction models is to use the trained model as a surrogate model for augmenting an inverse model (e.g., [MIST](http://github.com/samgoldman97/mist/)). An example workflow for doing this is shown in `run_scripts/iceberg_augmentation`. The target dataset including a labels file, spectrum files, split, and target augmetnation file for prediction should first be coppied into the `data/spec_datasets`. Once this is complete, the runscripts folder can be copied, modified to use the datset of interest, and run. The ideal output will be a single MGF and labels files including the ouptut predictions. 
+
+
+## Citation <a name="citation"></a>
 
 We ask any user of this repository to cite the following works based upon the portion of the repository used:
 

@@ -1,7 +1,6 @@
-""" make_splits.py
+""" Make splits
 
 Make train-test-val splits by compound uniqueness.
-
 
 """
 import argparse
@@ -20,28 +19,47 @@ from ms_pred import common
 
 def get_args():
     args = argparse.ArgumentParser()
-    args.add_argument("--data-dir", default='data/spec_datasets/gnps2015_debug',
-                        help="Data directory")
-    args.add_argument("--label-file",
-                      default='data/spec_datasets/gnps2015_debug/labels.tsv',
-                        help="Path to label file.")
-    args.add_argument("--ionization", type=str, default=None,
-                      help="Ion that the user want to focused on (if applicable)")
-    args.add_argument("--train-frac", type=float, default=0.8,
-                        help="Percentage of validation data out of all training data.")
-    args.add_argument("--val-frac", type=float, default=0.1,
-                        help="Percentage of validation data out of all training data.")
-    args.add_argument("--test-frac", type=float, default=0.1,
-                        help="Percentage of test data out of all data.")
-    args.add_argument("--seed", type=int, default=22,
-                        help="Random seed be reproducible")
-    args.add_argument("--split-name", default=None,
-                        help="split name prefix")
-    args.add_argument("--split-type", default="inchikey",
-                        help="Type of split; normally split on structures",
-                        choices=["inchikey", "scaffold", "fingerprint"]
-                      )
-    args.add_argument("--greedy-pack", default=False,action="store_true")
+    args.add_argument("--data-dir", help="Data directory")
+    args.add_argument(
+        "--label-file",
+        default="data/spec_datasets/gnps2015_debug/labels.tsv",
+        help="Path to label file.",
+    )
+    args.add_argument(
+        "--ionization",
+        type=str,
+        default=None,
+        help="Ion that the user want to focused on (if applicable)",
+    )
+    args.add_argument(
+        "--train-frac",
+        type=float,
+        default=0.8,
+        help="Percentage of validation data out of all training data.",
+    )
+    args.add_argument(
+        "--val-frac",
+        type=float,
+        default=0.1,
+        help="Percentage of validation data out of all training data.",
+    )
+    args.add_argument(
+        "--test-frac",
+        type=float,
+        default=0.1,
+        help="Percentage of test data out of all data.",
+    )
+    args.add_argument(
+        "--seed", type=int, default=22, help="Random seed be reproducible"
+    )
+    args.add_argument("--split-name", default=None, help="split name prefix")
+    args.add_argument(
+        "--split-type",
+        default="inchikey",
+        help="Type of split; normally split on structures",
+        choices=["inchikey", "scaffold", "fingerprint"],
+    )
+    args.add_argument("--greedy-pack", default=False, action="store_true")
     return args.parse_args()
 
 
@@ -70,14 +88,14 @@ def make_splits(args):
         split_suffix = f"split_{seed}.tsv"
 
     if args.ionization is not None:
-        df = df[df['ionization'] == args.ionization]
+        df = df[df["ionization"] == args.ionization]
 
     if split_type == "inchikey":
         obj_set = set(df["inchikey"].values)
         spec_to_obj = dict(df[["spec", "inchikey"]].values)
     elif split_type == "scaffold":
-        smis = df['smiles'].values
-        specs = df['spec'].values
+        smis = df["smiles"].values
+        specs = df["spec"].values
         scaffolds = common.chunked_parallel(smis, get_scaffold)
 
         obj_set = set(scaffolds)
@@ -86,9 +104,9 @@ def make_splits(args):
 
         get_fp = lambda x: common.get_morgan_fp_smi(x, nbits=512)
 
-        #debug_num = 500
-        smis = df['smiles'].values
-        specs = df['spec'].values
+        # debug_num = 500
+        smis = df["smiles"].values
+        specs = df["spec"].values
         fps = common.chunked_parallel(smis, get_fp)
         fps = np.vstack(fps)
 
@@ -100,10 +118,13 @@ def make_splits(args):
 
         print("Running agglom clustering")
         from sklearn.cluster import AgglomerativeClustering
-        model = AgglomerativeClustering(n_clusters=20,
-                                        linkage="complete",
-                                        affinity="precomputed",)
-                                        #affinity=tani_dist,)
+
+        model = AgglomerativeClustering(
+            n_clusters=20,
+            linkage="complete",
+            affinity="precomputed",
+        )
+        # affinity=tani_dist,)
         print("Done agglom clustering")
         clusts = model.fit_predict(tani_dist)
         obj_set = set(clusts)
@@ -116,8 +137,9 @@ def make_splits(args):
     train_frac, val_frac, test_frac = args.train_frac, args.val_frac, args.test_frac
     num_train = int(train_frac * len(spec_to_obj))
     num_val = int(args.val_frac * len(spec_to_obj))
-    num_test = min(len(spec_to_obj) - num_train - num_val,
-                   int(test_frac * len(spec_to_obj)))
+    num_test = min(
+        len(spec_to_obj) - num_train - num_val, int(test_frac * len(spec_to_obj))
+    )
 
     if greedy_pack:
         # Pack low items
@@ -148,7 +170,7 @@ def make_splits(args):
         test = set(full_obj_list[num_train:])
 
         val_fraction = args.val_frac
-        val_num = int(len(train)*val_fraction)
+        val_num = int(len(train) * val_fraction)
         np.random.seed(seed)
         val = set(np.random.choice(list(train), val_num, replace=False))
 
@@ -157,7 +179,7 @@ def make_splits(args):
 
     fold_num = 0
     fold_name = f"Fold_{fold_num}"
-    output_dir = Path(args.data_dir) / 'splits'
+    output_dir = Path(args.data_dir) / "splits"
     if not output_dir.is_dir():
         output_dir.mkdir(exist_ok=True)
 
@@ -165,9 +187,9 @@ def make_splits(args):
     print(f"Num val total formulae: {len(val)}")
     print(f"Num test total formulae: {len(test)}")
 
-    split_data = {'spec': [], fold_name: []}
+    split_data = {"spec": [], fold_name: []}
     for _, row in df.iterrows():
-        spec_fn = row['spec']
+        spec_fn = row["spec"]
         spec_obj = spec_to_obj[spec_fn]
 
         if spec_obj in train:
@@ -178,19 +200,17 @@ def make_splits(args):
             fold = "val"
         else:
             fold = "exclude"
-        split_data['spec'].append(spec_fn)
+        split_data["spec"].append(spec_fn)
         split_data[fold_name].append(fold)
 
-    assert len(split_data['spec']) == df.shape[0]
+    assert len(split_data["spec"]) == df.shape[0]
     assert len(split_data[fold_name]) == df.shape[0]
 
     export_df = pd.DataFrame(split_data)
-    export_df = export_df.sort_values('spec', ascending=True)
-    export_df.to_csv(
-        output_dir / split_suffix , sep='\t', index=False
-    )
+    export_df = export_df.sort_values("spec", ascending=True)
+    export_df.to_csv(output_dir / split_suffix, sep="\t", index=False)
 
 
-if __name__=="__main__":
+if __name__ == "__main__":
     args = get_args()
     make_splits(args)

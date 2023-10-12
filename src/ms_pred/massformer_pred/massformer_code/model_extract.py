@@ -1,9 +1,8 @@
-
 import torch.nn as nn
 import torch.nn.functional as F
 
-class LinearBlock(nn.Module):
 
+class LinearBlock(nn.Module):
     def __init__(self, in_feats, out_feats, dropout=0.1):
         super(LinearBlock, self).__init__()
         self.linear = nn.Linear(in_feats, out_feats)
@@ -15,7 +14,7 @@ class LinearBlock(nn.Module):
 
 
 class NeimsBlock(nn.Module):
-    """ from the NEIMS paper (uses LeakyReLU instead of ReLU) """
+    """from the NEIMS paper (uses LeakyReLU instead of ReLU)"""
 
     def __init__(self, in_dim, out_dim, dropout):
 

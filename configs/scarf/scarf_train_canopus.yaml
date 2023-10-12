@@ -2,22 +2,22 @@ launcher_args: {experiment_name: scarf_canopus_train_public,
   script_name: "src/ms_pred/scarf_pred/train_gen.py",
   slurm_script: launcher_scripts/generic_slurm.sh, 
   launch_method: local,
-  visible_devices: [1]
+  visible_devices: [0]
 }
 universal_args:
   _slurm_args:
-  - {_num_gpu: 1, cpus-per-task: 7, job-name: forward_train, mem-per-cpu: 8G, #nodelist: 'node[1236]',
-    time: '1-18:00:00'}
+  - {_num_gpu: 1, cpus-per-task: 7, job-name: forward_train, mem-per-cpu: 8G, 
+     nodelist: 'node[1236]', time: '1-18:00:00'}
   debug: [false]
   gpu: [true]
 
   seed: [1]
-  num-workers: [10] #[20]
+  num-workers: [10]
   batch-size: [16]
   max-epochs: [200]
 
   dataset-name: [canopus_train_public]
-  split-name: [split_1.tsv] #[split_1.tsv, split_2.tsv, split_3.tsv]
+  split-name: [split_1.tsv]
 
   learning-rate: [0.000577]
   lr-decay-rate: [0.894]
@@ -43,7 +43,14 @@ universal_args:
 
 iterative_args:
   -  split-name: [split_1.tsv]
-     save-dir: [split_1]
+     save-dir: [split_1_rnd1]
+     seed: [1]
+  -  split-name: [split_1.tsv]
+     save-dir: [split_1_rnd2]
+     seed: [2]
+  -  split-name: [split_1.tsv]
+     save-dir: [split_1_rnd3]
+     seed: [3]
 
   #-  split-name: [hyperopt.tsv]
   #   save-dir: [hyperopt]

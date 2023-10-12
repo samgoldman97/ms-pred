@@ -1,4 +1,4 @@
-""" eval_dag_pred.py
+""" DAG prediction evaluation
 
 Use to compare predicted trees to ground truth tree values in terms of coverage
 
@@ -11,9 +11,7 @@ import json
 import argparse
 import yaml
 
-# import sem
 from scipy.stats import sem
-
 import ms_pred.common as common
 
 
@@ -22,10 +20,7 @@ def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--dataset", default="canopus_train_public")
     parser.add_argument("--magma-name", default="magma_outputs")
-    parser.add_argument(
-        "--tree-pred-folder",
-        default="results/2022_12_15_tree_pred/overfit_debug_preds/tree_preds",
-    )
+    parser.add_argument("--tree-pred-folder",)
     parser.add_argument("--outfile", default=None)
     return parser.parse_args()
 
@@ -98,7 +93,6 @@ def main(args):
         # Also calc sem and std
         final_output[f"sem_{k}"] = float(sem(v))
         final_output[f"std_{k}"] = float(np.std(v))
-        
 
     df = pd.DataFrame(output_entries)
     df_grouped = pd.concat(

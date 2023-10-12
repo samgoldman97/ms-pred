@@ -1,4 +1,4 @@
-""" utils.py """
+""" utils """
 import sys
 import copy
 import logging
@@ -8,6 +8,7 @@ from itertools import groupby, islice
 from typing import Tuple, List
 import pandas as pd
 import numpy as np
+from tqdm import tqdm
 
 import ms_pred.common.chem_utils as chem_utils
 
@@ -23,7 +24,7 @@ def get_data_dir(dataset_name: str) -> Path:
 def setup_logger(save_dir, log_name="output.log", debug=False):
     """Create output directory"""
     save_dir = Path(save_dir)
-    save_dir.mkdir(exist_ok=True)
+    save_dir.mkdir(exist_ok=True, parents=True)
     log_file = save_dir / log_name
 
     if debug:
@@ -371,6 +372,7 @@ def bin_spectra(
             [(header, spec array)]
         num_bins (int): Number of discrete bins from [0, upper_limit)
         upper_limit (int): Max m/z to consider featurizing
+        pool_fn (str): Pooling function to use for binning (max or add)
 
     Return:
         np.ndarray of shape [channels, num_bins]
@@ -438,6 +440,7 @@ def bin_mass_results(
 
     Args:
         mass:
+        mass_bins:
     """
     for i, j in mass_bins:
         m_str = f"{i} - {j}"
@@ -455,3 +458,45 @@ def batches_num_chunks(it, num_chunks: int):
     """Consume an iterable in batches of size chunk_size""" ""
     chunk_size = len(it) // num_chunks
     return batches(it, chunk_size)
+
+
+def build_mgf_str(
+    meta_spec_list: List[Tuple[dict, List[Tuple[str, np.ndarray]]]],
+    merge_charges=True,
+    parent_mass_keys=["PEPMASS", "parentmass", "PRECURSOR_MZ"],
+) -> str:
+    """build_mgf_str.
+
+    Args:
+        meta_spec_list (List[Tuple[dict, List[Tuple[str, np.ndarray]]]]): meta_spec_list
+
+    Returns:
+        str:
+    """
+    entries = []
+    for meta, spec in tqdm(meta_spec_list):
+        str_rows = ["BEGIN IONS"]
+
+        # Try to add precusor mass
+        for i in parent_mass_keys:
+            if i in meta:
+                pep_mass = float(meta.get(i, -100))
+                str_rows.append(f"PEPMASS={pep_mass}")
+                break
+
+        for k, v in meta.items():
+            str_rows.append(f"{k.upper().replace(' ', '_')}={v}")
+
+        if merge_charges:
+            spec_ar = np.vstack([i[1] for i in spec])
+            spec_ar = np.vstack([i for i in sorted(spec_ar, key=lambda x: x[0])])
+        else:
+            raise NotImplementedError()
+        str_rows.extend([f"{i} {j}" for i, j in spec_ar])
+        str_rows.append("END IONS")
+
+        str_out = "\n".join(str_rows)
+        entries.append(str_out)
+
+    full_out = "\n\n".join(entries)
+    return full_out

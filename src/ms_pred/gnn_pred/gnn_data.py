@@ -11,7 +11,7 @@ import ms_pred.common as common
 
 
 class BinnedDataset(Dataset):
-    """SmiDataset."""
+    """BinnedDataset."""
 
     def __init__(
         self,
@@ -192,7 +192,7 @@ class MolDataset(Dataset):
         else:
             self.mols = common.chunked_parallel(
                 self.smiles,
-                Chem.MolFromSmiles,
+                lambda x: Chem.MolFromSmiles(x),
                 chunks=100,
                 max_cpu=self.num_workers,
                 timeout=4000,

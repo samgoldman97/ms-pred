@@ -2,12 +2,12 @@ launcher_args: {experiment_name: gnn_baseline_canopus_train_public,
   script_name: "src/ms_pred/gnn_pred/train.py",
   slurm_script: launcher_scripts/generic_slurm.sh, 
   launch_method: local,
-  visible_devices: [1],
+  visible_devices: [3],
 }
 universal_args:
   _slurm_args:
-  - {_num_gpu: 1, cpus-per-task: 7, job-name: forward_train, mem-per-cpu: 8G, #nodelist: 'node[1236]',
-    time: '1-18:00:00'}
+  - {_num_gpu: 1, cpus-per-task: 7, job-name: forward_train, mem-per-cpu: 8G, 
+     nodelist: 'node[1236]', time: '1-18:00:00'}
   debug: [false]
   gpu: [true]
 
@@ -39,4 +39,13 @@ universal_args:
 
 iterative_args:
   -  split-name: [split_1.tsv]
-     save-dir: [split_1]
+     save-dir: [split_1_rnd1]
+     seed: [1]
+
+  -  split-name: [split_1.tsv]
+     save-dir: [split_1_rnd2]
+     seed: [2]
+
+  -  split-name: [split_1.tsv]
+     save-dir: [split_1_rnd3]
+     seed: [3]

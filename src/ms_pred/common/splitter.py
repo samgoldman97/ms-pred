@@ -10,13 +10,11 @@ import pandas as pd
 def get_splits(
     names: List[str],
     split_file: str,
-    val_frac: float = 0.1,
 ) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
     """get_splits.
     Args:
         names (List[str]): Names to be split
         split_file (str): Split file
-        val_frac (float): Fraction of validation
     Return:
         Train, val, test indices
     """
@@ -25,11 +23,20 @@ def get_splits(
         logging.info(f"Unable to find {split_file}")
         raise ValueError()
 
-    # Resetting num folds to 10 regardless
     split_df = pd.read_csv(split_file, sep="\t")
 
     folds = set(split_df.columns)
-    folds.remove("spec")
+
+    # Compatibility across split types
+    if "spec" in folds:
+        spec_key = "spec"
+        folds.remove("spec")
+    elif "name" in folds:
+        spec_key = "name"
+        folds.remove("name")
+    else:
+        raise ValueError()
+
     num_folds = len(folds)
     folds = sorted(list(folds))
     if len(folds) == 0:
@@ -47,20 +54,20 @@ def get_splits(
     test_entries = fold_entries == "test"
     train_inds = [
         names_to_index.get(i)
-        for i in split_df["spec"][train_entries]
+        for i in split_df[spec_key][train_entries]
         if i in names_to_index
     ]
     test_inds = np.array(
         [
             names_to_index.get(i)
-            for i in split_df["spec"][test_entries]
+            for i in split_df[spec_key][test_entries]
             if i in names_to_index
         ]
     )
     val_inds = np.array(
         [
             names_to_index.get(i)
-            for i in split_df["spec"][val_entries]
+            for i in split_df[spec_key][val_entries]
             if i in names_to_index
         ]
     )

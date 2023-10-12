@@ -259,14 +259,14 @@ def main(args):
         ["mass_bin", "ion"], [outfile_grouped_mass, outfile_grouped_ion]
     ):
         df_grouped = pd.concat(
-            [df.groupby(group_key).mean(), df.groupby(group_key).size()], 1
+            [df.groupby(group_key).mean(numeric_only=True), df.groupby(group_key).size()], axis=1
         )
         df_grouped = df_grouped.rename({0: "num_examples"}, axis=1)
 
-        all_mean = df.mean()
+        all_mean = df.mean(numeric_only=True)
         all_mean["num_examples"] = len(df)
         all_mean.name = "avg"
-        df_grouped = df_grouped.append(all_mean)
+        df_grouped = pd.concat([df_grouped, all_mean.to_frame().T], axis=0)
         df_grouped.to_csv(out_name, sep="\t")
 
     with open(outfile, "w") as fp:

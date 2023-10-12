@@ -66,7 +66,7 @@ def score_function(config, base_args, orig_dir=""):
     atom_feats = graph_featurizer.atom_feats
     bond_feats = graph_featurizer.bond_feats
 
-    subform_stem = kwargs['form_dir_name']
+    subform_stem = kwargs["form_dir_name"]
     subformula_folder = Path(data_dir) / "subformulae" / subform_stem
     form_map = {i.stem: Path(i) for i in subformula_folder.glob("*.json")}
     graph_featurizer = nn_utils.MolDGLGraph(pe_embed_k=kwargs["pe_embed_k"])
@@ -92,10 +92,10 @@ def score_function(config, base_args, orig_dir=""):
     )
     logging.info("Constructing form dict")
     # Losses will be negatives and others will be positives
-    num_fixed_forms = kwargs['num_fixed_forms']
+    num_fixed_forms = kwargs["num_fixed_forms"]
     top_forms = train_dataset.get_top_forms()
-    num_fixed_forms = min(num_fixed_forms, len(top_forms['forms']))
-    fixed_forms = top_forms['forms'][:num_fixed_forms]
+    num_fixed_forms = min(num_fixed_forms, len(top_forms["forms"]))
+    fixed_forms = top_forms["forms"][:num_fixed_forms]
     logging.info("Done constructing form dict")
 
     # Define dataloaders
@@ -137,7 +137,7 @@ def score_function(config, base_args, orig_dir=""):
         num_bond_feats=graph_featurizer.num_bond_feats,
         lr_decay_rate=kwargs["lr_decay_rate"],
         embed_adduct=kwargs["embed_adduct"],
-        num_fixed_forms=num_fixed_forms
+        num_fixed_forms=num_fixed_forms,
     )
     model.set_fixed_forms(fixed_forms)
 
@@ -201,8 +201,7 @@ def get_param_space(trial):
     trial.suggest_categorical("pool_op", ["avg", "attn"])
     trial.suggest_categorical("mpnn_type", ["GGNN"])
     trial.suggest_categorical("embed_adduct", [True])
-    trial.suggest_categorical("num_fixed_forms", [1000, 5000, 10000, 25000,
-                                                  50000])
+    trial.suggest_categorical("num_fixed_forms", [1000, 5000, 10000, 25000, 50000])
 
 
 def get_initial_points() -> List[Dict]:
@@ -226,7 +225,7 @@ def get_initial_points() -> List[Dict]:
         "use_reverse": True,
         "mpnn_type": "GGNN",  # "GINE",
         "embed_adduct": True,
-        "num_fixed_forms": 10000
+        "num_fixed_forms": 10000,
     }
     return [init_base]
 

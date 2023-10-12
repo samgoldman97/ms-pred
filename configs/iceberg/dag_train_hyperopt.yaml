@@ -1,4 +1,4 @@
-launcher_args: {experiment_name: dag_nist_hyperopt, #dag_gen_,
+launcher_args: {experiment_name: dag_nist_hyperopt,
   script_name: "src/ms_pred/dag_pred/train_gen.py",
   slurm_script: launcher_scripts/generic_slurm.sh, 
   launch_method: local,
@@ -6,18 +6,18 @@ launcher_args: {experiment_name: dag_nist_hyperopt, #dag_gen_,
 }
 universal_args:
   _slurm_args:
-  - {_num_gpu: 1, cpus-per-task: 7, job-name: forward_train, mem-per-cpu: 8G, #nodelist: 'node[1236]',
+  - {_num_gpu: 1, cpus-per-task: 7, job-name: forward_train, mem-per-cpu: 8G, 
     time: '1-18:00:00'}
   debug: [false]
   gpu: [true]
 
   seed: [1]
-  num-workers: [16] #[20]
+  num-workers: [16]
   batch-size: [32]
   max-epochs: [200]
 
   dataset-name: [nist20]
-  split-name: [split20] #[split_1.tsv, split_2.tsv, split_3.tsv]
+  split-name: [split20]
 
   learning-rate: [0.000996]
   lr-decay-rate: [0.7214]
@@ -31,7 +31,6 @@ universal_args:
   weight-decay: [0.0]
   layers: [6]
 
-  # Trying to run with FP encoding
   root-encode: [gnn]
   inject-early: [False]
   embed-adduct: [true]

@@ -2,12 +2,12 @@ from rdkit import Chem
 
 from .massformer_code import gf_data_utils
 
+
 class MassformerGraphFeaturizer:
     """
     Thin wrapper over Massformer code to match the API we were using for graph featurizer.
     Note that Massformer makes use of Pytorch Geometric Graph datastructures.
     """
-
 
     def __call__(self, input_molecule: Chem.Mol):
         out = gf_data_utils.gf_preprocess(input_molecule, 0, "algos2")

@@ -4,8 +4,8 @@ import pandas as pd
 
 dataset = "nist20"
 data_path = Path(f"data/spec_datasets/{dataset}")
-labels = data_path / 'labels.tsv'
-out = data_path.parent / 'sample_labels.tsv'
+labels = data_path / "labels.tsv"
+out = data_path.parent / "sample_labels.tsv"
 num_sample = 100
 
 df = pd.read_csv(labels, sep="\t")

@@ -1,3 +1,10 @@
+"""tune_utils.
+
+Minor change to TuneReportCallback such that it can report the best metric value
+so far, rather than the last metric after model patience has stopped the
+training run.
+
+"""
 import logging
 from typing import Dict, List, Optional, Union
 

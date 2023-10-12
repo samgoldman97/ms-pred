@@ -11,37 +11,38 @@ import dgl
 
 import ms_pred.common as common
 
+
 def array_to_string(array):
     """
     Converts a 1D NumPy array into a string.
-    
+
     Args:
-    	array: 1D NumPy array
-    
+        array: 1D NumPy array
+
     Returns:
-		str_array: String representation of the array
+                str_array: String representation of the array
     """
-    str_array = np.array2string(array, separator=',')
+    str_array = np.array2string(array, separator=",")
     return str_array
 
 
 def string_to_array(str_array):
     """
     Converts a string representation of a 1D NumPy array back into the array.
-    
+
     Args:
-		str_array: String representation of the array
-    
+                str_array: String representation of the array
+
     Returns:
-    	array: 1D NumPy array
+        array: 1D NumPy array
     """
-    array = np.fromstring(str_array[1:-1], sep=',')
+    array = np.fromstring(str_array[1:-1], sep=",")
     return array
 
 
 def extract_single_dict(entry):
-    root = entry['root_form']
-    intens, new_forms = entry['intens'], entry['formulae']
+    root = entry["root_form"]
+    intens, new_forms = entry["intens"], entry["formulae"]
     freqs = defaultdict(lambda: 0)
     dense_forms = np.vstack([common.formula_to_dense(i) for i in new_forms])
     base_form = common.formula_to_dense(root)
@@ -54,6 +55,7 @@ def extract_single_dict(entry):
         freqs[array_to_string(i)] += inten
 
     return freqs
+
 
 def merge_diffs(diff_list):
     """merge_diffs.
@@ -69,15 +71,12 @@ def merge_diffs(diff_list):
     return freq_diffs
 
 
-def process_form_file(
-    form_dict_file,
-    upper_limit,
-    num_bins
-):
+def process_form_file(form_dict_file, upper_limit, num_bins):
     """process_form_file."""
     if form_dict_file is None or not form_dict_file.exists():
         return None
-    form_dict = json.load(open(form_dict_file, "r"))
+    with open(form_dict_file, "r") as fp:
+        form_dict = json.load(fp)
     root_form = form_dict["cand_form"]
     out_tbl = form_dict["output_tbl"]
 
@@ -98,14 +97,17 @@ def process_form_file(
     out_inten = new_out
 
     out_dict = dict(
-        root_form=root_form, intens=intens, formulae=formulae, 
-        raw_spec=raw_spec, raw_binned=out_inten
+        root_form=root_form,
+        intens=intens,
+        formulae=formulae,
+        raw_spec=raw_spec,
+        raw_binned=out_inten,
     )
     return out_dict
 
 
 class BinnedDataset(Dataset):
-    """SmiDataset."""
+    """BinnedDataset."""
 
     def __init__(
         self,
@@ -232,8 +234,7 @@ class BinnedDataset(Dataset):
             common.ion2onehot_pos[self.name_to_adduct[i]] for i in self.spec_names
         ]
 
-
-    def get_top_forms(self): 
+    def get_top_forms(self):
         all_freqs = []
         for i in self.spec_names:
             entry = self.name_to_forms[i]
@@ -248,10 +249,8 @@ class BinnedDataset(Dataset):
         forms = forms[new_order]
         return {"forms": forms, "cts": cts}
 
-
     def __len__(self):
         return len(self.spec_names)
-
 
     def __getitem__(self, idx: int):
         name = self.spec_names[idx]
@@ -260,16 +259,16 @@ class BinnedDataset(Dataset):
         graph = self.name_to_mols[name]
         spec_form_obj = self.name_to_forms[name]
 
-        ar = spec_form_obj['raw_binned']
+        ar = spec_form_obj["raw_binned"]
         adduct = self.adducts[idx]
 
         outdict = {
             "name": name,
-            "root_form": common.formula_to_dense(spec_form_obj['root_form']),
+            "root_form": common.formula_to_dense(spec_form_obj["root_form"]),
             "binned": ar,
             "adduct": adduct,
             "graph": graph,
-            "smiles": smiles
+            "smiles": smiles,
         }
         return outdict
 
@@ -331,7 +330,7 @@ class MolDataset(Dataset):
         else:
             self.mols = common.chunked_parallel(
                 self.smiles,
-                Chem.MolFromSmiles,
+                lambda x: Chem.MolFromSmiles(x),
                 chunks=100,
                 max_cpu=self.num_workers,
                 timeout=4000,
@@ -391,7 +390,7 @@ class MolDataset(Dataset):
         adducts = [j["adduct"] for j in input_list]
         adducts = torch.FloatTensor(adducts)
 
-        full_forms = torch.FloatTensor([j['root_form'] for j in input_list])
+        full_forms = torch.FloatTensor([j["root_form"] for j in input_list])
         batched_graph = dgl.batch(graphs)
         return_dict = {
             "graphs": batched_graph,

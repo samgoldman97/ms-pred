@@ -1,6 +1,6 @@
 """gnn_hyperopt.py
 
-Hyperopt parameters for FFN model
+Hyperopt parameters for GNN model
 
 """
 import os
@@ -190,7 +190,7 @@ def get_param_space(trial):
 
 
 def get_initial_points() -> List[Dict]:
-    """get_intiial_points.
+    """get_initial_points.
 
     Create dictionaries defining initial configurations to test
 

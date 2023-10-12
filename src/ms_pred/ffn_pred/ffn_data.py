@@ -9,7 +9,7 @@ import ms_pred.common as common
 
 
 class BinnedDataset(Dataset):
-    """SmiDataset."""
+    """BinnedDataset."""
 
     def __init__(
         self,
@@ -22,6 +22,17 @@ class BinnedDataset(Dataset):
         use_ray=False,
         **kwargs,
     ):
+        """__init__ _summary_
+
+        Args:
+            df (_type_): _description_
+            data_dir (_type_): _description_
+            num_bins (_type_): _description_
+            num_workers (int, optional): _description_. Defaults to 0.
+            upper_limit (int, optional): _description_. Defaults to 1500.
+            form_dir_name (str, optional): _description_. Defaults to "subform_50".
+            use_ray (bool, optional): _description_. Defaults to False.
+        """
         self.df = df
         self.num_bins = num_bins
         self.num_workers = num_workers

@@ -1,4 +1,4 @@
-""" spec_pred_eval.py
+""" Spectrum prediction evaluation
 
 Use to compare binned predictions to ground truth spec values
 
@@ -18,14 +18,25 @@ from scipy.stats import sem
 import ms_pred.common as common
 
 
+def cos_sim_fn(pred_ar, true_spec):
+    """cos_sim_fn.
+
+    Args:
+        pred_ar:
+        true_spec:
+    """
+    norm_pred = max(norm(pred_ar), 1e-6)
+    norm_true = max(norm(true_spec), 1e-6)
+    cos_sim = np.dot(pred_ar, true_spec) / (norm_pred * norm_true)
+    return cos_sim
+
+
 def get_args():
     """get_args."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--dataset", default="canopus_train_public")
     parser.add_argument("--formula-dir-name", default="subform_20")
-    parser.add_argument(
-        "--binned-pred-file", default="results/2022_12_18_ffn_pred/fp_preds.p"
-    )
+    parser.add_argument("--binned-pred-file")
     parser.add_argument("--outfile", default=None)
     parser.add_argument(
         "--min-inten",
@@ -111,13 +122,10 @@ def main(args):
         new_pred[pos_bins] = pred_ar[pos_bins]
         pred_ar = new_pred
 
-        norm_pred = max(norm(pred_ar), 1e-6)
-        norm_true = max(norm(true_spec), 1e-6)
-        cos_sim = np.dot(pred_ar, true_spec) / (norm_pred * norm_true)
+        cos_sim = cos_sim_fn(pred_ar, true_spec)
         mse = np.mean((pred_ar - true_spec) ** 2)
 
         # Compute validity
-
         # Get all possible bins that would be valid
         if pred_smi is not None:
             true_form = common.form_from_smi(pred_smi)
@@ -127,10 +135,19 @@ def main(args):
             )
             smiles_mass = common.mass_from_smi(pred_smi)
             ikey = common.inchikey_from_smiles(pred_smi)
+
+            max_possible_bin = np.max(possible)
+
         else:
             possible = []
             smiles_mass = 0
+            max_possible_bin = 0
             ikey = ""
+
+        copy_pred, copy_true = np.copy(pred_ar), np.copy(true_spec)
+        copy_pred[max_possible_bin] = 0
+        copy_true[max_possible_bin] = 0
+        cos_sim_zero_pep = cos_sim_fn(copy_pred, copy_true)
 
         possible_set = set(possible)
         pred_set = set(pos_bins)
@@ -143,11 +160,6 @@ def main(args):
             frac_valid = 1.0
         else:
             frac_valid = len(overlap) / len(pred_set)
-
-        # Bin 2420 from pred set
-        # 2421 in the possible set, grrr. Must be a boundary decision?
-        # nist_3143557
-        # mass n;umber 3854, masss 242.01614gt
 
         # Compute true overlap
         true_inds = np.argwhere(true_spec > min_inten).flatten()
@@ -165,6 +177,7 @@ def main(args):
             "name": pred_spec,
             "inchi": ikey,
             "cos_sim": float(cos_sim),
+            "cos_sim_zero_pep": float(cos_sim_zero_pep),
             "mse": float(mse),
             "frac_valid": float(frac_valid),
             "overlap_coeff": float(overlap_coeff),
@@ -177,6 +190,7 @@ def main(args):
 
         output_entries.append(output_entry)
         running_lists["cos_sim"].append(cos_sim)
+        running_lists["cos_sim_zero_pep"].append(cos_sim_zero_pep)
         running_lists["mse"].append(mse)
         running_lists["frac_valid"].append(frac_valid)
         running_lists["overlap_coeff"].append(overlap_coeff)
@@ -198,14 +212,14 @@ def main(args):
 
     df = pd.DataFrame(output_entries)
     df_grouped = pd.concat(
-        [df.groupby("mass_bin").mean(), df.groupby("mass_bin").size()], 1
+        [df.groupby("mass_bin").mean(numeric_only=True), df.groupby("mass_bin").size()], axis=1
     )
     df_grouped = df_grouped.rename({0: "num_examples"}, axis=1)
 
-    all_mean = df.mean()
+    all_mean = df.mean(numeric_only=True)
     all_mean["num_examples"] = len(df)
     all_mean.name = "avg"
-    df_grouped = df_grouped.append(all_mean)
+    df_grouped = pd.concat([df_grouped, all_mean.to_frame().T], axis=0)
     df_grouped.to_csv(outfile_grouped, sep="\t")
 
     with open(outfile, "w") as fp:

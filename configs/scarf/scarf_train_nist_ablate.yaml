@@ -1,23 +1,23 @@
 launcher_args: {experiment_name: scarf_nist20_ablate,
   script_name: "src/ms_pred/scarf_pred/train_gen.py",
   slurm_script: launcher_scripts/generic_slurm.sh, 
-  launch_method: local_parallel,
-  visible_devices: [1, 2]
+  launch_method: local,
+  visible_devices: [0]
 }
 universal_args:
   _slurm_args:
-  - {_num_gpu: 1, cpus-per-task: 7, job-name: forward_train, mem-per-cpu: 8G, #nodelist: 'node[1236]',
-    time: '1-18:00:00'}
+  - {_num_gpu: 1, cpus-per-task: 7, job-name: forward_train, mem-per-cpu: 8G, 
+     nodelist: 'node[1236]', time: '1-18:00:00'}
   debug: [false]
   gpu: [true]
 
   seed: [1]
-  num-workers: [10] #[20]
+  num-workers: [10]
   batch-size: [16]
   max-epochs: [200]
 
   dataset-name: [nist20]
-  split-name: [split_1.tsv] #[split_1.tsv, split_2.tsv, split_3.tsv]
+  split-name: [split_1.tsv]
 
   learning-rate: [0.000577]
   lr-decay-rate: [0.894]
@@ -52,8 +52,3 @@ iterative_args:
      save-dir: [forward]
      use-reverse: [false]
      no-forward: [false]
-
-     #-  split-name: [split_1.tsv]
-     #   save-dir: [both]
-     #   use-reverse: [false]
-     #   no-forward: [false]

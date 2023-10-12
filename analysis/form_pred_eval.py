@@ -1,4 +1,4 @@
-""" form_pred_eval.py
+""" Formula prediction evaluation
 
 Use to compare scarf predicted formula to actual formulae
 
@@ -24,10 +24,7 @@ def get_args():
         default="magma_outputs",
     )
     parser.add_argument("--num-bins", default=15000, type=int)
-    parser.add_argument(
-        "--tree-pred-folder",
-        default="results/2022_12_15_tree_pred/overfit_debug_preds/tree_preds",
-    )
+    parser.add_argument("--tree-pred-folder",)
     parser.add_argument("--outfile", default=None)
     return parser.parse_args()
 
@@ -99,9 +96,11 @@ def main(args):
 
         total_true_inten = np.sum(true_intens)
         overlap_inten = np.sum(
-            [true_form_to_inten[i]
-             for i in true_form_to_inten
-             if i in pred_frag_forms_set]
+            [
+                true_form_to_inten[i]
+                for i in true_form_to_inten
+                if i in pred_frag_forms_set
+            ]
         )
         inten_covg = float(overlap_inten / (total_true_inten + 1e-22))
 
@@ -138,7 +137,7 @@ def main(args):
         dict(pred_tree=pred_tree, data_folder=data_folder) for pred_tree in pred_trees
     ]
     eval_fn = lambda x: eval_item(**x)
-    #output_entries = [eval_fn(i) for i in eval_entries]
+    # output_entries = [eval_fn(i) for i in eval_entries]
     output_entries = common.chunked_parallel(eval_entries, eval_fn)
     output_entries = [i for i in output_entries if i is not None]
 

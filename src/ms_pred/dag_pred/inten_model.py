@@ -1,4 +1,4 @@
-"""frag_model."""
+"""DAG intensity prediction model."""
 import numpy as np
 import copy
 import torch
@@ -198,7 +198,6 @@ class IntenGNN(pl.LightningModule):
         Args:
             pred:
             targ:
-            optionlens:
         """
         if not self.binned_targs:
             raise ValueError()
@@ -221,25 +220,27 @@ class IntenGNN(pl.LightningModule):
         frag_forms=None,
         binned_out=False,
     ) -> dict:
-        """predict.
+        """predict _summary_
 
         Args:
-            graphs:
-            root_reprs:
-            ind_maps:
-            num_frags:
-            max_breaks:
-            adducts
-            max_add_hs:
-            max_remove_hs:
-            masses
-            root_forms
-            frag_forms
-            binned_out
+            graphs (_type_): _description_
+            root_reprs (_type_): _description_
+            ind_maps (_type_): _description_
+            num_frags (_type_): _description_
+            max_breaks (_type_): _description_
+            adducts (_type_): _description_
+            max_add_hs (_type_, optional): _description_. Defaults to None.
+            max_remove_hs (_type_, optional): _description_. Defaults to None.
+            masses (_type_, optional): _description_. Defaults to None.
+            root_forms (_type_, optional): _description_. Defaults to None.
+            frag_forms (_type_, optional): _description_. Defaults to None.
+            binned_out (bool, optional): _description_. Defaults to False.
 
+        Raises:
+            NotImplementedError: _description_
 
         Returns:
-            dict:
+            dict: _description_
         """
         # B x nodes x num outputs x inten items
         out = self.forward(
@@ -295,20 +296,26 @@ class IntenGNN(pl.LightningModule):
         root_forms=None,
         frag_forms=None,
     ):
-        """predict spec from graphs
+        """forward _summary_
 
         Args:
-            graphs: DGL Graphs of all mols in batch
-            root_reprs
-            ind_maps: Mapping to pair graphs to root graphs (allows parallel)
-            num_frags: Number of fragments
-            broken: num bonds broken
-            adducts
-            max_add_hs
-            max_remove_hs
-            masses
-            root_forms
-            frag_forms
+            graphs (_type_): _description_
+            root_repr (_type_): _description_
+            ind_maps (_type_): _description_
+            num_frags (_type_): _description_
+            broken (_type_): _description_
+            adducts (_type_): _description_
+            max_add_hs (_type_, optional): _description_. Defaults to None.
+            max_remove_hs (_type_, optional): _description_. Defaults to None.
+            masses (_type_, optional): _description_. Defaults to None.
+            root_forms (_type_, optional): _description_. Defaults to None.
+            frag_forms (_type_, optional): _description_. Defaults to None.
+
+        Raises:
+            NotImplementedError: _description_
+
+        Returns:
+            _type_: _description_
         """
         device = num_frags.device
 

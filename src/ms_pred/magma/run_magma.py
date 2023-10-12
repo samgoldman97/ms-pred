@@ -403,6 +403,7 @@ def run_magma_augmentation(
     spec_labels: str,
     max_peaks: int,
     debug: bool = False,
+    ppm_diff: int  = 20,
 ):
     """run_magma_augmentation.
 
@@ -413,6 +414,7 @@ def run_magma_augmentation(
         output_dir (str): output_dir
         spec_labels (str): spec_labels
         max_peaks (int): max_peaks
+        ppm_diff (int): PPM diff threshold
     """
     logging.info("Create magma spectra files")
     output_dir = Path(output_dir)
@@ -432,6 +434,7 @@ def run_magma_augmentation(
         spec_to_adduct,
         max_peaks=max_peaks,
         debug=debug,
+        ppm_diff=ppm_diff,
     )
     if debug:
         [partial_aug_safe(i) for i in tqdm(ms_files)]
@@ -461,6 +464,12 @@ def get_args():
         "--max-peaks",
         default=20,
         help="Maximum number of peaks",
+        type=int,
+    )
+    parser.add_argument(
+        "--ppm-diff",
+        default=20,
+        help="PPM threshold difference",
         type=int,
     )
     parser.add_argument("--debug", default=False, action="store_true")

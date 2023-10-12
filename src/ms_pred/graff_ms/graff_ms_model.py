@@ -1,4 +1,4 @@
-""" gnn_model. """
+""" GRAFF MS model. """
 import torch
 import pytorch_lightning as pl
 import numpy as np
@@ -45,27 +45,35 @@ class GraffGNN(pl.LightningModule):
         num_fixed_forms: int = 10000,
         **kwargs,
     ):
-        """__init__.
+        """__init__ _summary_
+
         Args:
-            hidden_size (int): Hidden size
-            layers (int): Num layers
-            dropout (float): Amount of dropout
-            learning_rate (float): Learning rate
-            lr_decay_rate (float): LR decay rate
-            output_dim (int): Output dim of bins
-            upper_limit (int): Max bin size
-            weight_decay
-            loss_fn (str): Name of loss function
-            mpnn_type (str):
-            set_layers (int):
-            atom_feats (list)
-            bond_feats (list)
-            pool_op (str):
-            pe_embed_k (int)
-            num_atom_feats (int):
-            num_bond_feats (int):
-            num_fixed_forms
+            hidden_size (int): _description_
+            layers (int, optional): _description_. Defaults to 2.
+            dropout (float, optional): _description_. Defaults to 0.0.
+            learning_rate (float, optional): _description_. Defaults to 7e-4.
+            lr_decay_rate (float, optional): _description_. Defaults to 1.0.
+            output_dim (int, optional): _description_. Defaults to 1000.
+            upper_limit (int, optional): _description_. Defaults to 1500.
+            weight_decay (float, optional): _description_. Defaults to 0.
+            loss_fn (str, optional): _description_. Defaults to "mse".
+            mpnn_type (str, optional): _description_. Defaults to "GGNN".
+            set_layers (int, optional): _description_. Defaults to 2.
+            atom_feats (list, optional): _description_. Defaults to ( "a_onehot", "a_degree", "a_hybrid", "a_formal", "a_radical", "a_ring", "a_mass", "a_chiral", ).
+            bond_feats (list, optional): _description_. Defaults to ("b_degree",).
+            pool_op (str, optional): _description_. Defaults to "avg".
+            pe_embed_k (int, optional): _description_. Defaults to 0.
+            num_atom_feats (int, optional): _description_. Defaults to 86.
+            num_bond_feats (int, optional): _description_. Defaults to 5.
+            embed_adduct (bool, optional): _description_. Defaults to False.
+            warmup (int, optional): _description_. Defaults to 1000.
+            num_fixed_forms (int, optional): _description_. Defaults to 10000.
+
+        Raises:
+            NotImplementedError: _description_
+            NotImplementedError: _description_
         """
+
         super().__init__()
         self.save_hyperparameters()
         self.hidden_size = hidden_size
@@ -101,11 +109,11 @@ class GraffGNN(pl.LightningModule):
 
         # Define output formulae and bins
         self.fixed_forms = torch.zeros(self.num_fixed_forms, common.CHEM_ELEMENT_NUM)
-        self.fixed_forms = nn.Parameter(self.fixed_forms) 
+        self.fixed_forms = nn.Parameter(self.fixed_forms)
         self.fixed_forms.requires_grad = False
 
         self.is_loss = torch.zeros(self.num_fixed_forms)
-        self.is_loss = nn.Parameter(self.is_loss) 
+        self.is_loss = nn.Parameter(self.is_loss)
         self.is_loss.requires_grad = False
 
         self.weight_mult = torch.from_numpy(common.VALID_MONO_MASSES).float()
@@ -147,22 +155,22 @@ class GraffGNN(pl.LightningModule):
             raise NotImplementedError()
 
         # Gates, reverse, forward
-        self.output_layer = nn.Linear(
-            self.hidden_size, self.num_fixed_forms
-        )
+        self.output_layer = nn.Linear(self.hidden_size, self.num_fixed_forms)
 
-        self.attn_layer = nn.Linear(
-            self.hidden_size, self.num_fixed_forms
-        )
+        self.attn_layer = nn.Linear(self.hidden_size, self.num_fixed_forms)
 
     def set_fixed_forms(self, new_fixed):
         new_val = torch.from_numpy(new_fixed)
-        assert(self.fixed_forms.data.shape == new_val.shape)
+        assert self.fixed_forms.data.shape == new_val.shape
         self.fixed_forms.data = new_val.float()
-        self.is_loss.data = torch.any(new_val < 0, -1).float()
+        bool_1 = torch.any(new_val < 0, -1)
+
+        # If we want to include the ability to predict the precursor
+        bool_2 = torch.all(new_val <= 0, -1)
+        self.is_loss.data = torch.logical_or(bool_1, bool_2).float()
+
         self.is_loss.requires_grad = False
         self.fixed_forms.data.requires_grad = False
-
 
     def cos_loss(self, pred, targ):
         """loss_fn."""
@@ -205,38 +213,40 @@ class GraffGNN(pl.LightningModule):
         batch_size = output.shape[0]
 
         # Predict intens at all formulae
-        #output = torch.sigmoid(self.output_layer(output))
+        # output = torch.sigmoid(self.output_layer(output))
 
         output = self.output_layer(hidden)
         attn_weights = self.attn_layer(hidden)
 
-        # Determine which formulae are valid 
+        # Determine which formulae are valid
         device = output.device
-        batch_size, form_dim  = full_forms.shape
+        batch_size, form_dim = full_forms.shape
 
         is_loss_bool = self.is_loss.bool()
-        out_frags = torch.zeros(self.num_fixed_forms, batch_size, form_dim, 
-                                device=device)
-        out_frags[is_loss_bool] = full_forms[None, :, :]  + self.fixed_forms[is_loss_bool,
-                                                                             None,
-                                                                             :]
-        out_frags[~is_loss_bool] = self.fixed_forms[~is_loss_bool, None, :].repeat(1,batch_size,1)
+        out_frags = torch.zeros(
+            self.num_fixed_forms, batch_size, form_dim, device=device
+        )
+        out_frags[is_loss_bool] = (
+            full_forms[None, :, :] + self.fixed_forms[is_loss_bool, None, :]
+        )
+        out_frags[~is_loss_bool] = self.fixed_forms[~is_loss_bool, None, :].repeat(
+            1, batch_size, 1
+        )
 
         # Check that resulting frags are > 0 and < root
         lb = torch.all(out_frags >= 0, -1)
-        ub = torch.all((full_forms[None, :, :]  - out_frags) >= 0, -1)
+        ub = torch.all((full_forms[None, :, :] - out_frags) >= 0, -1)
         is_valid = torch.logical_and(lb, ub)
-        
-        # Num frags x batch ... => batch x num frags ... 
-        is_valid = is_valid.transpose(0,1)
-        out_frags = out_frags.transpose(0,1)
+
+        # Num frags x batch ... => batch x num frags ...
+        is_valid = is_valid.transpose(0, 1)
+        out_frags = out_frags.transpose(0, 1)
 
         # Get the mass at each new fragment and identify its binned bucket
-        resulting_mass = torch.einsum("ijk, k -> ij", 
-                                      out_frags,
-                                      self.weight_mult)
-        inverse_indices = torch.bucketize(resulting_mass, self.inten_buckets, 
-                                          right=False)
+        resulting_mass = torch.einsum("ijk, k -> ij", out_frags, self.weight_mult)
+        inverse_indices = torch.bucketize(
+            resulting_mass, self.inten_buckets, right=False
+        )
 
         # Compute scatter max into each bucket
         # Mask invalid
@@ -251,46 +261,12 @@ class GraffGNN(pl.LightningModule):
             dim_size=self.inten_buckets.shape[-1],
             dim=-1,
         )
-        # Alternative output construction
-        #    const_neg = -9999999
-        #    output = self.output_layer(hidden)
-        #    attn_weights = self.attn_layer(hidden)
-
-        #    # Mask attention and output
-        #    attn_weights = attn_weights + ~is_valid * const_neg
-        #    output = output + ~is_valid * const_neg
-
-        #    form_attns = ts.scatter_softmax(attn_weights, index=inverse_indices, dim=-1)
-        #    output = form_attns * output
-
-        #    # Scatter and prefill all highly negative numbers except for where
-        #    # we have formula considerations
-        #    base_out = torch.ones(batch_size, self.inten_buckets.shape[-1],
-        #                          device=device) * const_neg
-        #    aranged_ind = torch.arange(batch_size, 
-        #                               device=device)[:, None].repeat(1, 
-        #                                                              inverse_indices.shape[-1])
-        #    base_out[aranged_ind, inverse_indices] = 0
-
-        #    # B x Outs x Unique inds
-        #    output = ts.scatter_add(
-        #        output,
-        #        index=inverse_indices,
-        #        out = base_out,
-        #        dim=-1,
-        #    )
-
-        #    output = torch.sigmoid(output)
-
-
-        assert (self.num_outputs == 1)
+        assert self.num_outputs == 1
         output = output.reshape(batch_size, 1, -1)
         return output
 
     def _common_step(self, batch, name="train"):
-        pred_spec = self.forward(
-            batch["graphs"], batch['full_forms'], batch["adducts"]
-        )
+        pred_spec = self.forward(batch["graphs"], batch["full_forms"], batch["adducts"])
         loss_dict = self.loss_fn(pred_spec, batch["spectra"])
         self.log(f"{name}_loss", loss_dict.get("loss"))
         for k, v in loss_dict.items():

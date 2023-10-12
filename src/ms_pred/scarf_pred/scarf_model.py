@@ -17,7 +17,7 @@ import dgl
 import ms_pred.common as common
 import ms_pred.nn_utils as nn_utils
 
-import ms_pred.massformer_pred._massformer_graph_featurizer as mformer 
+import ms_pred.massformer_pred._massformer_graph_featurizer as mformer
 
 import ms_pred.massformer_pred.massformer_code.gf_model as gf_model
 
@@ -63,33 +63,42 @@ class ScarfNet(pl.LightningModule):
         embed_adduct: bool = False,
         **kwargs,
     ):
-        """__init__.
+        """__init__ _summary_
 
         Args:
-            formula_dim (int): formula_dim
-            hidden_size (int): hidden_size
-            layers (int): layers
-            dropout (float): dropout
-            learning_rate (float): learning_rate
-            lr_decay_rate (float): lr_decay_rate
-            weight_decay (float): weight_decay
-            loss_fn (str): loss_fn
-            mpnn_type (str): mpnn_type
-            set_layers (int): set_layers
-            atom_feats (list): atom_feats
-            bond_feats (list): bond_feats
-            pool_op (str): pool_op
-            pe_embed_k (int): pe_embed_k
-            num_atom_feats (int): num_atom_feats
-            num_bond_feats (int): num_bond_feats
-            use_reverse (bool): Use reverse
-            no_forward (bool): If true and use_reverse, don't use forward preds
-                Helpful for computing ablations.. Can be abstracted to have
-                "use_reverse" be a flag ("both", "reverse", "forward")
-            embedder (str): the embedder to use: bianry, fourier, rbf, one-hot
-            use_tbc: use to be confirmed token in options and diffs
-            kwargs:
+            formula_dim (int): _description_
+            hidden_size (int): _description_
+            gnn_layers (int, optional): _description_. Defaults to 2.
+            mlp_layers (int, optional): _description_. Defaults to 2.
+            set_layers (int, optional): _description_. Defaults to 2.
+            dropout (float, optional): _description_. Defaults to 0.0.
+            learning_rate (float, optional): _description_. Defaults to 7e-4.
+            lr_decay_rate (float, optional): _description_. Defaults to 1.0.
+            weight_decay (float, optional): _description_. Defaults to 0.
+            mpnn_type (str, optional): _description_. Defaults to "GGNN".
+            atom_feats (list, optional): _description_. Defaults to ( "a_onehot", "a_degree", "a_hybrid", "a_formal", "a_radical", "a_ring", "a_mass", "a_chiral", ).
+            bond_feats (list, optional): _description_. Defaults to ("b_degree",).
+            pool_op (str, optional): _description_. Defaults to "avg".
+            pe_embed_k (int, optional): _description_. Defaults to 0.
+            num_atom_feats (int, optional): _description_. Defaults to 86.
+            num_bond_feats (int, optional): _description_. Defaults to 5.
+            loss_fn (str, optional): _description_. Defaults to "mse".
+            warmup (int, optional): _description_. Defaults to 1000.
+            use_reverse (bool, optional): _description_. Defaults to False.
+            no_forward (bool, optional): _description_. Defaults to False.
+            embedder (str, optional): _description_. Defaults to "abs-sines".
+            use_tbc (bool, optional): _description_. Defaults to True.
+            root_embedder (str, optional): _description_. Defaults to "gnn".
+            info_join (str, optional): _description_. Defaults to "concat".
+            embed_adduct (bool, optional): _description_. Defaults to False.
+
+        Raises:
+            NotImplementedError: _description_
+            NotImplementedError: _description_
+            NotImplementedError: _description_
+            NotImplementedError: _description_
         """
+
         super().__init__()
         self.save_hyperparameters()
 
@@ -168,11 +177,10 @@ class ScarfNet(pl.LightningModule):
                 gf_pretrain_name="pcqm4mv2_graphormer_base",
                 fix_num_pt_layers=0,
                 reinit_num_pt_layers=-1,
-                reinit_layernorm=True
+                reinit_layernorm=True,
             )
             embed_dim = self.root_embed_module.get_embed_dim()
-            self.embed_to_hidden = nn.Linear(embed_dim + adduct_shift, 
-                                             self.hidden_size)
+            self.embed_to_hidden = nn.Linear(embed_dim + adduct_shift, self.hidden_size)
 
         else:
             raise NotImplementedError()
@@ -867,13 +875,12 @@ class ScarfIntenNet(pl.LightningModule):
                 gf_model_name="graphormer_base",
                 gf_pretrain_name="pcqm4mv2_graphormer_base",
                 fix_num_pt_layers=0,
-                #reinit_num_pt_layers=-1,
+                # reinit_num_pt_layers=-1,
                 reinit_num_pt_layers=-1,
-                reinit_layernorm=True
+                reinit_layernorm=True,
             )
             embed_dim = self.root_embed_module.get_embed_dim()
-            self.embed_to_hidden = nn.Linear(embed_dim + adduct_shift, 
-                                             self.hidden_size)
+            self.embed_to_hidden = nn.Linear(embed_dim + adduct_shift, self.hidden_size)
         else:
             raise NotImplementedError()
 
@@ -1121,40 +1128,23 @@ class ScarfIntenNet(pl.LightningModule):
         diffs: torch.FloatTensor,
         num_forms: torch.LongTensor,
         adducts: torch.LongTensor,
-    ):
-        """forward_switch.
-
-        Args:
-            graphs (dgl.graph): graphs
-            formulae (torch.FloatTensor): formulae
-            diffs (torch.FloatTensor): diffs
-            num_forms (torch.LongTensor): num_forms
-        """
-        return self.forward_switch(
-            graphs, formulae, diffs, num_forms, adducts, self.binned_targs
-        )
-
-    def forward_switch(
-        self,
-        graphs: dgl.graph,
-        formulae: torch.FloatTensor,
-        diffs: torch.FloatTensor,
-        num_forms: torch.LongTensor,
-        adducts: torch.LongTensor,
         binned_targs: bool = False,
     ):
-        """forward_switch.
+        """forward.
 
         Args:
             graphs (dgl.graph): graphs
             formulae (torch.FloatTensor): formulae
             diffs (torch.FloatTensor): diffs
             num_forms (torch.LongTensor): num_forms
+            adducts: (torch.LongTensor): adducts
+            binned_targs (bool): Binned targs 
         """
         if binned_targs:
             return self.forward_binned(graphs, formulae, diffs, num_forms, adducts)
         else:
             return self.forward_unbinned(graphs, formulae, diffs, num_forms, adducts)
+
 
     def forward_unbinned(
         self,
@@ -1217,7 +1207,7 @@ class ScarfIntenNet(pl.LightningModule):
 
     def predict(self, graphs, full_formula, diffs, num_forms, adducts, binned_out=True):
         """predict."""
-        out = self.forward_switch(
+        out = self.forward(
             graphs=graphs,
             formulae=full_formula,
             diffs=diffs,
@@ -1255,6 +1245,7 @@ class ScarfIntenNet(pl.LightningModule):
             diffs=batch["diffs"],
             num_forms=batch["num_forms"],
             adducts=batch["adducts"],
+            binned_targs=self.binned_targs,
         )
         loss_dict = self.loss_fn(outputs, batch["intens"], batch["num_forms"])
         self.log(f"{name}_loss", loss_dict.get("loss"), on_epoch=True, logger=True)
