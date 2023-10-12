@@ -1,4 +1,6 @@
-wget https://www.dropbox.com/scl/fi/l3t1dmxgazqji9yoe98g9/canopus_scarf_models.zip?rlkey=zmkiz5c6kgt8qpm0o8z8qyt2a -O canopus_scarf_models.zip
+#wget https://www.dropbox.com/scl/fi/l3t1dmxgazqji9yoe98g9/canopus_scarf_models.zip?rlkey=zmkiz5c6kgt8qpm0o8z8qyt2a -O canopus_scarf_models.zip
+
+wget https://zenodo.org/record/8433354/files/canopus_scarf_models.zip -O canopus_scarf_models.zip
 
 unzip canopus_scarf_models.zip
 

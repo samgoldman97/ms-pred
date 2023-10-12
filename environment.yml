@@ -22,7 +22,7 @@ dependencies:
 - pytorch-scatter
 
 # CPU:
-- dgl=0.9.*
+- dgl=0.8.*
 # GPU:
 #- cudatoolkit=11.1
 #- dgl-cuda11.1 

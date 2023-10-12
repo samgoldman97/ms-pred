@@ -107,7 +107,7 @@ class IntenDataset(Dataset):
         else:
             raise ValueError()
 
-        if self.num_workers == 0:
+        if self.num_workers == 0 or True:
             self.mols = [Chem.MolFromSmiles(i) for i in self.smiles]
             self.mol_graphs = [self.root_encode_fn(i) for i in self.mols]
         else:
@@ -369,7 +369,7 @@ class ScarfDataset(Dataset):
         else:
             raise ValueError()
 
-        if self.num_workers == 0:
+        if self.num_workers == 0 or True:
             self.mols = [Chem.MolFromSmiles(i) for i in self.smiles]
             self.mol_graphs = [self.root_encode_fn(i) for i in self.mols]
         else:
@@ -403,7 +403,7 @@ class ScarfDataset(Dataset):
         process_fn = partial(
             process_form_file,
         )
-        if self.num_workers > 0:
+        if self.num_workers > 0: 
             self.spec_forms = common.chunked_parallel(
                 self.form_files,
                 process_fn,
@@ -676,11 +676,12 @@ class MolDataset(Dataset):
         else:
             raise ValueError()
 
-        if self.num_workers == 0:
+        if self.num_workers == 0 or True:
             self.mols = [Chem.MolFromSmiles(i) for i in self.smiles]
             self.base_formulae = [common.form_from_smi(i) for i in self.smiles]
             self.mol_graphs = [self.root_encode_fn(i) for i in self.mols]
         else:
+
             self.mols = common.chunked_parallel(
                 self.smiles,
                 lambda x: Chem.MolFromSmiles(x),

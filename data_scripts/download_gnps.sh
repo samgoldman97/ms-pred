@@ -1,4 +1,5 @@
-LINK=https://www.dropbox.com/scl/fi/13yt9gozdr6yf3jl908u8/canopus_train_public.zip?rlkey=lnfwjxutp90zqo89gfj7m15ot
+#LINK=https://www.dropbox.com/scl/fi/13yt9gozdr6yf3jl908u8/canopus_train_public.zip?rlkey=lnfwjxutp90zqo89gfj7m15ot
+LINK=https://zenodo.org/record/8433354/files/canopus_train_public.zip
 
 
 wget "$LINK" -O canopus_train_public.zip
