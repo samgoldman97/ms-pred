@@ -668,6 +668,8 @@ class FragmentEngine(object):
 
         Convert dict of frags to a list of dicts with mz / inten and frag attributed
 
+        Note that this includes charges in the output
+
         """
         mass_to_obj = defaultdict(lambda: {})
         for k, val in frags.items():

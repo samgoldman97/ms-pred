@@ -27,3 +27,6 @@ python data_scripts/forms/03_add_form_intens.py \
     --add-raw \
     --binned-add \
     --out-form-folder data/spec_datasets/nist20/subformulae/magma_subform_50_with_raw
+
+# CASMI22
+# python data_scripts/forms/01_assign_subformulae.py --data-dir data/spec_datasets/casmi22/ --labels-file data/spec_datasets/casmi22/labels.tsv --use-all --output-dir no_subform

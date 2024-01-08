@@ -116,32 +116,48 @@ def rank_test_entry(
     # NOTE: resorted is out of bounds
     resorted_ikeys = cand_ikeys[resorted]
     resorted_dist = dist[resorted]
-
-    assert len(true_ind) == 1
-
-    true_ind = true_ind[0]
-
-    true_dist = dist[true_ind]
-    # ind_found = inds_found[true_ind]
-    # tie_shift = np.sum(true_dist == dist) - 1
-    # ind_found_init = ind_found
-    # ind_found = ind_found + tie_shift
-    ind_found = np.argwhere(resorted_dist == true_dist).flatten()[-1]
-
-    # Add 1 in case it was first to be top 1 not zero
-    ind_found = ind_found + 1
+    
+    top_hit = str(resorted_ikeys[0]) if len(resorted_ikeys) > 0 else None
 
     true_mass = common.mass_from_smi(true_smiles)
     mass_bin = common.bin_mass_results(true_mass)
 
-    return {
-        "ind_recovered": float(ind_found),
-        "total_decoys": len(resorted_ikeys),
-        "mass": float(true_mass),
-        "mass_bin": mass_bin,
-        "true_dist": float(true_dist),
-        "spec_name": str(spec_name),
-    }
+    #assert len(true_ind) == 1
+    if len(true_ind) == 0:
+        print(f"Could not find true ind for {spec_name}")
+        return {
+            "ind_recovered": 1e10,
+            "total_decoys": len(resorted_ikeys),
+            "mass": float(true_mass),
+            "mass_bin": mass_bin,
+            "true_dist": None,
+            "spec_name": str(spec_name),
+            "top_hit": top_hit,
+        }
+    elif len(true_ind) > 1:
+        raise ValueError()
+    else:
+        true_ind = true_ind[0]
+        true_dist = dist[true_ind]
+
+        # ind_found = inds_found[true_ind]
+        # tie_shift = np.sum(true_dist == dist) - 1
+        # ind_found_init = ind_found
+        # ind_found = ind_found + tie_shift
+        ind_found = np.argwhere(resorted_dist == true_dist).flatten()[-1]
+
+        # Add 1 in case it was first to be top 1 not zero
+        ind_found = ind_found + 1
+
+        return {
+            "ind_recovered": float(ind_found),
+            "total_decoys": len(resorted_ikeys),
+            "mass": float(true_mass),
+            "mass_bin": mass_bin,
+            "true_dist": float(true_dist),
+            "spec_name": str(spec_name),
+            "top_hit": top_hit,
+        }
 
 
 def main(args):
@@ -152,6 +168,7 @@ def main(args):
     data_folder = Path(f"data/spec_datasets/{dataset}")
     form_folder = data_folder / f"subformulae/{formula_dir_name}/"
     data_df = pd.read_csv(data_folder / "labels.tsv", sep="\t")
+    data_df['spec'] = [str(i) for i in data_df['spec']]
 
     name_to_ikey = dict(data_df[["spec", "inchikey"]].values)
     name_to_smi = dict(data_df[["spec", "smiles"]].values)
@@ -176,8 +193,8 @@ def main(args):
     pred_spec_ars = pred_specs["preds"]
     # pred_smiles = np.array(pred_specs['smiles'])
     pred_ikeys = np.array(pred_specs["ikeys"])
-    pred_spec_names = np.array(pred_specs["spec_names"])
-    pred_spec_names_unique = np.unique(pred_spec_names)
+    pred_spec_names = np.array(pred_specs["spec_names"], dtype=str)
+    pred_spec_names_unique = [str(i) for i in np.unique(pred_spec_names)]
     upper_limit = pred_specs["upper_limit"]
     num_bins = pred_specs["num_bins"]
     use_sparse = pred_specs["sparse_out"]
@@ -204,6 +221,7 @@ def main(args):
     # Create a list of dicts, bucket by mass, etc.
     all_entries = []
     for spec_name in tqdm(pred_spec_names_unique):
+        spec_name = str(spec_name)
 
         # Get candidates
         bool_sel = pred_spec_names == spec_name
@@ -234,7 +252,7 @@ def main(args):
     for out in all_out:
         output_entries.append(out)
         for k in k_vals:
-            below_k = out["ind_recovered"] <= k
+            below_k = out["ind_recovered"] is not None and out["ind_recovered"] <= k
             running_lists[f"top_{k}"].append(below_k)
             out[f"top_{k}"] = below_k
         running_lists["total_decoys"].append(out["total_decoys"])
@@ -244,7 +262,8 @@ def main(args):
         "dataset": dataset,
         "data_folder": str(data_folder),
         "dist_fn": dist_fn,
-        "individuals": sorted(output_entries, key=lambda x: x["ind_recovered"]),
+        "individuals": sorted(output_entries, key=lambda x: x["ind_recovered"]
+                              if x['ind_recovered'] is not None else -99999),
     }
 
     for k, v in running_lists.items():

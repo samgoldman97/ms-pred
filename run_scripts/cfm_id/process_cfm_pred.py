@@ -48,11 +48,11 @@ def extract_cfm_file(spectra_file, out_dir, max_node):
 
 
 datasets = ["canopus_train_public", "nist20"]
-max_nodes = [10, 20, 30, 40, 50, 100, 200]
 max_node = 100
-subform_name = "magma_subform_50"
 split_override = None
+datasets = ["casmi22"]
 splits = ["split_1", "scaffold_1"]
+splits = ["all_split"]
 
 for dataset in datasets:
         res_folder = Path(f"results/cfm_id_{dataset}/")
@@ -76,11 +76,11 @@ for dataset in datasets:
 
             export_dir = pred_dir / "form_preds"
             export_dir.mkdir(exist_ok=True)
-            test_specs = set(split_df[split_df["Fold_0"] == "test"]["spec"].values)
+            test_specs = set(split_df[split_df["Fold_0"] == "test"]["spec"].astype(str).values)
 
             to_export = [i for i in all_files if i.stem in test_specs]
             export_fn = lambda x: extract_cfm_file(x, export_dir, max_node=max_node)
-            common.chunked_parallel(to_export, export_fn)
+            common.chunked_parallel(to_export, export_fn, spawn=False)
             pred_dir_folders.append(export_dir)
 
             # Convert all preds to binned

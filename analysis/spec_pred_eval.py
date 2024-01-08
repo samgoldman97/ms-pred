@@ -174,7 +174,7 @@ def main(args):
 
         # Load true spec
         output_entry = {
-            "name": pred_spec,
+            "name": str(pred_spec),
             "inchi": ikey,
             "cos_sim": float(cos_sim),
             "cos_sim_zero_pep": float(cos_sim_zero_pep),

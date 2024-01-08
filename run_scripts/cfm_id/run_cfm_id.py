@@ -5,6 +5,7 @@ from ms_pred import common
 
 
 datasets = ["nist20", "canopus_train_public"]
+# datasets = ["casmi22"]
 num_threads = 96
 
 for dataset  in datasets:
@@ -50,7 +51,7 @@ for dataset  in datasets:
         fp.write(wait_forever_cmd)
 
 
-    docker_str = f""" docker run --rm=true -v $(pwd):/cfmid/public/ \\
+    docker_str = f""" sudo docker run --rm=true -v $(pwd):/cfmid/public/ \\
     -i wishartlab/cfmid:latest  \\
     sh -c  ". /cfmid/public/{cmd_file}"
     """

@@ -11,41 +11,56 @@ dist = "cos"
 num_workers = 32
 
 test_entries = [
-    {"dataset": "nist20",
+    {
+     "test_dataset": "nist20",
+     "dataset": "nist20",
      "train_split": "split_1_rnd1",
      "test_split": "split_1",
      "max_k": 50},
 
     {"dataset": "canopus_train_public",
+     "test_dataset": "canopus_train_public",
      "train_split": "split_1_rnd1",
      "test_split": "split_1",
      "max_k": 50},
 
     {"dataset": "nist20",
+     "test_dataset": "nist20",
      "train_split": "split_1_rnd2",
      "test_split": "split_1",
      "max_k": 50},
 
     {"dataset": "canopus_train_public",
+     "test_dataset": "canopus_train_public",
      "train_split": "split_1_rnd2",
      "test_split": "split_1",
      "max_k": 50},
 
     {"dataset": "nist20",
+     "test_dataset": "nist20",
      "train_split": "split_1_rnd3",
      "test_split": "split_1",
      "max_k": 50},
 
     {"dataset": "canopus_train_public",
+     "test_dataset": "canopus_train_public",
      "train_split": "split_1_rnd3",
      "test_split": "split_1",
      "max_k": 50},
+
+    #{"dataset": "canopus_train_public",
+    # "test_dataset": "casmi22",
+    # "train_split": "split_1_rnd1",
+    # "test_split": "all_split",
+    # "max_k": None},
+
 ]
 
 
 for test_entry in test_entries:
     dataset = test_entry['dataset']
-    train_split =  test_entry['train_split']
+    test_dataset = test_entry['test_dataset']
+    train_split = test_entry['train_split']
     split = test_entry['test_split']
     maxk = test_entry['max_k']
 
@@ -57,13 +72,17 @@ for test_entry in test_entries:
 
     labels = f"retrieval/cands_df_{split}_{maxk}.tsv"
 
-    save_dir = model.parent.parent / f"retrieval_{dataset}_{split}_{maxk}"
-    save_dir.mkdir(exist_ok=True)
+    save_dir = model.parent.parent
+    if test_dataset != dataset:
+        save_dir = save_dir / "cross_dataset" / test_dataset
+
+    save_dir = save_dir / f"retrieval_{dataset}_{split}_{maxk}"
+    save_dir.mkdir(exist_ok=True, parents=True)
 
 
     cmd = f"""python {pred_file} \\
     --batch-size 32  \\
-    --dataset-name {dataset} \\
+    --dataset-name {test_dataset} \\
     --sparse-out \\
     --sparse-k 100 \\
     --split-name {split}.tsv   \\
@@ -78,7 +97,7 @@ for test_entry in test_entries:
 
     # Run retrieval
     cmd = f"""python {retrieve_file} \\
-    --dataset {dataset} \\
+    --dataset {test_dataset} \\
     --formula-dir-name {subform_name} \\
     --binned-pred-file {save_dir / 'binned_preds.p'} \\
     --dist-fn cos \\

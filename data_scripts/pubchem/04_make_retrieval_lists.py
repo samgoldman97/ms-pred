@@ -133,7 +133,7 @@ def main(max_k, workers, input_map, input_dataset_folder, split_file):
     process_fn = partial(process_example, max_k=max_k)
 
     # print(f"Num in database with incihikey found: {np.mean(num_found)}")
-    if debug:
+    if debug or len(out_list) == 0:
         processed = [process_fn(i) for i in out_list]
         processed = {i["spec"]: i for i in processed}
     else:
@@ -190,15 +190,18 @@ if __name__ == "__main__":
     workers = 32
     debug = False
 
+    # Modify here to create various datasets
     compute_entries = [
         #{"dataset": "nist20", "max_k": 50, "split": "split_1.tsv"},
         #{"dataset": "nist20", "max_k": 50, "split": "split_1_500.tsv"},
         #{"dataset": "nist20", "max_k": None, "split": "split_1_500.tsv"},
         #{"dataset": "nist20", "max_k": 50, "split": "split_1_1000.tsv"},
         #{"dataset": "nist20", "max_k": None, "split": "split_1_1000.tsv"},
-        #{"dataset": "canopus_train_public", "max_k": 50, "split": "split_1.tsv"},
+        {"dataset": "canopus_train_public", "max_k": 50, "split": "split_1.tsv"},
 
-        {"dataset": "nist20", "max_k": 50, "split": "split_1_1000.tsv"},
+        #{"dataset": "nist20", "max_k": 50, "split": "split_1_1000.tsv"},
+        #{"dataset": "casmi22", "max_k": None, "split": "all_split.tsv"},
+        #{"dataset": "casmi22", "max_k": None, "split": "priority_split.tsv"},
     ]
 
     for test_entry in compute_entries:

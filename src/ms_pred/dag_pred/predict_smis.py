@@ -195,7 +195,7 @@ def predict():
                 preds.append(pred)
         else:
             preds = common.chunked_parallel(
-                all_rows, single_predict_mol, max_cpu=kwargs["batch_size"]
+                all_rows, single_predict_mol, max_cpu=kwargs["batch_size"], spawn=True
             )
 
         # Export out

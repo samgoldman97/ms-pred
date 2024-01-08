@@ -3,7 +3,8 @@ from tqdm import tqdm
 
 
 def simple_parallel(
-    input_list, function, max_cpu=16, timeout=4000, max_retries=3, use_ray: bool = False
+    input_list, function, max_cpu=16, timeout=4000, max_retries=3, use_ray:
+    bool = False, spawn=False
 ):
     """Simple parallelization.
 
@@ -15,6 +16,7 @@ def simple_parallel(
     timeout: Length of timeout
     max_retries: Num times to retry this
     use_ray
+    spawn=True
 
     """
     if use_ray:
@@ -26,8 +28,11 @@ def simple_parallel(
 
         return ray.get([ray_func.remote(x) for x in input_list])
 
+    import multiprocess.context as ctx
     from multiprocess.context import TimeoutError
     from pathos import multiprocessing as mp
+    if spawn:
+        ctx._force_start_method('spawn')
 
     cpus = min(mp.cpu_count(), max_cpu)
     pool = mp.Pool(processes=cpus)
@@ -45,6 +50,7 @@ def chunked_parallel(
     timeout=4000,
     max_retries=3,
     use_ray=False,
+    spawn=False
 ):
     """chunked_parallel.
 
@@ -80,6 +86,7 @@ def chunked_parallel(
         timeout=timeout,
         max_retries=max_retries,
         use_ray=use_ray,
+        spawn=spawn
     )
     # Unroll
     full_output = [j for i in list_outputs for j in i]
