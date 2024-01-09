@@ -120,7 +120,7 @@ def main(args):
 
         smiles_mass = common.mass_from_smi(pred_smi)
         output_entry = {
-            "name": spec_name,
+            "name": str(spec_name),
             "smiles": pred_smi,
             "num_pred": pred_num_frags,
             "num_true": true_num_frags,

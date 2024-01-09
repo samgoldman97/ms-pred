@@ -344,14 +344,21 @@ class MolDataset(Dataset):
                 timeout=4000,
                 max_retries=3,
             )
-            self.mol_graphs = common.chunked_parallel(
-                self.mols,
-                self.graph_featurizer.get_dgl_graph,
-                chunks=100,
-                max_cpu=self.num_workers,
-                timeout=4000,
-                max_retries=3,
-            )
+
+            self.mol_graphs = [
+                self.graph_featurizer.get_dgl_graph(i) for i in tqdm(self.mols)
+            ]
+
+
+            #self.mol_graphs = common.chunked_parallel(
+            #    self.mols,
+            #    self.graph_featurizer.get_dgl_graph,
+            #    chunks=100,
+            #    max_cpu=self.num_workers,
+            #    timeout=4000,
+            #    max_retries=3,
+            #    spawn=False
+            #)
 
         # Extract
         self.weights = np.array(self.weights)
